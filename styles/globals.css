@@ -8,13 +8,24 @@ body::-webkit-scrollbar {
 
 body {
 	font-family: Bricolage;
-	background-color: #163300;
+	background-color: #0B3848;
 	overflow-x: hidden;
 }
 
 @font-face {
 	src: url("../font/Bricolage.woff2");
 	font-family: Bricolage;
+
+}
+
+@font-face {
+	font-family: Hff;
+	src: url("../font/hff-hunts-deco.otf") format("opentype"),
+		 url("../font/hff-hunts-deco.ttf") format("truetype");
+}
+
+.text-hff {
+	font-family: Hff;
 }
 
 @layer utilities {

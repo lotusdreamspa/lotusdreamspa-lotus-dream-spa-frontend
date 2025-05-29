@@ -1,49 +1,15 @@
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { blackCircle } from "@/public";
 import { useTranslations } from "next-intl";
-import { TextHover, Marquee } from "@/components";
+
 
 export default function Footer() {
 	const t = useTranslations("footerContent");
 	return (
 		<>
 			<div
-				id="get-in-touch"
-				className="w-full h-screen flex flex-col items-center padding-x justify-between pt-5">
-				<Marquee
-					titile1="Get in touch"
-					titile2="Get in touch"
-					className="text-[#ffeb69]"
-				/>
-				<div className="w-[80%] flex flex-col gap-10 xm:w-full sm:w-full">
-					<div>
-						<h1 className="text-[60px] xm:text-[40px] sm:text-[40px] xm:leading-[40px] sm:leading-[40px] text-[#ffeb69] font-bold leading-[62px] tracking-tight text-center xm:text-left sm:text-left">
-							{t("footerHeading1")}
-						</h1>
-					</div>
-					<div>
-						<p className="text-[25px] text-[#ffeb69] leading-normal tracking-tight text-center xm:text-left sm:text-left">
-							{t("footerHeading2")}
-						</p>
-					</div>
-					<div className="flex items-center justify-center">
-						<button className="group flex gap-2 items-center text-[17px] font-semibold capitalize text-[#260A2F] bg-secondary rounded-full leading-tight tracking-tight px-4 py-3">
-							<Image
-								src={blackCircle}
-								alt="blackCircle"
-								width={30}
-								height={30}
-								className="group-hover:rotate-[60deg] transition-all duration-300 ease-linear"
-							/>
-							<TextHover
-								titile1={t("footerBtn")}
-								titile2={t("footerBtn")}
-							/>
-						</button>
-					</div>
-				</div>
+				id="footer"
+				className="w-full  flex flex-col items-center padding-x justify-end pt-5">
 				<div className="w-full flex justify-between gap-5 py-10 xm:flex-col sm:flex-col">
 					<div className="w-1/2 xm:w-full sm:w-full flex gap-5 justify-between xm:flex-col sm:flex-col">
 						<div className="flex flex-col gap-5">
@@ -53,18 +19,18 @@ export default function Footer() {
 								</p>
 								<Link
 									className="text-[30px] font-semibold text-[#9FE870] leading-tight tracking-tight"
-									href="tell:+31 53 234 0188">
-									+31 53 234 0188
+									href={`tel:${process.env.NEXT_PUBLIC_STORE_PHONE_NUMBER}`}>
+									{process.env.NEXT_PUBLIC_STORE_PHONE_NUMBER}
 								</Link>
 							</div>
 							<div className="flex flex-col">
 								<p className="text-[16px] text-[#9FE870] leading-tight tracking-tight">
-									linkedin
+									Facebook
 								</p>
 								<Link
 									className="text-[30px] font-semibold text-[#9FE870] leading-tight tracking-tight"
-									href="/">
-									@SupaDupaNL
+									href={process.env.NEXT_PUBLIC_STORE_FACEBOOK ?? "/"}>
+									Our Facebook Page
 								</Link>
 							</div>
 						</div>
@@ -75,8 +41,8 @@ export default function Footer() {
 								</p>
 								<Link
 									className="text-[30px] font-semibold text-[#9FE870] leading-tight tracking-tight"
-									href="mailTo:hello@supadupa.nl">
-									hello@supadupa.nl
+									href={`mailto:${process.env.NEXT_PUBLIC_STORE_EMAIL}`}>
+									{process.env.NEXT_PUBLIC_STORE_EMAIL}
 								</Link>
 							</div>
 							<div className="flex flex-col">
@@ -85,8 +51,8 @@ export default function Footer() {
 								</p>
 								<Link
 									className="text-[30px] font-semibold text-[#9FE870] leading-tight tracking-tight"
-									href="/">
-									@SupaDupaNL
+									href={process.env.NEXT_PUBLIC_STORE_INSTAGRAM ?? "/"}>
+									Our Instagtram Profile
 								</Link>
 							</div>
 						</div>
@@ -95,12 +61,12 @@ export default function Footer() {
 						<div className="flex flex-col gap-10">
 							<div className="flex flex-col">
 								<p className="text-[16px] text-[#9FE870] leading-tight tracking-tight">
-									Enschede
+									Address
 								</p>
 								<Link
 									className="text-[30px] font-semibold text-[#9FE870] leading-tight tracking-tight"
 									href="/">
-									Langestraat 45a, <br /> 7511 HB
+									{process.env.NEXT_PUBLIC_STORE_ADDRESS}
 								</Link>
 							</div>
 						</div>
@@ -134,7 +100,7 @@ export default function Footer() {
 								ease: "easeInOut",
 							}}
 							className="text-[#9FE870] text-sm overflow-hidden">
-							Supa Dupa 2024
+							{(process.env.NEXT_PUBLIC_STORE_NAME ?? "") + " - " + new Date().getFullYear()}
 						</motion.h2>
 						<motion.h2
 							initial={{ y: "100%" }}

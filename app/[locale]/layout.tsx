@@ -4,8 +4,8 @@ import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 
 export const metadata: Metadata = {
-	title: "SupaDupa - Let's build some good companies!",
-	description: "SupaDupa website clone by devwithzain",
+	title: "The Amara Bar and Restaurant | Best Plant based and vegetarian restaurant in Siem Reap",
+	description: "The Amara Bar and Restaurant is a vegan and vegetarian restaurant in Siem Reap, Cambodia. We offer a wide range of delicious and healthy dishes made from fresh, locally sourced ingredients",
 };
 
 export default async function RootLayout({

@@ -3,7 +3,9 @@ import React, { useRef } from "react";
 import { TParagraphProps, TWordProps } from "@/types";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-export default function Paragraph({ paragraph }: TParagraphProps) {
+type ParagraphPropsWithClassName = TParagraphProps & { className?: string };
+
+export default function Paragraph({ paragraph, className }: ParagraphPropsWithClassName) {
 	const container = useRef(null);
 	const { scrollYProgress } = useScroll({
 		target: container,
@@ -15,7 +17,7 @@ export default function Paragraph({ paragraph }: TParagraphProps) {
 		<>
 			<p
 				ref={container}
-				className="text-[100px] lg:text-[70px] md:text-[60px] xm:text-[36px] sm:text-[40px] text-[#260A2F] font-bold leading-none tracking-tight text-center flex flex-wrap items-center justify-center">
+				className={`text-[100px] lg:text-[70px] md:text-[60px] xm:text-[36px] sm:text-[40px] text-[#260A2F] font-bold leading-none tracking-tight text-center flex flex-wrap items-center justify-center${className ? ` ${className}` : ""}`}>
 				{words.map((word, i) => {
 					const start = i / words.length;
 					const end = start + 1 / words.length;

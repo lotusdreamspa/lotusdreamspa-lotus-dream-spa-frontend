@@ -15,6 +15,11 @@ const config: Config = {
         "light-subtle": "rgba(39, 39, 39, 0.5)",
         "highlight-dark": "#ffc220",
         "highlight-light": "#ffc220",
+        "amara-gold": "#C09C60",
+        "amara-dark-blue": "#0B3848",
+      },
+      fontFamily: {
+        hff: ["Hff", "sans-serif"],
       }
     },
     screens: {

@@ -1,16 +1,17 @@
 "use client";
-import Slider from "@/components/slider";
 import Lenis from "@studio-freight/lenis";
 import { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import {
-	Collaboration,
-	Companies,
+	NotJust,
+	Navbar,
+	ContactUs,
 	Footer,
 	Hero,
+	VideoCta,
 	Journey,
 	Preload,
-	Whatwedo,
+	OurWay
 } from "@/components";
 
 export default function App() {
@@ -39,12 +40,15 @@ export default function App() {
 			<AnimatePresence mode="wait">{isLoading && <Preload />}</AnimatePresence>
 			{!isLoading && (
 				<>
-					<Hero />
+					<div className="w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
+						<Navbar />
+						<Hero />
+						<VideoCta videoPath="./amara.mov" translationNamespace="homepageVideoCtaContent" ctaParagraph="paragraph" lateralText="lateralText" ctaLink="link" />
+					</div>
 					<Journey />
-					<Companies />
-					<Whatwedo />
-					<Slider />
-					<Collaboration />
+					<NotJust />
+					<OurWay />
+					<ContactUs />
 					<Footer />
 				</>
 			)}

@@ -5,7 +5,7 @@ import { links } from "@/constants";
 import TextHover from "./text-hover";
 import { navVariants } from "@/motion";
 import { useRouter } from "next/navigation";
-import { blackCircle, logo } from "@/public";
+import { blackCircle, logoSm } from "@/public";
 import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
@@ -34,10 +34,10 @@ export default function Navbar() {
 				<div className="w-[50%]">
 					<Link href="/">
 						<Image
-							src={logo}
-							alt="supadupa logo"
-							width={100}
-							height={100}
+							src="/logo-sm.png"
+							alt="The Amara logo"
+							width={70}
+							height={70}
 							className="xm:w-[70px] sm:w-[70px]"
 						/>
 					</Link>
@@ -55,11 +55,11 @@ export default function Navbar() {
 							className="flex gap-2 items-center text-[17px] font-semibold capitalize text-[#260A2F] bg-secondary rounded-full leading-tight tracking-tight px-4 py-3 xm:py-2 sm:py-2 xm:px-4 sm:px-4 group"
 							onClick={() => setActive(!active)}>
 							<Image
-								src={blackCircle}
-								alt="blackCircle"
+								src="/logo-sm.png"
+								alt="Menu button"
 								width={20}
 								height={20}
-								className="group-hover:rotate-[60deg] transition-all duration-300 ease-linear xm:hidden sm:hidden"
+								className="group-hover:rotate-[360deg] transition-all duration-300 ease-linear xm:hidden sm:hidden"
 							/>
 							<TextHover
 								titile1="Menu"

@@ -5,10 +5,10 @@ import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useTransform, motion, useScroll } from "framer-motion";
 import {
-	whatwedoImg1,
-	whatwedoImg2,
-	whatwedoImg3,
-	whatwedoImg4,
+	porridge,
+	kombucha,
+	pig,
+	romduol,
 } from "@/public";
 
 export default function OurWayCards() {
@@ -79,8 +79,8 @@ export default function OurWayCards() {
 							<Link
 								style={{ color: t("linkColor1") }}
 								className="text-[18px] font-normal leading-tight tracking-tight"
-								href="/">
-								{t("href1")}
+								href={t("href1")}>
+								{t("linkLabel1")}
 							</Link>
 							<div
 								className="w-full h-[1px] rounded-lg"
@@ -92,8 +92,8 @@ export default function OurWayCards() {
 						className="w-1/2 xm:w-full sm:w-full h-full flex items-center justify-center"
 						style={{ scale: imageScale1 }}>
 						<Image
-							src={whatwedoImg1}
-							alt="whatwedoImg"
+							src={porridge}
+							alt="porridge bowl"
 							className="w-[80%] object-cover"
 						/>
 					</motion.div>
@@ -133,8 +133,8 @@ export default function OurWayCards() {
 							<Link
 								style={{ color: t("linkColor2") }}
 								className="text-[18px] font-normal leading-tight tracking-tight"
-								href="/">
-								{t("href2")}
+								href={t("href2")}>
+								{t("linkLabel2")}
 							</Link>
 							<div
 								className="w-full h-[1px] rounded-lg"
@@ -146,8 +146,8 @@ export default function OurWayCards() {
 						className="w-1/2 xm:w-full sm:w-full h-full flex items-center justify-center"
 						style={{ scale: imageScale2 }}>
 						<Image
-							src={whatwedoImg2}
-							alt="whatwedoImg"
+							src={kombucha}
+							alt="kombucha bowl"
 							className="w-[80%] object-cover"
 						/>
 					</motion.div>
@@ -187,8 +187,8 @@ export default function OurWayCards() {
 							<Link
 								style={{ color: t("linkColor3") }}
 								className="text-[18px] font-normal leading-tight tracking-tight"
-								href="/">
-								{t("href3")}
+								href={t("href3")}>
+								{t("linkLabel3")}
 							</Link>
 							<div
 								className="w-full h-[1px] rounded-lg"
@@ -197,11 +197,11 @@ export default function OurWayCards() {
 						</div>
 					</div>
 					<motion.div
-						className="w-1/2 xm:w-full sm:w-full h-full flex items-center justify-center"
+						className="w-1/2 xm:w-full sm:w-full h-full flex  justify-center"
 						style={{ scale: imageScale3 }}>
 						<Image
-							src={whatwedoImg3}
-							alt="whatwedoImg"
+							src={pig}
+							alt="happy pig"
 							className="w-[80%] object-cover"
 						/>
 					</motion.div>
@@ -241,8 +241,8 @@ export default function OurWayCards() {
 							<Link
 								style={{ color: t("linkColor4") }}
 								className="text-[18px] font-normal leading-tight tracking-tight"
-								href="/">
-								{t("href4")}
+								href={t("href4")}>
+								{t("linkLabel4")}
 							</Link>
 							<div
 								className="w-full h-[1px] rounded-lg"
@@ -254,8 +254,8 @@ export default function OurWayCards() {
 						className="w-1/2 xm:w-full sm:w-full h-full flex items-center justify-center"
 						style={{ scale: imageScale4 }}>
 						<Image
-							src={whatwedoImg4}
-							alt="whatwedoImg"
+							src={romduol}
+							alt="khmer national flower"
 							className="w-[80%] object-cover"
 						/>
 					</motion.div>

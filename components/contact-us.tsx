@@ -9,7 +9,7 @@ export default function ContactUs() {
         <>
             <div
                 id="contact-us"
-                className="w-full h-screen flex flex-col items-center padding-x justify-between pt-5">
+                className="w-full h-screen flex flex-col items-center padding-x justify-between pt-5 mb-16">
                 <Marquee
                     titile1="Get"
                     titile2="in touch"

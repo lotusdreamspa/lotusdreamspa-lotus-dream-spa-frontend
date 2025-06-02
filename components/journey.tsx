@@ -24,7 +24,7 @@ export default function Journey() {
 				<Words paragraph={t("ourOffer")} className="text-white"/>
 			</div>
 			<div className="w-full h-full absolute">
-				<div className="absolute right-24 -bottom-10">
+				<div className="absolute right-24 -bottom-20">
 					<motion.img
 						animate={{ rotate: [-360, 360] }}
 						transition={{
@@ -33,27 +33,13 @@ export default function Journey() {
 							duration: 20,
 							ease: "linear",
 						}}
-						src="/circle2.svg"
-						alt="circle2"
-						width={130}
-						height={130}
+						src="/cabbage.png"
+						alt="cabbage"
+						width={240}
+						height={240}
 					/>
 				</div>
-				<div className="absolute right-60 -bottom-12">
-					<motion.img
-						animate={{ rotate: [-360, 360] }}
-						transition={{
-							repeat: Infinity,
-							repeatType: "loop",
-							duration: 20,
-							ease: "linear",
-						}}
-						src="/circle1.svg"
-						alt="circle1"
-						width={100}
-						height={100}
-					/>
-				</div>
+		
 			</div>
 		</motion.div>
 	);

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { arrowDown, heroCircle } from "@/public";
+import { arrowDown, kindFood } from "@/public";
 
 interface VideoCtaProps {
   videoPath: string;
@@ -133,13 +133,13 @@ export default function VideoCta({
             duration: 20,
             ease: "linear",
           }}
-          className="flex items-center absolute top-36 -left-16 xm:hidden sm:hidden"
+          className="flex items-center absolute top-36 -left-20 xm:hidden sm:hidden"
         >
           <Image
-            src={heroCircle}
-            alt="heroCircleImg"
-            width={120}
-            height={120}
+            src={kindFood}
+            alt="kindFood"
+            width={200}
+            height={200}
           />
         </motion.div>
       </div>

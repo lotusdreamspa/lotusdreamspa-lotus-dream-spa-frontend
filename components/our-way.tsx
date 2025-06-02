@@ -3,7 +3,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Marquee, OurWayCards } from "@/components";
-import { whatwedoCircleImg } from "@/public";
+import { thanksFor } from "@/public";
 
 export default function OurWay() {
 	const t = useTranslations("ourWayContent");
@@ -19,12 +19,12 @@ export default function OurWay() {
 					duration: 20,
 					ease: "linear",
 				}}
-				className="flex items-center absolute -top-14 right-40">
+				className="flex items-center absolute -top-24 right-4">
 				<Image
-					src={whatwedoCircleImg}
+					src={thanksFor}
 					alt="heroCircleImg"
-					width={120}
-					height={120}
+					width={240}
+					height={240}
 				/>
 			</motion.div>
 			<Marquee

@@ -1,12 +1,8 @@
 "use client";
 import gsap from "gsap";
-import Link from "next/link";
-import Navbar from "./navbar";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { arrowDown, heroCircle } from "@/public";
 
 export default function Hero() {
 	const t = useTranslations("heroContent");
@@ -54,17 +50,7 @@ export default function Hero() {
 	let xForce = 0;
 	let yForce = 0;
 	const easing = 0.08;
-	const speed = 0.01;
 
-	const manageMouseMove = (e: any) => {
-		const { movementX, movementY } = e;
-		xForce += movementX * speed;
-		yForce += movementY * speed;
-
-		if (requestAnimationFrameId == null) {
-			requestAnimationFrameId = requestAnimationFrame(animate);
-		}
-	};
 
 	const lerp = (start: number, target: number, amount: number) =>
 		start * (0.8 - amount) + target * amount;
@@ -84,17 +70,12 @@ export default function Hero() {
 		}
 	};
 
-	const resetVideoPosition = () => {
-		gsap.to(plane1.current, { x: 0, y: 0, duration: 0.5, ease: "power3.out" });
-		xForce = 0;
-		yForce = 0;
-	};
 
 	return (
 			<div
 				className="flex flex-col justify-start w-full"
 				ref={containerRef}>
-				<h1 className="text-[24px] xm:text-lg sm:text-lg text-[#9FE870] font-normal leading-tight tracking-tight mt-24">
+				<h1 className="text-[24px] xm:text-lg sm:text-lg text-[#9FE870] font-normal leading-tight tracking-tight mt-24 hidden md:block lg:block xl:block">
 					{t("welcome-to-the-amara")}
 				</h1>
 				<span

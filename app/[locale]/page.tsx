@@ -43,7 +43,7 @@ export default function App() {
 					<div className="w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
 						<Navbar />
 						<Hero />
-						<VideoCta videoPath="./amara.mov" translationNamespace="homepageVideoCtaContent" ctaParagraph="paragraph" lateralText="lateralText" ctaLink="link" />
+						<VideoCta videoPath="./amara.mp4" translationNamespace="homepageVideoCtaContent" ctaParagraph="paragraph" lateralText="lateralText" ctaLink="link" />
 					</div>
 					<Journey />
 					<NotJust />

@@ -54,17 +54,9 @@ export default function Navbar() {
 						<button
 							className="flex gap-2 items-center text-[17px] font-semibold capitalize text-[#260A2F] bg-secondary rounded-full leading-tight tracking-tight px-4 py-3 xm:py-2 sm:py-2 xm:px-4 sm:px-4 group"
 							onClick={() => setActive(!active)}>
-							<Image
-								src="/logo-sm.png"
-								alt="Menu button"
-								width={20}
-								height={20}
-								className="group-hover:rotate-[360deg] transition-all duration-300 ease-linear xm:hidden sm:hidden"
-							/>
-							<TextHover
-								titile1="Menu"
-								titile2="Menu"
-							/>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+								<path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+							</svg>
 						</button>
 						<motion.div
 							initial={{ scaleY: 0 }}

@@ -12,7 +12,8 @@ interface VideoCtaProps {
   translationNamespace: string;
   ctaParagraph: string;
   lateralText: string;
-  ctaLink: string;
+  ctaLinkLabel: string;
+  ctaLinkHref?: string; // Optional, if you want to use a dynamic link
 }
 
 export default function VideoCta({
@@ -20,7 +21,8 @@ export default function VideoCta({
   translationNamespace,
   ctaParagraph,
   lateralText,
-  ctaLink,
+  ctaLinkLabel,
+  ctaLinkHref,
 }: VideoCtaProps) {
   const t = useTranslations(translationNamespace);
   const textRef = useRef<HTMLSpanElement | null>(null);
@@ -180,9 +182,9 @@ export default function VideoCta({
           <div className="w-fit flex flex-col gap-2">
             <Link
               className="text-[18px] text-secondary font-normal leading-tight tracking-tight"
-              href="/"
+              href={ctaLinkHref || "#"} // Use dynamic link or fallback to #
             >
-              {t(ctaLink)} {/* Dynamic translation key */}
+              {t(ctaLinkLabel)} {/* Dynamic translation key */}
             </Link>
             <div className="w-full h-[1px] rounded-lg bg-secondary" />
           </div>

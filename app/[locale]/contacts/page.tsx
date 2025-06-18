@@ -56,12 +56,12 @@ export default function App() {
                         </div>
                         <div className="w-full flex justify-center my-16">
                             <div className="group flex gap-2 items-center text-[17px] font-semibold capitalize text-[#260A2F] bg-secondary rounded-full leading-tight tracking-tight px-4 py-3">
-                            <Link href="https://www.google.com/maps/dir//The+Amara+Bar+and+Restaurant,+629+Central+Market+St,+Krong+Siem+Reap+12131/@13.3570307,103.8155963,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x311017dcaa9040d9:0x4edae835d38d891c!2m2!1d103.8567962!2d13.3569505?entry=ttu&g_ep=EgoyMDI1MDUyNi4wIKXMDSoASAFQAw%3D%3D" className="w-36 text-center">
-                                     <TextHover
-                                    titile1="Open in Google Maps"
-                                    titile2="Let's Go!"
-                                />
-                            </Link>
+                                <Link href="https://www.google.com/maps/dir//The+Amara+Bar+and+Restaurant,+629+Central+Market+St,+Krong+Siem+Reap+12131/@13.3570307,103.8155963,13z/data=!4m8!4m7!1m0!1m5!1m1!1s0x311017dcaa9040d9:0x4edae835d38d891c!2m2!1d103.8567962!2d13.3569505?entry=ttu&g_ep=EgoyMDI1MDUyNi4wIKXMDSoASAFQAw%3D%3D" className="w-36 text-center">
+                                    <TextHover
+                                        titile1="Open in Google Maps"
+                                        titile2="Let's Go!"
+                                    />
+                                </Link>
                             </div>
                         </div>
                     </div>

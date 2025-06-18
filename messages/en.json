@@ -1,10 +1,9 @@
 {
   "navbarContent": {
-    "our-ambition": "Our ambition",
-    "what-we-do": "What we do",
-    "transformation": "Transformation",
-    "our-impact": "Our impact",
-    "get-in-touch": "Get in touch"
+    "aboutUs": "What's Amara?",
+    "ourOffer": "Menu",
+    "blog": "Blog",
+    "findUs": "Find Us"
   },
   "heroContent": {
     "welcome-to-the-world-of": "Welcome to the world of",
@@ -17,13 +16,25 @@
   "homepageVideoCtaContent": {
     "paragraph": "Redefining dining <br/> where healthy, ethical, and sustainable <br/> is the standard, not a luxury.",
     "lateralText": "More...",
-    "link": "Let's cultivate Joy"
+    "linkLabel": "Let's cultivate Joy",
+    "linkHref": "/contacts"
   },
   "journeyContent": {
     "journeyContent": "At Supa Dupa we help companies on their journey to do good business in a sustainable way. Because good business leads to a future."
   },
   "whatWeDoContent": {
-    "ourOffer": "At The Amara, we craft innovative plant-based and vegetarian dishes. Using fermentation and extraction, our chefs elevate local Khmer ingredients, offering healthy, ethical dining at fair prices."
+    "ourOffer": "At The Amara, we craft innovative plant-based and vegetarian dishes. Using fermentation and extraction, our chefs elevate local Khmer ingredients, offering healthy, ethical dining at fair prices.",
+    "paragraph": "At The Amara, we craft innovative plant-based and vegetarian dishes. Using fermentation and extraction, our chefs elevate local Khmer ingredients, offering healthy, ethical dining at fair prices."
+  },
+  "aboutUsContent": {
+    "paragraph": "Welcome to The Amara Bar and Restaurant, nestled in the evocative heart of Cambodia, where history deeply roots itself in the wild and captivating nature. We aim to offer you a truly unique culinary experience. We're committed to creating as much as possible with our own hands, presenting a cuisine that, starting from local ingredients—primarily sourced from traditional markets and small producers in the countryside around Siem Reap—reflects our identity, our meticulous research, and years of acquired expertise. From our artisanal kombucha to our homemade yogurt, and even more distinctive creations like our 100% mango vinegar or our plant-based milks (also available in high-protein versions), every detail is thoughtfully crafted to offer you authentic and innovative flavors."
+  },
+  "aboutUsParagraph": {
+    "paragraph-1": "At The Amara Bar and Restaurant, our very name, Amara – derived from the Sanskrit word for 'immortal' or 'eternal' – embodies our deep commitment to celebrating Cambodia's rich and enduring culture. We approach our culinary endeavors with profound respect for local traditions, consciously avoiding cultural appropriation. While our menu proudly features dishes inspired by exquisite Khmer ingredients, these are thoughtfully woven into a fusion cuisine that harmoniously blends flavors from the Middle East, Europe, Africa, and Asia, creating a truly global yet locally rooted experience.",
+    "paragraph-2": "Beyond our kitchen, we are dedicated to numerous initiatives that actively promote local culture and provide vital economic support to small family businesses. This commitment extends from our cherished ingredient suppliers, notably our coffee providers, to our intelligent waste management practices. We deliberately partner with small local enterprises for plastic and aluminum recycling, championing meticulous waste separation within our operations.",
+    "paragraph-3": "The issue of waste is particularly close to our hearts; once a month, we close for half a day, joining our staff in collecting plastic waste from areas surrounding our restaurant, such as the riverside.",
+    "paragraph-4": "Looking ahead, we're excited to host future events like exhibitions, conferences, and art shows, specifically designed to uplift Cambodian artists and illuminate the nation's profound history and cultural depth for those unfamiliar with its beauty. Furthermore, as Amara Beer Lab, we craft premium artisanal beers, some of which uniquely incorporate local fruits, herbs, spices, and ingredients. As a token of gratitude to the nation that embraces us, our brewery offers a special discount for Cambodian customers, a conscious gesture of kindness and appreciation.",
+    "paragraph-5": "Through these concerted efforts, The Amara Bar and Restaurant isn't just a place to dine or enjoy a drink; it's a testament to our philosophy of conscious hospitality, where every interaction contributes to a deeper appreciation for Cambodia's heritage and a sustainable future for its communities. We invite you to join us in this journey of taste, culture, and shared values."
   },
   "notJustContent": {
     "notJustHeading": "Not just a restaurant, but a movement.",
@@ -64,7 +75,7 @@
     "heading7": "Respecting",
     "heading8": "Local Culture",
     "para4": "We respect the local culture and traditions of Cambodia. Our menu features dishes that are inspired by local Khmer ingredients, and we work with local farmers to source our ingredients.",
-    "href4": "/about-us#values",
+    "href4": "/about-us",
     "linkLabel4": "What we do for Cambodia",
     "bgColor4": "#320707",
     "textColor4": "#FFD7EF",
@@ -95,6 +106,36 @@
     "title5": "Activate.",
     "heading5": "This is where the magic starts.",
     "para5": "We activate your journey and amplify your story with creative concepts, digital experiences, and campaigns. We bring your purpose-driven initiatives to life, creating tangible actions that positively impact your business and community. Utilizing our innovative Transformation Sprint method, rooted in Systemic Transition Management principles, we implement iterative short bursts of positive change that help your team make the necessary transition."
+  },
+  "aboutUsSliderContent": {
+    "sliderHeading1": "Our Approach to Flavor",
+    "sliderHeading2": "Crafting Authenticity Through Dedication",
+    "sliderHeading3": "At The Amara Bar and Restaurant, our culinary philosophy extends beyond mere ingredients; it's a deep commitment to the art of creation. We believe the true essence of a dish lies in its journey from concept to plate, shaped by meticulous research, passion, and years of honed expertise. Every element, from our unique fermentations to our custom blends, is a testament to our dedication to innovation and genuine taste. This commitment forms the core of an experience that is uniquely Amara.",
+    "slide-1": {
+      "title": "Local Sourcing",
+      "heading": "Embracing Cambodia's Bounty",
+      "par": "Our ingredients are the heartbeat of Cambodia. We champion local markets and small farmers in Siem Reap, ensuring every dish brings you the freshest, most vibrant flavors straight from our land."
+    },
+    "slide-2": {
+      "title": "Artisanal Craft",
+      "heading": "Handcrafted Excellence",
+      "par": "Beyond cooking, we are creators. Our dedication to homemade quality shines in everything from our handcrafted kombucha to our bespoke plant-based milks, each made with precision and care."
+    },
+    "slide-3": {
+      "title": "Innovative Spirit",
+      "heading": "Pioneering New Tastes",
+      "par": "We honor tradition but dare to innovate. Explore unique culinary expressions like our pure mango vinegar or high-protein plant-based milks, pushing boundaries for adventurous palates."
+    },
+    "slide-4": {
+      "title": "Sustainability",
+      "heading": "Nurturing Our Planet",
+      "par": "Our commitment extends to the planet. By sourcing locally and minimizing waste, we strive to offer a dining experience that is as responsible as it is delicious, respecting Cambodia's natural bounty."
+    },
+    "slide-5": {
+      "title": "Mastery",
+      "heading": "Years of Dedication",
+      "par": "Every recipe reflects deep research and a genuine love for transforming natural elements into extraordinary dishes, guided by our honed expertise."
+    }
   },
   "ourImpactContent": {
     "ourImpactHeading1": "Our Impact",

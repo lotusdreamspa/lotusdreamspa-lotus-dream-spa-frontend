@@ -1,16 +1,18 @@
 "use client";
 import Lenis from "@studio-freight/lenis";
 import { useEffect, useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, AnimateSharedLayout } from "framer-motion";
 import {
-	NotJust,
+	Collaboration,
+	AnimatedTextSection,
 	Navbar,
-	ContactUs,
 	Footer,
 	Hero,
 	VideoCta,
-	AnimatedTextSection,
+	Journey,
+	ReusableSlider,
 	Preload,
+	Paragraph,
 	OurWay
 } from "@/components";
 
@@ -43,14 +45,32 @@ export default function App() {
 					<div className="w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
 						<Navbar />
 						<Hero />
-						<VideoCta videoPath="./amara.mp4" translationNamespace="homepageVideoCtaContent" ctaParagraph="paragraph" lateralText="lateralText" ctaLinkLabel="linkLabel" ctaLinkHref="/contacts" />
 					</div>
 					<AnimatedTextSection
-						svgPath="/cabbage.png"
-						translationKey="whatWeDoContent"/>
-					<NotJust />
-					<OurWay />
-					<ContactUs />
+						translationKey="aboutUsContent"
+						paragraphWidth="w-[90%]"
+						textColor="text-amara-dark-blue"
+					/>
+					<div id="our-values">
+
+						<ReusableSlider
+							translationKey="aboutUsSliderContent"		// Adjust the translation key as needed
+							numberOfSlides={5} // Adjust the number of slides as needed	
+						/>
+					</div>
+
+					<Paragraph
+						translationKey="aboutUsParagraph"
+						bgColor="bg-[#FFEB69]"
+						textColor="text-amara-dark-blue"
+						paragraphWidth="w-[70%]"
+						buttonLabel="Discover"
+						buttonLabel2="Amara Beer Lab"
+						buttonHref="https://amarabeerlab.com/"
+						buttonBgColor="bg-amara-dark-blue"
+						buttonTextColor="text-amara-gold"
+						numberOfParagraphs={5}
+					/>
 					<Footer />
 				</>
 			)}

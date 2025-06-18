@@ -18,7 +18,7 @@ export default function Navbar() {
 	const currentLocale = useLocale();
 
 	const onSelectChange = () => {
-		const nextLocale = currentLocale === "en" ? "nl" : "en";
+		const nextLocale = currentLocale === "en" ? "kh" : "en";
 		startTransition(() => {
 			router.replace(`/${nextLocale}`);
 		});
@@ -47,7 +47,7 @@ export default function Navbar() {
 						className="text-[17px] font-semibold uppercase text-[#260A2F] bg-secondary rounded-full leading-tight tracking-tight px-6 py-3 xm:py-2 sm:py-2 xm:px-4 sm:px-4"
 						onClick={onSelectChange}
 						disabled={isPending}>
-						{currentLocale === "nl" ? "en" : "nl"}
+						{currentLocale === "kh" ? "en" : "kh"}
 					</button>
 
 					<div className="relative">
@@ -68,17 +68,17 @@ export default function Navbar() {
 							<AnimatePresence mode="wait">
 								{active && (
 									<motion.div
-										className="absolute flex flex-col gap-2 bg-secondary pl-5 pr-16 py-8 rounded-[20px] right-0 mt-8"
+										className="absolute flex flex-col gap-2 bg-secondary pl-5 pr-16 py-8 rounded-[20px] right-0 mt-8 w-max"
 										initial={{ opacity: 0 }}
 										animate={{ opacity: 1 }}
 										exit={{ opacity: 0 }}>
 										{links.map((link) => (
 											<Link
 												key={link.id}
-												href={`#${link.href}`}
+												href={`${link.href}`}
 												className="text-[16px] font-semibold capitalize text-[#260A2F] bg-secondary leading-tight tracking-tight"
 												onClick={() => setActive(!active)}>
-												{t(link.href)}
+												{t(link.title)}
 											</Link>
 										))}
 									</motion.div>

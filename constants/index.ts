@@ -10,29 +10,24 @@ import {
 export const links = [
 	{
 		id: 1,
-		title: "Our ambition",
-		href: "our-ambition",
+		title: "aboutUs",
+		href: "/about-us",
 	},
 	{
 		id: 2,
-		title: "What we do",
-		href: "what-we-do",
+		title: "ourOffer",
+		href: "/menu",
 	},
 	{
 		id: 3,
-		title: "Transformation",
-		href: "transformation",
+		title: "blog",
+		href: "/blog",
 	},
 	{
 		id: 4,
-		title: "Our impact",
-		href: "our-impact",
-	},
-	{
-		id: 5,
-		title: "Get in touch",
-		href: "get-in-touch",
-	},
+		title: "findUs",
+		href: "/contacts",
+	}
 ];
 
 export const collaborationItems = [

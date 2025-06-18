@@ -14,12 +14,14 @@
     "gsap": "^3.12.5",
     "next": "^14.2.29",
     "next-intl": "^3.19.3",
+    "qs": "^6.14.0",
     "react": "^18",
     "react-dom": "^18",
     "swiper": "^11.1.14"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/qs": "^6.14.0",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

@@ -15,5 +15,5 @@ export function getStrapiMedia(url: string | null) {
   }
 
   // Otherwise, prepend the Strapi base URL from the environment variable
-  return `<span class="math-inline">\{STRAPI\_API\_URL\}</span>{url}`;
+  return  STRAPI_API_URL + url;
 }

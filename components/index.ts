@@ -13,7 +13,6 @@ export { default as Journey } from "./journey";
 export { default as ReusableSlider } from "./reusable-slider";
 export { default as AnimatedTextSection } from "./animated-text-section";
 export { default as ContactUs } from "./contact-us";
-export { default as Collaboration } from "./collaboration";
 export { default as TextHover } from "./text-hover";
 export { default as Words } from "./words";
 export { default as Paragraph } from "./paragraph";

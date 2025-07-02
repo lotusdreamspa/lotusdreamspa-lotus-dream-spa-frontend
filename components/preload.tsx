@@ -52,7 +52,7 @@ export default function PreLoad() {
 								ease: [0.76, 0, 0.24, 1],
 							}}
 							className="text-[#163300] text-[40px] xm:text-[20px] sm:text-[20px] leading-tight tracking-tighter font-medium">
-							Let&apos;s Start
+							Promote
 						</motion.p>
 						<motion.img
 							initial={{ rotate: 0 }}
@@ -61,7 +61,7 @@ export default function PreLoad() {
 								duration: 1,
 								ease: [0.76, 0, 0.24, 1],
 							}}
-							src="/loadingImg.svg"
+							src="/leaf.svg"
 							alt="loadingImg"
 							className="w-[250px] h-[250px] xm:w-20 sm:w-20 xm:h-20 sm:h-20"
 						/>
@@ -74,7 +74,7 @@ export default function PreLoad() {
 								ease: [0.76, 0, 0.24, 1],
 							}}
 							className="text-[#163300] text-[40px] xm:text-[20px] sm:text-[20px] leading-tight tracking-tighter font-medium">
-							Something good
+							Kindness
 						</motion.p>
 					</motion.div>
 					<svg className="absolute top-0 w-full h-calc-100">

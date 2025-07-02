@@ -53,7 +53,7 @@ export default function OurWayCards() {
 						backgroundColor: t("bgColor1"),
 						top: `calc(-5vh + ${1 * 25}px)`,
 					}}
-					className="w-full p-20 xm:p-7 sm:p-7 flex justify-between rounded-[30px] gap-10 relative -top-[45%] h-[800px] transform origin-top xm:flex-col sm:flex-col">
+					className="w-full p-20 pt-8 xm:p-7 sm:p-7 flex justify-between rounded-[30px] gap-10 relative -top-[45%] h-[800px] transform origin-top xm:flex-col sm:flex-col">
 					<div className="w-1/2 xm:w-full sm:w-full h-full flex flex-col gap-14 pt-10 xm:pt-5 sm:pt-5 xm:gap-5 sm:gap-5">
 						<div className="flex flex-col gap-2">
 							<h4
@@ -89,7 +89,7 @@ export default function OurWayCards() {
 						</div>
 					</div>
 					<motion.div
-						className="w-1/2 xm:w-full sm:w-full h-full flex items-center justify-center"
+						className="w-1/2 xm:w-full sm:w-full h-full flex items-start justify-center"
 						style={{ scale: imageScale1 }}>
 						<Image
 							src={porridge}
@@ -107,7 +107,7 @@ export default function OurWayCards() {
 						backgroundColor: t("bgColor2"),
 						top: `calc(-5vh + ${2 * 25}px)`,
 					}}
-					className="w-full p-20 xm:p-7 sm:p-7 flex justify-between rounded-[30px] gap-10 relative -top-[45%] h-[800px] transform origin-top xm:flex-col sm:flex-col">
+					className="w-full p-20 pt-8 xm:p-7 sm:p-7 flex justify-between rounded-[30px] gap-10 relative -top-[45%] h-[800px] transform origin-top xm:flex-col sm:flex-col">
 					<div className="w-1/2 xm:w-full sm:w-full h-full flex flex-col gap-14 pt-10 xm:pt-5 sm:pt-5 xm:gap-5 sm:gap-5">
 						<div className="flex flex-col gap-2">
 							<h4
@@ -143,7 +143,7 @@ export default function OurWayCards() {
 						</div>
 					</div>
 					<motion.div
-						className="w-1/2 xm:w-full sm:w-full h-full flex items-center justify-center"
+						className="w-1/2 xm:w-full sm:w-full h-full flex items-start justify-center"
 						style={{ scale: imageScale2 }}>
 						<Image
 							src={kombucha}
@@ -161,7 +161,7 @@ export default function OurWayCards() {
 						backgroundColor: t("bgColor3"),
 						top: `calc(-5vh + ${3 * 25}px)`,
 					}}
-					className="w-full p-20 xm:p-7 sm:p-7 flex justify-between rounded-[30px] gap-10 relative -top-[45%] h-[800px] transform origin-top xm:flex-col sm:flex-col">
+					className="w-full p-20 pt-8 xm:p-7 sm:p-7 flex justify-between rounded-[30px] gap-10 relative -top-[45%] h-[800px] transform origin-top xm:flex-col sm:flex-col">
 					<div className="w-1/2 xm:w-full sm:w-full h-full flex flex-col gap-14 pt-10 xm:pt-5 sm:pt-5 xm:gap-5 sm:gap-5">
 						<div className="flex flex-col gap-2">
 							<h4
@@ -197,7 +197,7 @@ export default function OurWayCards() {
 						</div>
 					</div>
 					<motion.div
-						className="w-1/2 xm:w-full sm:w-full h-full flex  justify-center"
+						className="w-1/2 xm:w-full sm:w-full h-full flex justify-center"
 						style={{ scale: imageScale3 }}>
 						<Image
 							src={pig}
@@ -215,7 +215,7 @@ export default function OurWayCards() {
 						backgroundColor: t("bgColor4"),
 						top: `calc(-5vh + ${4 * 25}px)`,
 					}}
-					className="w-full p-20 xm:p-7 sm:p-7 flex justify-between rounded-[30px] gap-10 relative -top-[45%] h-[800px] transform origin-top xm:flex-col sm:flex-col">
+					className="w-full p-20 pt-8 xm:p-7 sm:p-7 flex justify-between rounded-[30px] gap-10 relative -top-[45%] h-[800px] transform origin-top xm:flex-col sm:flex-col">
 					<div className="w-1/2 xm:w-full sm:w-full h-full flex flex-col gap-14 pt-10 xm:pt-5 sm:pt-5 xm:gap-5 sm:gap-5">
 						<div className="flex flex-col gap-2">
 							<h4
@@ -251,7 +251,7 @@ export default function OurWayCards() {
 						</div>
 					</div>
 					<motion.div
-						className="w-1/2 xm:w-full sm:w-full h-full flex items-center justify-center"
+						className="w-1/2 xm:w-full sm:w-full h-full flex items-start justify-center"
 						style={{ scale: imageScale4 }}>
 						<Image
 							src={romduol}

@@ -3,17 +3,13 @@ import Lenis from "@studio-freight/lenis";
 import { useEffect, useState } from "react";
 import { AnimatePresence, AnimateSharedLayout } from "framer-motion";
 import {
-	Collaboration,
 	AnimatedTextSection,
 	Navbar,
 	Footer,
 	Hero,
-	VideoCta,
-	Journey,
 	ReusableSlider,
 	Preload,
-	Paragraph,
-	OurWay
+	Paragraph
 } from "@/components";
 
 export default function App() {

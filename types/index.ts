@@ -71,3 +71,141 @@ export interface ReusableSliderProps {
 	arrowButtonBgColor?: string; // Colore di sfondo dei bottoni freccia (es. "#9fe870")
 	arrowButtonHoverColor?: string; // Colore di hover dei bottoni freccia (es. "#FFEB69")
 }
+
+export interface ImageFormat {
+  ext: string;
+  url: string;
+  hash: string;
+  mime: string;
+  name: string;
+  path: string | null;
+  size: number;
+  width: number;
+  height: number;
+  sizeInBytes: number;
+}
+
+export interface Image {
+  id: number;
+  documentId: string;
+  name: string;
+  alternativeText: string | null;
+  caption: string | null;
+  width: number;
+  height: number;
+  formats: {
+    large: ImageFormat;
+    small: ImageFormat;
+    medium: ImageFormat;
+    image: ImageFormat;
+    thumbnail: ImageFormat;
+
+  };
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl: string | null;
+  provider: string;
+  provider_metadata: string | null;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+export interface ParagraphBlock {
+  __component: "text-components.paragraph";
+  id: number;
+  text: string;
+  cssClasses: string;
+  imagePosition: string;
+  imageAlt: string;
+  image: Image | null; // Assuming the image can be null if not provided
+}
+
+export interface HeroBlock {
+  __component: "image-components.hero";
+  id: number;
+  title: string;
+  caption: string;
+  imageAlt: string;
+  cssClasses: string;
+  bgImage: Image; // Assuming this is a single image object
+}
+
+export interface QuoteBlock {
+  __component: "text-components.quote";
+  id: number;
+  text: string;
+  author: string;
+  authorInfo: string;
+  authorLifespan: string;
+  cssClasses: string;
+}
+
+export interface CtaBlock {
+  __component: "functional-components.cta";
+  id: number;
+  title: string;
+  subtitle: string;
+  paragraph: string;
+  buttonLabel: string;
+  buttonHref: string;
+  cssClasses: string;
+  displayMode: string;
+}
+
+export interface GalleryBlock {
+  __component: "image-components.gallery";
+  id: number;
+  caption: string;
+  displayMode: string;
+  images: Image[]; // Assuming this is an array of image objects
+}
+
+export type ContentBlock =
+  | ParagraphBlock
+  | HeroBlock
+  | QuoteBlock
+  | CtaBlock
+  | GalleryBlock;
+
+export interface Article {
+  id: number;
+  documentId: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  seoTitle: string;
+  seoDescription: string;
+  caption: string;
+  slug: string;
+  openGraphTitle: string;
+  openGraphDescription: string;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+  image: Image;
+  openGraphImage: Image;
+  contentBlocks: ContentBlock[];
+  relatedArticles: any[]; // Consider defining a more specific type if the structure of related articles is known.
+  articles: any[]; // Consider defining a more specific type if the structure of articles is known.
+  tags: any[]; // Consider defining a more specific type if the structure of tags is known.
+}
+
+export interface Pagination {
+  page: number;
+  pageSize: number;
+  pageCount: number;
+  total: number;
+}
+
+export interface Meta {
+  pagination: Pagination;
+}
+
+export interface ArticleData {
+  data: Article[];
+  meta: Meta;
+}

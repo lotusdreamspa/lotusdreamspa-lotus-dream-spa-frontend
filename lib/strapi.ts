@@ -46,6 +46,7 @@ export async function fetchStrapiData(
     });
 
     if (!response.ok) {
+      console.log(response)
       console.error(`Failed to fetch data from Strapi: ${response.statusText}`);
       throw new Error(`Failed to fetch data from Strapi: ${response.statusText}`);
     }

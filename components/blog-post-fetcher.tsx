@@ -1,41 +1,45 @@
-import { fetchStrapiData } from "@/lib/strapi"; // Assicurati che il percorso sia corretto
-import PostRender from "@/components/post-renderer"; // Assicurati che il percorso sia corretto
+// components/blog-post-fetcher.tsx
+'use client'; // This component will run on the client
 
-// Definisci il tipo per i tuoi blog post (lo stesso usato in Collaboration)
-interface BlogPost {
-    id: number;
-    attributes: {
-        title: string;
-        description: string;
-        slug: string;
-        mainImage: {
-            data: {
-                attributes: {
-                    url: string;
-                    alternativeText: string;
-                };
-            };
-        };
-        // Aggiungi altri campi che ti servono
-    };
-}
+import React, { useState, useEffect } from 'react';
+import { fetchStrapiData } from "@/lib/strapi";
+import PostRender from "@/components/post-renderer";
+import { Article } from '@/types';
 
-export default async function BlogPostFetcher() {
-    let blogPosts: BlogPost[] = [];
-    let error: string | null = null;
+export default function BlogPostFetcher() {
+    const [blogPosts, setBlogPosts] = useState<Article[]>([]);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true); // Add loading state
 
-    try {
-        const data = await fetchStrapiData('blog-posts', {
-            populate: ['mainImage'],
-            sort: ['createdAt:desc'],
-            pagination: {
-                limit: 10,
+    useEffect(() => {
+        async function getPosts() {
+            try {
+                setLoading(true); // Set loading to true before fetching
+                const data = await fetchStrapiData('articles', {
+                    populate: ['thumbnail'], // Populate necessary fields
+                    pagination: {
+                        limit: 10,
+                    }
+                }, 300); // The revalidate option won't apply here as it's client-side fetch
+
+                setBlogPosts(data.data);
+            } catch (err) {
+                setError("Failed to load blog posts.");
+                console.error(err);
+            } finally {
+                setLoading(false); // Set loading to false after fetching
             }
-        }, 60); // Revalidate ogni 60 secondi
-        blogPosts = data.data;
-    } catch (err) {
-        error = "Failed to load blog posts.";
-        console.error(err);
+        }
+
+        getPosts();
+    }, []); // Empty dependency array means this runs once on mount
+
+    if (loading) {
+        return (
+            <div className="w-full bg-amara-dark-blue py-10 padding-x">
+                <p className="text-white text-center">Loading blog posts...</p>
+            </div>
+        );
     }
 
     if (error) {
@@ -54,6 +58,5 @@ export default async function BlogPostFetcher() {
         );
     }
 
-   
     return <PostRender blogPosts={blogPosts} />;
 }

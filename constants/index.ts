@@ -30,29 +30,4 @@ export const links = [
 	}
 ];
 
-export const collaborationItems = [
-	{
-		id: 1,
-		src: saion,
-	},
-	{
-		id: 2,
-		src: haafkes,
-	},
-	{
-		id: 3,
-		src: pentuin,
-	},
-	{
-		id: 4,
-		src: eshuis,
-	},
-	{
-		id: 5,
-		src: hartman,
-	},
-	{
-		id: 6,
-		src: stewards,
-	},
-];
+

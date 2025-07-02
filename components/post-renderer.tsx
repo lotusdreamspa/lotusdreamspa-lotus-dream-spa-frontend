@@ -11,45 +11,19 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { useScroll, useTransform, motion } from "framer-motion";
 import {
     arrowLeft,
-    arrowRight,
-    collaborationCircle,
+    arrowRight
 } from "@/public";
-import { useTranslations } from "next-intl";
 
 import { getStrapiMedia } from "@/lib/client-utils/media";
 
-// Define the BlogPost interface
-interface BlogPost {
-    id: number;
-    attributes: {
-        title: string;
-        description: string;
-        slug: string;
-        mainImage: {
-            data: {
-                attributes: {
-                    url: string;
-                    alternativeText: string | null;
-                };
-            } | null;
-        };
-    };
-}
+import { Article } from "@/types"; // Adjust the import path based on your project structure
 
 // Define the props for this component
-interface PostRendererProps { // Changed interface name to PostRendererProps
-    blogPosts: BlogPost[];
+interface PostRendererProps {
+    blogPosts: Article[];
 }
 
-// Renamed the default export function
 export default function PostRenderer({ blogPosts }: PostRendererProps) {
-    const container = useRef(null);
-    const t = useTranslations("ourImpactContent");
-    const { scrollYProgress } = useScroll({
-        target: container,
-        offset: ["start end", "end start"],
-    });
-    const sc = useTransform(scrollYProgress, [0, 1], [100, -1500]);
 
     const swiperRef = useRef<any | null>(null);
 
@@ -63,21 +37,13 @@ export default function PostRenderer({ blogPosts }: PostRendererProps) {
     if (!blogPosts || blogPosts.length === 0) {
         return (
             <div className="w-full bg-amara-dark-blue py-10 padding-x">
-                <p className="text-white text-center">Nessun post del blog trovato da visualizzare.</p>
+                <p className="text-white text-center">Nothing to see here yet, but check back soon for updates!</p>
             </div>
         );
     }
 
     return (
         <div id="blog" className="w-full bg-amara-dark-blue py-10 padding-x">
-            <div className="w-full flex justify-start items-center xm:pb-10 sm:pb-10">
-                <div className="w-[72%] xm:w-full sm:w-full flex flex-col gap-4 mx-auto pb-8">
-                    <h1 className="text-[80px] xm:text-[35px] sm:text-[40px] xm:leading-[40px] sm:leading-[50px] text-[#FFD7EF] font-bold leading-[80px] tracking-tighter text-center">
-                        {t("ourImpactHeading2")}
-                    </h1>
-                </div>
-            </div>
-
             <div className="w-full pb-10 bg-[#9FE870] rounded-[20px]">
                 <div className="p-5 overflow-hidden">
                     <Swiper
@@ -87,69 +53,40 @@ export default function PostRenderer({ blogPosts }: PostRendererProps) {
                         slidesPerView={1}
                         onSwiper={(swiper) => (swiperRef.current = swiper)}
                     >
-                        {blogPosts.map((post) => (
-                            <SwiperSlide key={post.id}>
-                                <motion.div className="w-full p-14 xm:p-0 sm:p-0 flex justify-between rounded-[30px] gap-20 xm:gap-10 sm:gap-10 xm:flex-col sm:flex-col">
-                                    <div className="w-1/2 xm:w-full sm:w-full flex flex-col gap-14 pt-10 xm:gap-5 sm:gap-5">
-                                        {post.attributes.mainImage?.data && (
-                                            <Image
-                                                src={getStrapiMedia(post.attributes.mainImage.data.attributes.url) || '/placeholder.png'}
-                                                alt={post.attributes.mainImage.data.attributes.alternativeText || post.attributes.title}
-                                                width={100}
-                                                height={100}
-                                                className="w-[100px] h-[100px] object-cover rounded-full"
-                                                priority={true}
-                                            />
-                                        )}
-                                        <div className="flex flex-col gap-4">
-                                            <h4 className="text-[40px] xm:text-[27px] sm:text-[27px] leading-tight tracking-tight">
-                                                {post.attributes.title}
-                                            </h4>
-                                            <div className="flex flex-col">
-                                                <p className="text-[24px] xm:text-[20px] sm:text-[20px] leading-tight tracking-tighter">
-                                                    {post.attributes.description}
-                                                </p>
-                                                <Link
-                                                    href={`/blog/${post.attributes.slug}`}
-                                                    className="text-blue-600 hover:underline mt-4 inline-block font-semibold"
-                                                >
-                                                    Leggi di più &rarr;
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <motion.div className="w-1/2 xm:w-full sm:w-full h-full flex items-center justify-center relative">
-                                        {post.attributes.mainImage?.data && (
-                                            <Image
-                                                src={getStrapiMedia(post.attributes.mainImage.data.attributes.url) || '/placeholder.png'}
-                                                alt={post.attributes.mainImage.data.attributes.alternativeText || post.attributes.title}
-                                                width={500}
-                                                height={300}
-                                                className="w-full h-full object-cover rounded-[15px]"
-                                                priority={true}
-                                            />
-                                        )}
-                                        <motion.div
-                                            animate={{ rotate: [-360, 360] }}
-                                            transition={{
-                                                repeat: Infinity,
-                                                repeatType: "loop",
-                                                duration: 20,
-                                                ease: "linear",
-                                            }}
-                                            className="flex items-center absolute -bottom-14 right-20 xm:hidden sm:hidden"
+                        {blogPosts.map((post) => {
+                            // Get the full URL for the thumbnail image
+                            const thumbnailUrl = getStrapiMedia(post.thumbnail?.formats?.thumbnail?.url || "");
+
+                            return (
+                                <SwiperSlide key={post.id}>
+                                    <motion.div className="w-full p-16 xm:p-0 sm:p-0 flex justify-between rounded-[30px] gap-20 xm:gap-10 sm:gap-10 xm:flex-col sm:flex-col">
+                                        <div
+                                            className="w-1/2 h-96 relative rounded-lg bg-cover bg-center bg-no-repeat object-contain p-4"
+                                            style={{ backgroundImage: thumbnailUrl ? `url('${thumbnailUrl}')` : 'none' }}
+                                            role="img" // Indicate that this div serves as an image for accessibility
+                                            aria-label={post.thumbnail?.alternativeText || post.seoTitle || "Article image"}
                                         >
-                                            <Image
-                                                src={collaborationCircle}
-                                                alt="heroCircleImg"
-                                                width={120}
-                                                height={120}
-                                            />
-                                        </motion.div>
+                                            <Link href={`/blog/${post.slug}?documentId=${post.documentId}`}
+                                                className="cursor-pointer mt-4 w-full h-full flex flex-col justify-between"
+                                            >
+                                                <h4 className="text-[40px] xm:text-[27px] sm:text-[27px] leading-tight tracking-tight text-amara-gold font-bold bg-amara-dark-blue px-4 uppercase">
+                                                    {post.seoTitle}
+                                                </h4>
+                                                <div className="flex flex-col grow justify-end">
+                                                    <p className="text-[24px] xm:text-[20px] sm:text-[20px] leading-tight tracking-tighter text-amara-dark-blue bg-white ps-4 mb-8">
+                                                        {post.seoDescription}
+                                                    </p>
+
+
+                                                </div>
+                                            </Link>
+                                        </div>
+
+
                                     </motion.div>
-                                </motion.div>
-                            </SwiperSlide>
-                        ))}
+                                </SwiperSlide>
+                            );
+                        })}
                     </Swiper>
 
                     <div className="flex w-fit gap-2 pl-10 xm:p-0 sm:p-0 xm:pt-5 sm:pt-5">
@@ -172,6 +109,7 @@ export default function PostRenderer({ blogPosts }: PostRendererProps) {
                             <Image
                                 src={arrowRight}
                                 alt="arrowRight"
+                                className="!w-[55px]"
                                 width={55}
                                 height={55}
                             />
@@ -179,6 +117,6 @@ export default function PostRenderer({ blogPosts }: PostRendererProps) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

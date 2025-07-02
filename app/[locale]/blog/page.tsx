@@ -84,7 +84,7 @@ export default function BlogPage() {
                         {/* Intestazione della sezione blog */}
                         <div className="w-full flex justify-start items-center xm:pb-10 sm:pb-10">
                             <div className="w-[72%] xm:w-full sm:w-full flex flex-col gap-4 mx-auto pb-8">
-                                <h1 className="text-[80px] xm:text-[35px] sm:text-[40px] xm:leading-[40px] sm:leading-[50px] text-[#FFD7EF] font-bold leading-[80px] tracking-tighter text-center">
+                                <h1 className="mt-16 text-[80px] xm:text-[35px] sm:text-[40px] xm:leading-[40px] sm:leading-[50px] text-[#FFD7EF] font-bold leading-[80px] tracking-tighter text-center">
                                     {t("ourImpactHeading2")} {/* Titolo della sezione blog */}
                                 </h1>
                             </div>

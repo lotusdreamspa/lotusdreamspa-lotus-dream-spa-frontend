@@ -1,75 +1,48 @@
-// lib/strapi.ts
-import qs from 'qs'; // You might need this for complex queries
-//import 'server-only'; // Ensure this utility is only run on the server if using server components
+// lib/strapi.ts (Example - you might need to adapt this to your existing fetchStrapiData structure)
 
-// Get the Strapi API URL from environment variables
-const STRAPI_API_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'; // Default Strapi URL
-const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN; // If you need a token for public access
+import qs from 'qs'; // You'll need to install 'qs': npm install qs
 
-interface FetchOptions {
-  populate?: string[];
-  filters?: Record<string, any>;
-  sort?: string[];
-  pagination?: {
-    page?: number;
-    pageSize?: number;
-    start?: number;
-    limit?: number;
-  };
-}
+const API_BASE_URL = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337/api';
 
-export async function fetchStrapiData(
+export async function fetchStrapiData<T>(
   path: string,
-  options: FetchOptions = {},
-  revalidate?: number // For Next.js revalidate option
-) {
-  const url = new URL(`${STRAPI_API_URL}/api/${path}`);
-
-  // Build query string
-  const query = qs.stringify(options, { encodeValuesOnly: true });
-  url.search = query;
-
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
-
-  if (STRAPI_API_TOKEN) {
-    headers['Authorization'] = `Bearer ${STRAPI_API_TOKEN}`;
-  }
-
+  urlParamsObject: any = {},
+  revalidate: number = 300
+): Promise<T | null> {
   try {
-    const response = await fetch(url.toString(), {
-      headers,
+    // Stringify the query parameters using qs for correct Strapi deep population
+    const queryString = qs.stringify(urlParamsObject, {
+      encodeValuesOnly: true, // Only encode values, not keys
+      arrayFormat: 'brackets', // Use brackets for array format: populate[0], populate[1]
+      addQueryPrefix: true, // Add '?' at the beginning if needed
+    });
+
+    const requestUrl = `${API_BASE_URL}/api/${path}${queryString}`;
+
+    console.log(`Fetching from Strapi: ${requestUrl}`); // Log the actual URL being used
+
+    const response = await fetch(requestUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       next: {
-        revalidate: revalidate // Example: 60 seconds
-      }
+        revalidate: revalidate,
+      },
     });
 
     if (!response.ok) {
-      console.log(response)
+      console.log(response); // Log the full response object for more details
       console.error(`Failed to fetch data from Strapi: ${response.statusText}`);
-      throw new Error(`Failed to fetch data from Strapi: ${response.statusText}`);
+      const errorBody = await response.text(); // Get response body for more error info
+      console.error('Strapi Error Body:', errorBody);
+      throw new Error(`Failed to fetch data from Strapi: ${response.statusText} - ${errorBody}`);
     }
 
     const data = await response.json();
-    return data;
+    return data as T;
   } catch (error) {
-    console.error("Error fetching Strapi data:", error);
-    throw error; // Re-throw to handle it in the component
-  }
-}
-
-// Helper to get image URL
-export function getStrapiMedia(url: string | null) {
-  if (url == null) {
+    console.error('Error fetching Strapi data:', error);
     return null;
   }
-
-  // Return the full URL if it's already an absolute URL
-  if (url.startsWith('http') || url.startsWith('//')) {
-    return url;
-  }
-
-  // Otherwise, prepend the Strapi base URL
-  return `${STRAPI_API_URL}${url}`;
 }

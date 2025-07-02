@@ -53,10 +53,20 @@ export default async function ArticleDetailPage({
         notFound();
     }
 
-    const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchStrapiData(
-        `articles/${documentId}`, {
-            populate: ['contentBlocks'], // Ensure main image and all content block images are populated
-        }, 300);
+const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchStrapiData(
+    `articles/${documentId}`, {
+        populate: [
+            // Populate the main article image and openGraphImage directly
+            'openGraphImage',
+            // Populate all content blocks
+            'contentBlocks',
+            // Deeply populate fields within contentBlocks
+            'contentBlocks.image', // For ParagraphBlock image
+            'contentBlocks.bgImage', // For HeroBlock bgImage
+            'contentBlocks.images' // For GalleryBlock images
+            // Add other nested relations if you have more components with nested data
+        ]
+    }, 300);
 
     if (!articleRes || !articleRes.data) {
         console.error(`Article not found or API error for documentId: ${documentId}`);
@@ -94,11 +104,12 @@ export default async function ArticleDetailPage({
                         key={heroBlock.id}
                         className={`relative my-8 h-80 sm:h-96 md:h-[500px] flex items-center justify-center text-center p-6 rounded-[20px] overflow-hidden ${heroBlock.cssClasses}`}
                         style={{
-                            backgroundImage: heroBlock.bgImage && heroBlock.bgImage.url ? `url(${heroBlock.bgImage.url})` : 'none',
+                            backgroundImage: heroBlock.bgImage && heroBlock.bgImage.url ? `url(${process.env.NEXT_PUBLIC_STRAPI_API_URL}${heroBlock.bgImage.url})` : 'none',
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                         }}
                     >
+
                         {/* Overlay for better text readability */}
                         {heroBlock.bgImage && heroBlock.bgImage.url && (
                             <div className="absolute inset-0 bg-black opacity-40 rounded-[20px]"></div>

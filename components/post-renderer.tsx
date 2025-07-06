@@ -52,11 +52,11 @@ export default function PostRenderer({ blogPosts }: PostRendererProps) {
                         spaceBetween={30}
                         slidesPerView={1}
                         onSwiper={(swiper) => (swiperRef.current = swiper)}
-                    >
+                        >
                         {blogPosts.map((post) => {
                             // Get the full URL for the thumbnail image
                             const thumbnailUrl = getStrapiMedia(post.thumbnail?.formats?.thumbnail?.url || "");
-
+                            
                             return (
                                 <SwiperSlide key={post.id}>
                                     <motion.div className="w-full p-16 xm:p-0 sm:p-0 flex justify-between rounded-[30px] gap-20 xm:gap-10 sm:gap-10 xm:flex-col sm:flex-col">

@@ -7,10 +7,11 @@ import { AnimatedTextSectionProps } from "@/types";
 
 export default function AnimatedTextSection({
   svgPath,
+  svgPositionClasses = "right-24 -bottom-24", // Default position classes for SVG
   translationKey,
   bgColor, // Add bgColor prop
   textColor, 
-  paragraphWidth // Add paragraphWidth prop
+  paragraphWidth, // Add paragraphWidth prop
 }: AnimatedTextSectionProps) {
   const t = useTranslations(translationKey);
   const container = useRef(null);
@@ -33,7 +34,7 @@ export default function AnimatedTextSection({
       </div>
       {svgPath && (
         <div className="w-full h-full absolute">
-          <div className="absolute right-24 -bottom-20">
+          <div className={`absolute ${svgPositionClasses}`}>
             <motion.img
               animate={{ rotate: [-360, 360] }}
               transition={{

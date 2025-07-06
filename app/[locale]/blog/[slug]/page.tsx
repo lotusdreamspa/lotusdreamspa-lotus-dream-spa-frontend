@@ -189,7 +189,7 @@ const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchSt
     return (
         <div className="min-h-screen bg-amara-dark-blue text-[#FFD7EF] font-sans">
             <header className="bg-amara-dark-blue shadow-sm py-6 border-b border-[#0B3848]">
-                <div className="max-w-4xl mx-auto px-4 flex justify-between items-center">
+                <div className="max-w-4xl mx-auto flex justify-between items-center">
                     <a
                         href="/blog"
                         className="inline-flex items-center text-[#9FE870] hover:text-[#FFEB69] font-semibold transition-colors duration-200 ease-linear text-[20px]"
@@ -200,16 +200,16 @@ const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchSt
             </header>
 
             {/* Main Article Hero Section using background image */}
-            {article.image && article.image.url && (
+            {article.thumbnail && article.thumbnail.url && (
                 <div
                     className="relative w-full h-[400px] md:h-[600px] flex items-center justify-center text-center"
                     style={{
-                        backgroundImage: `url(${article.image.url})`,
+                        backgroundImage: `url(${article.thumbnail.formats?.medium?.url})`, // Use large format if available, fallback to original
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
                     }}
                 >
-                    {/* Optional overlay for better text readability on hero image */}
+                    {/* Optional overlay for better text readability on hero thumbnail */}
                     <div className="absolute inset-0 bg-black opacity-50"></div>
                     <div className="relative z-10 text-white max-w-4xl px-4 mx-auto">
                         <h1 className="text-[80px] xm:text-[45px] sm:text-[50px] font-bold mb-4 leading-[80px] xm:leading-[50px] sm:leading-[60px] tracking-tighter">
@@ -231,7 +231,7 @@ const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchSt
 
             <main className="max-w-4xl mx-auto padding-x py-12 bg-[#FFD7EF] shadow-lg rounded-b-[30px] text-[#260A2F]">
                 {/* Article Header (inside main for consistency, but hero handled above) */}
-                {!article.image && ( // Only show if there's no main hero image, as the hero above covers this
+                {!article.thumbnail && ( // Only show if there's no main hero thumbnail, as the hero above covers this
                     <>
                         <h1 className="text-[80px] xm:text-[35px] sm:text-[40px] font-bold text-center mb-4 leading-[80px] xm:leading-[40px] sm:leading-[50px] tracking-tighter">
                             {article.title}
@@ -259,12 +259,11 @@ const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchSt
                         </div>
                     )}
                 </div>
-            </main>
 
-            <footer className="text-center py-8 text-[#FFD7EF] text-[16px]">
-                <p>&copy; {new Date().getFullYear()} Your Blog Name. All rights reserved.</p>
-                <p>Published: {new Date(article.publishedAt).toLocaleDateString()}</p>
-            </footer>
+                <div className="pt-8">
+                    <p>Published: {new Date(article.publishedAt).toLocaleDateString()}</p>
+                </div>
+            </main>
         </div>
     );
 }

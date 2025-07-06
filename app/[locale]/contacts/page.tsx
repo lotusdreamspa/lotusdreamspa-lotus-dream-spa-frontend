@@ -39,7 +39,7 @@ export default function App() {
                 <>
                     <div className="w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
                         <Navbar />
-                        <Hero />
+                        <Hero heroWord="Find   Us"/>
 
                     </div>
 

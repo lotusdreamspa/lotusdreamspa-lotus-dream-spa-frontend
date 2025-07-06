@@ -2,43 +2,41 @@
 'use client'; // This component will run on the client
 
 import React, { useState, useEffect } from 'react';
-import { fetchStrapiData } from "@/lib/strapi";
-import PostRender from "@/components/post-renderer";
-import { Article } from '@/types';
+import { fetchMenuData } from "@/lib/strapi";
+import MenuRenderer from "@/components/menu-renderer";
+import { Category } from '@/types';
 
-export default function BlogPostFetcher() {
-    const [blogPosts, setBlogPosts] = useState<Article[]>([]);
+export default function MenuFetcher() {
+    const [menuItems, setMenuItems] = useState<Category[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true); // Add loading state
 
     useEffect(() => {
-        async function getPosts() {
+        async function getMenu() {
             try {
                 setLoading(true); // Set loading to true before fetching
-                const data = await fetchStrapiData('articles', {
-                    populate: ['thumbnail'], // Populate necessary fields
-                    pagination: {
-                        limit: 10,
-                    }
+                const data = await fetchMenuData('categories', {
+                    populate: ['products'], // Populate necessary fields
+       
                 }, 300); // The revalidate option won't apply here as it's client-side fetch
 
-                const typedData = data as { data: Article[] };
-                setBlogPosts(typedData.data);
+                const typedData = data as { data: Category[] };
+                setMenuItems(typedData.data);
             } catch (err) {
-                setError("Failed to load blog posts.");
+                setError("Failed to load menu items.");
                 console.error(err);
             } finally {
                 setLoading(false); // Set loading to false after fetching
             }
         }
 
-        getPosts();
+        getMenu();
     }, []); // Empty dependency array means this runs once on mount
 
     if (loading) {
         return (
             <div className="w-full bg-amara-dark-blue py-10 padding-x">
-                <p className="text-white text-center">Loading blog posts...</p>
+                <p className="text-white text-center">Loading updated menu...</p>
             </div>
         );
     }
@@ -51,13 +49,15 @@ export default function BlogPostFetcher() {
         );
     }
 
-    if (blogPosts.length === 0) {
+    if (menuItems.length === 0) {
         return (
             <div className="w-full bg-amara-dark-blue py-10 padding-x">
-                <p className="text-white text-center">No blog posts found.</p>
+                <p className="text-white text-center">Coming soon</p>
             </div>
         );
     }
 
-    return <PostRender blogPosts={blogPosts} />;
+    return (
+        <MenuRenderer Categories={menuItems} />
+    );
 }

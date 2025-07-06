@@ -28,8 +28,11 @@ export default function Marquee({
 				</h1>
 				<motion.img
 					style={{ rotate: rotate }}
-					src="/companiesImg.svg"
-					alt="companiesImg"
+					src="/leaf.svg"
+					alt="leaf svg"
+					width={200}
+					height={200}
+					className="w-[200px] h-[200px] object-contain"
 				/>
 				<h1
 					className={`text-[200px] ${className} font-bold leading-none tracking-tight`}>

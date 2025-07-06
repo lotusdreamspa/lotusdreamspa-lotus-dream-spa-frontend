@@ -41,6 +41,7 @@ export type TWordProps = {
 
 export interface AnimatedTextSectionProps {
   svgPath?: string; 
+  svgPositionClasses?: string; // Optional prop for SVG position classes
   translationKey: string;
   bgColor?: string;
   textColor?: string;
@@ -186,7 +187,7 @@ export interface Article {
   createdAt: string;
   updatedAt: string;
   publishedAt: string;
-  image: Image;
+  thumbnail: Image;
   openGraphImage: Image;
   contentBlocks: ContentBlock[];
   relatedArticles: any[]; // Consider defining a more specific type if the structure of related articles is known.
@@ -208,4 +209,24 @@ export interface Meta {
 export interface ArticleData {
   data: Article[];
   meta: Meta;
+}
+
+export interface Category {
+  id: number;
+  documentId?: string;
+  name: string;
+  products?: Product[];
+  isFood?: boolean; // Indicates if the category is food-related
+  isAlcoholic?: boolean; // Indicates if the category is drink-related
+}
+
+interface Product {
+  name: string;
+  price: number;
+  description: string;
+  vat: number;
+  image: Image; // Assuming 'Media' can be represented as a URL string
+  available: boolean;
+  ingredients: string;
+  sku: string; // Custom field
 }

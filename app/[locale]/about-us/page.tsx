@@ -40,18 +40,22 @@ export default function App() {
 				<>
 					<div className="w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
 						<Navbar />
-						<Hero />
+						<Hero heroWord="About" />
 					</div>
 					<AnimatedTextSection
 						translationKey="aboutUsContent"
 						paragraphWidth="w-[90%]"
 						textColor="text-amara-dark-blue"
+						svgPath="/leaf.png"
+						svgPositionClasses="right-0 -bottom-32" // Adjust the position classes as needed
 					/>
 					<div id="our-values">
 
 						<ReusableSlider
 							translationKey="aboutUsSliderContent"		// Adjust the translation key as needed
-							numberOfSlides={5} // Adjust the number of slides as needed	
+							numberOfSlides={5} 
+							arrowButtonBgColor="#0B3848"
+							arrowButtonHoverColor="#C09C60"// Adjust the number of slides as needed	
 						/>
 					</div>
 

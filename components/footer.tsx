@@ -113,7 +113,11 @@ export default function Footer() {
 								ease: "easeInOut",
 							}}
 							className="text-[#9FE870] text-sm overflow-hidden">
-							Privacy Statement
+								<Link
+									className=""
+									href="https://amarabeerlab.com" legacyBehavior>
+									Discover our Brewery
+								</Link>
 						</motion.h2>
 					</div>
 				</div>

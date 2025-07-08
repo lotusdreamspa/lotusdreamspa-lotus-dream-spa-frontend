@@ -1,7 +1,7 @@
 "use client";
 import Lenis from "@studio-freight/lenis";
 import { useEffect, useState } from "react";
-import { AnimatePresence, AnimateSharedLayout } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
 	AnimatedTextSection,
 	Navbar,

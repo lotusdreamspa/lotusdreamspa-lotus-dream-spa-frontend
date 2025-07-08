@@ -63,11 +63,11 @@ export default function Footer() {
 								<p className="text-[16px] text-[#9FE870] leading-tight tracking-tight">
 									Address
 								</p>
-								<Link
+								<p
 									className="text-[30px] font-semibold text-[#9FE870] leading-tight tracking-tight"
-									href="/">
+									>
 									{process.env.NEXT_PUBLIC_STORE_ADDRESS}
-								</Link>
+								</p>
 							</div>
 						</div>
 					</div>

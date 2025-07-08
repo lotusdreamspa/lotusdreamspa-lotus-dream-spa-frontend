@@ -14,8 +14,9 @@ import {
     QuoteBlock,
     CtaBlock,
     GalleryBlock,
-    ImageFormat, // This seems to be a type alias for ImageFormat
 } from '@/types';
+
+import { Metadata } from 'next';
 
 interface StrapiSingleResponse<T> {
     data: T | null;
@@ -34,6 +35,88 @@ export async function generateStaticParams() {
     return articlesRes.data.map((article) => ({
         slug: article.slug,
     }));
+}
+
+async function getArticleForMetadata(slug: string, documentId: string): Promise<StrapiArticleType | null> {
+    if (!documentId) {
+        console.error(`Error: documentId is missing for metadata generation for slug: ${slug}`);
+        return null;
+    }
+
+    const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchStrapiData(
+        `articles/${documentId}`,
+        {
+            populate: ['openGraphImage'], // Popola solo l'immagine per OpenGraph e gli altri campi SEO
+        }, 300
+    );
+
+    if (!articleRes || !articleRes.data) {
+        console.error(`Article not found or API error for metadata for documentId: ${documentId}`);
+        return null;
+    }
+    return articleRes.data;
+}
+
+
+// --- INIZIO: generateMetadata ---
+export async function generateMetadata({
+    params,
+    searchParams,
+}: {
+    params: {
+        locale: string; slug: string 
+};
+    searchParams: { documentId?: string };
+}): Promise<Metadata> {
+    const { slug } = params;
+    const { documentId } = searchParams;
+
+    // Recupera i dati dell'articolo per i metadata
+    const article = await getArticleForMetadata(slug, documentId as string); // documentId è garantito da notFound() sotto
+
+    if (!article) {
+        // Se l'articolo non viene trovato, puoi restituire metadata generici o NotFound
+        return {
+            title: "Article Not Found",
+            description: "The requested article could not be found.",
+        };
+    }
+
+    // Costruisci l'URL completo dell'immagine per Open Graph
+    const ogImageUrl = article.openGraphImage && article.openGraphImage.url
+        ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${article.openGraphImage.formats.small.url}`
+        : null;
+
+    return {
+        // Usa seoTitle se disponibile, altrimenti fallback al titolo dell'articolo
+        title: article.seoTitle || article.title,
+        // Usa seoDescription se disponibile, altrimenti fallback alla descrizione dell'articolo
+        description: article.seoDescription || article.description,
+        openGraph: {
+            // Se openGraphTitle non è fornito, usa seoTitle o title
+            title: article.openGraphTitle || article.seoTitle || article.title,
+            // Se openGraphDescription non è fornito, usa seoDescription o description
+            description: article.openGraphDescription || article.seoDescription || article.description,
+            // Se hai un tipo per l'Open Graph (es. 'article', 'website')
+            type: 'article', // O 'website' a seconda del contenuto
+            // URL dell'immagine di Open Graph
+            images: ogImageUrl ? [{ url: ogImageUrl }] : [],
+            // URL canonico della pagina
+            url: `https://amara.pub/${params.locale}/blog/${slug}?documentId=${documentId}`, 
+            // Assicurati di usare il tuo dominio reale
+        },
+        twitter: {
+            // Se twitterTitle non è fornito, usa seoTitle o title
+            title: article.openGraphTitle || article.openGraphTitle || article.title,
+            // Se twitterDescription non è fornito, usa seoDescription o description
+            description: article.openGraphDescription || article.openGraphDescription || article.description,
+            // URL dell'immagine per Twitter Card
+            images: article.openGraphImage ? [{ url: article.openGraphImage?.formats.small.url }] : [],
+            card: 'summary_large_image', // O 'summary' a seconda del layout desiderato
+        },
+        // Altri metadati che potresti voler includere
+      
+    };
 }
 
 export default async function ArticleDetailPage({

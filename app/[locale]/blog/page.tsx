@@ -2,7 +2,7 @@
 
 import Lenis from "@studio-freight/lenis"; // Per lo smooth scrolling
 import { useEffect, useState, useRef } from "react"; // Aggiunto useState e useEffect per la logica di caricamento
-import { AnimatePresence, useScroll, useTransform, motion } from "framer-motion"; // Mantiene Framer Motion
+import { AnimatePresence } from "framer-motion"; // Mantiene Framer Motion
 import { useTranslations } from "next-intl"; // Per le traduzioni
 
 // Importa i tuoi componenti UI. Assicurati che questi percorsi siano corretti.
@@ -32,11 +32,8 @@ export default function BlogPage() {
     const t = useTranslations("ourImpactContent"); // Per le traduzioni del testo "ourImpactHeading2"
 
     // Logica per Framer Motion (se applicabile agli elementi di questa pagina, non al contenuto di PostRenderer)
-    const { scrollYProgress } = useScroll({
-        target: container,
-        offset: ["start end", "end start"],
-    });
-    const sc = useTransform(scrollYProgress, [0, 1], [100, -1500]); // Esempio di animazione
+
+   
 
     // Effetto per Lenis e il timer di pre-caricamento
     useEffect(() => {

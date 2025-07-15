@@ -11,16 +11,16 @@ export default function ContactUs() {
                 <Marquee
                     titile1="Get"
                     titile2="in touch"
-                    className="text-[#ffeb69]"
+                    className="text-white"
                 />
                 <div className="w-[80%] flex flex-col gap-10 xm:w-full sm:w-full">
                     <div>
-                        <h1 className="text-[60px] xm:text-[40px] sm:text-[40px] xm:leading-[40px] sm:leading-[40px] text-[#ffeb69] font-bold leading-[62px] tracking-tight text-center xm:text-left sm:text-left">
+                        <h1 className="text-[60px] xm:text-[40px] sm:text-[40px] xm:leading-[40px] sm:leading-[40px] text-white font-bold leading-[62px] tracking-tight text-center xm:text-left sm:text-left">
                             {t("contactUsHeading")}
                         </h1>
                     </div>
                     <div>
-                        <p className="text-[25px] text-[#ffeb69] leading-normal tracking-tight text-center xm:text-left sm:text-left">
+                        <p className="text-[25px] text-white leading-normal tracking-tight text-center xm:text-left sm:text-left">
                             {t("contactUsSubtitle")}
                         </p>
                     </div>

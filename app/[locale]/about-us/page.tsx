@@ -61,7 +61,7 @@ export default function App() {
 
 					<Paragraph
 						translationKey="aboutUsParagraph"
-						bgColor="bg-[#FFEB69]"
+						bgColor="bg-white"
 						textColor="text-amara-dark-blue"
 						paragraphWidth="w-[70%]"
 						buttonLabel="Discover"

@@ -9,7 +9,7 @@ export default function WhereWeAre() {
                 <Marquee
                     titile1="Find"
                     titile2="Us"
-                    className="text-[#ffeb69]"
+                    className="text-white"
                 />
                 <div className="w-[80%] flex flex-col gap-10 xm:w-full sm:w-full">
 

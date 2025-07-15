@@ -49,7 +49,7 @@ export default function MenuRenderer({ Categories }: MenuRendererProps) {
     return (
         <div id="menu" className="w-full bg-amara-dark-blue py-10 padding-x">
             <div className="w-full pb-10">
-                <div className="p-5 overflow-hidden">
+                <div className="md:p-5 overflow-hidden">
                     {sortedCategories.map((cat) => {
                         // --- START OF MODIFICATION ---
                         const sortedProducts = cat.products ? [...cat.products].sort((a, b) => {
@@ -69,13 +69,13 @@ export default function MenuRenderer({ Categories }: MenuRendererProps) {
                         return (
                             <div key={cat.id}>
                                 <div className="w-full p-16 xm:p-0 sm:p-0 flex justify-between rounded-[30px] gap-20 xm:gap-10 sm:gap-10 xm:flex-col sm:flex-col">
-                                    <div className="w-full p-4">
+                                    <div className="w-full md:p-4">
                                         <h3 className="text-amara-gold text-6xl bolder font-hff text-center">{cat.name}</h3>
                                         {sortedProducts && sortedProducts.length > 0 ? ( // Use sortedProducts here
-                                            <ul className="max-w-lg w-lg mt-4 mx-auto border border-amara-dark-blue rounded-lg pt-4 space-y-2">
+                                            <ul className="max-w-lg w-lg mt-4 mb-16 md:mb-0 mx-auto border border-amara-dark-blue rounded-lg pt-4 space-y-2 ">
                                                 {sortedProducts.map((product) => ( // Use sortedProducts here
-                                                    <li key={product.sku} className="px-4 py-2">
-                                                        <div className="flex items-start justify-between border-b border-white pb-4 mb-8">
+                                                    <li key={product.sku} className="px-4 py-2 mb-4 md:mb-0">
+                                                        <div className="flex items-start justify-between border-b border-white pb-4 mb-4">
                                                             <div className="">
                                                                 <div className="flex gap-2 items-center">
                                                                     <p className={product.available ? "text-white text-lg" : "text-gray-500 text-lg line-through"}>

@@ -13,7 +13,7 @@ export default function NotJust() {
             <div className="w-full py-20 flex justify-center items-center padding-x">
                 <div className="w-[70%] xm:w-full sm:w-full flex flex-col gap-10">
                     <div>
-                        <h1 className="text-[70px] xm:text-[35px] sm:text-[40px] xm:leading-none sm:leading-none text-[#ffeb69] font-bold leading-[60px] tracking-tight">
+                        <h1 className="text-[70px] xm:text-[35px] sm:text-[40px] xm:leading-none sm:leading-none text-white font-bold leading-[60px] tracking-tight">
                             {t("notJustHeading")}
                         </h1>
                     </div>

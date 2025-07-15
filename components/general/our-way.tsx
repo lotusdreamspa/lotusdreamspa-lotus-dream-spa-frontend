@@ -10,7 +10,7 @@ export default function OurWay() {
 	return (
 		<div
 			id="our-way"
-			className="w-full py-20 bg-[#ffeb69] relative">
+			className="w-full py-20 bg-white relative">
 			<motion.div
 				animate={{ rotate: [-360, 360] }}
 				transition={{

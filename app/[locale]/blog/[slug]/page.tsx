@@ -227,7 +227,7 @@ const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchSt
                         {ctaBlock.subtitle && <h3 className="text-[24px] xm:text-[20px] sm:text-[20px] mb-4 leading-tight tracking-tighter">{ctaBlock.subtitle}</h3>}
                         {ctaBlock.paragraph && <p className="text-[20px] xm:text-[16px] sm:text-[16px] mb-6 leading-normal tracking-tight">{ctaBlock.paragraph}</p>}
                         {ctaBlock.buttonLabel && ctaBlock.buttonHref && (
-                            <a href={ctaBlock.buttonHref} className="inline-block bg-[#FFD7EF] text-amara-gold font-bold py-3 px-8 rounded-full hover:bg-[#FFEB69] transition-all duration-300 ease-linear text-[20px]">
+                            <a href={ctaBlock.buttonHref} className="inline-block bg-[#FFD7EF] text-amara-gold font-bold py-3 px-8 rounded-full hover:bg-white transition-all duration-300 ease-linear text-[20px]">
                                 {ctaBlock.buttonLabel}
                             </a>
                         )}
@@ -275,7 +275,7 @@ const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchSt
                 <div className="max-w-4xl mx-auto flex justify-between items-center">
                     <a
                         href="/blog"
-                        className="inline-flex items-center text-[#9FE870] hover:text-[#FFEB69] font-semibold transition-colors duration-200 ease-linear text-[20px]"
+                        className="inline-flex items-center text-[#9FE870] hover:text-white font-semibold transition-colors duration-200 ease-linear text-[20px]"
                     >
                         &larr; Back to Blog List
                     </a>

@@ -72,7 +72,7 @@
     "href1": "/menu",
     "linkLabel1": "Explore our breakfast menu",
     "bgColor1": "#0B3848",
-    "textColor1": "#C09C60",
+    "textColor1": "#FFC091",
     "linkColor1": "#FFC091",
     "title2": "Avocado, Kombucha, Plant Based Milk",
     "heading3": "It's all about",
@@ -91,7 +91,7 @@
     "linkLabel3": "Learn our story",
     "bgColor3": "#163300",
     "textColor3": "#9BE36D",
-    "linkColor3": "#C09C60",
+    "linkColor3": "#9BE36D",
     "title4": "Living in harmony with local culture",
     "heading7": "Respecting",
     "heading8": "Local Culture",
@@ -99,7 +99,7 @@
     "href4": "/about-us",
     "linkLabel4": "What we do for Cambodia",
     "bgColor4": "#320707",
-    "textColor4": "#FFD7EF",
+    "textColor4": "#ffffff",
     "linkColor4": "#FFEB69"
   },
   "contactUsContent": {

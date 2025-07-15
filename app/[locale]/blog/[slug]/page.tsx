@@ -211,7 +211,7 @@ const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchSt
                 const quoteBlock = block as QuoteBlock;
                 return (
                     <blockquote key={quoteBlock.id} className={`my-8 p-6 border-l-4 border-l-[#9FE870] bg-[#FFD7EF] italic text-[#260A2F] rounded-[20px] ${quoteBlock.cssClasses}`}>
-                        <p className="text-[24px] xm:text-[20px] sm:text-[20px] leading-tight tracking-tighter mb-2">"{quoteBlock.text}"</p>
+                        <p className="text-[24px] xm:text-[20px] sm:text-[20px] leading-tight tracking-tighter mb-2">&quot;{quoteBlock.text}&quot;</p>
                         <footer className="text-right text-[18px] xm:text-[14px] sm:text-[14px] font-medium">
                             — {quoteBlock.author}
                             {quoteBlock.authorInfo && <span className="ml-1">, {quoteBlock.authorInfo}</span>}

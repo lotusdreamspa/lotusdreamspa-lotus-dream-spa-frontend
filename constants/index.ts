@@ -1,12 +1,3 @@
-import {
-	eshuis,
-	haafkes,
-	hartman,
-	pentuin,
-	saion,
-	stewards,
-} from "@/public";
-
 export const links = [
 	{
 		id: 1,

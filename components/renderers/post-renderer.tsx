@@ -1,11 +1,5 @@
-// components/PostRenderer.tsx
-"use client"; // This component needs to be a Client Component for Swiper and Framer Motion
-
-import "swiper/css";
-import "swiper/css/navigation"; // Make sure this is imported if you use navigation
-import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+
 
 
 import { getStrapiMedia } from "@/lib/client-utils/media";
@@ -18,8 +12,6 @@ interface PostRendererProps {
 }
 
 export default function PostRenderer({ blogPosts }: PostRendererProps) {
-
-
 
     if (!blogPosts || blogPosts.length === 0) {
         return (
@@ -34,12 +26,9 @@ export default function PostRenderer({ blogPosts }: PostRendererProps) {
             <div className="w-full rounded-[20px]">
                 <div className="grid grid-cols-2 xm:grid-cols-1 sm:grid-cols-1 gap-x-10">
                         {blogPosts.map((post) => {
-                            // Get the full URL for the thumbnail image
                             const thumbnailUrl = getStrapiMedia(post.thumbnail?.formats?.thumbnail?.url || "");
-                            
                             return (
-                 
-                                    <motion.div className="w-full rounded-[30px] p-8" key={post.id}>
+                                    <div className="w-full rounded-[30px] p-8" key={post.id}>
                                         <div
                                             className="h-96 p-2 relative rounded-lg bg-cover bg-center bg-no-repeat object-contain border-4 border-white"
                                             style={{ backgroundImage: thumbnailUrl ? `url('${thumbnailUrl}')` : 'none' }}
@@ -56,18 +45,12 @@ export default function PostRenderer({ blogPosts }: PostRendererProps) {
                                                     <p className="text-[24px] xm:text-[20px] sm:text-[20px] leading-tight tracking-tighter text-amara-dark-blue bg-white px-2">
                                                         {post.seoDescription}
                                                     </p>
-
-
                                                 </div>
                                             </Link>
                                         </div>
-
-
-                                    </motion.div>
-                               
+                                    </div>
                             );
                         })}
-                   
                 </div>
             </div>
         </div >

@@ -16,7 +16,7 @@ import {
 } from "@/components";
 
 // Il componente Server che fetcha i dati e poi renderizza i post
-import BlogPostFetcher from "@/components/blog-post-fetcher"; // Assicurati che questo percorso sia corretto
+import BlogPostFetcher from "@/components/fetchers/blog-post-fetcher"; // Assicurati che questo percorso sia corretto
 
 // Questo è il componente client che renderizza lo Swiper dei post
 // Non PostRenderer. Come discusso l'ultima volta PostRenderer è il nuovo nome di Collaboration.
@@ -29,7 +29,7 @@ export default function BlogPage() {
 
     // Riferimento per Framer Motion se usato in questa pagina
     const container = useRef(null);
-    const t = useTranslations("ourImpactContent"); // Per le traduzioni del testo "ourImpactHeading2"
+    const t = useTranslations("blogContent"); // Per le traduzioni del testo "ourImpactHeading2"
 
     // Logica per Framer Motion (se applicabile agli elementi di questa pagina, non al contenuto di PostRenderer)
 
@@ -81,9 +81,12 @@ export default function BlogPage() {
                         {/* Intestazione della sezione blog */}
                         <div className="w-full flex justify-start items-center xm:pb-10 sm:pb-10">
                             <div className="w-[72%] xm:w-full sm:w-full flex flex-col gap-4 mx-auto pb-8">
-                                <h1 className="mt-16 text-[80px] xm:text-[35px] sm:text-[40px] xm:leading-[40px] sm:leading-[50px] text-[#FFD7EF] font-bold leading-[80px] tracking-tighter text-center">
-                                    {t("ourImpactHeading2")} {/* Titolo della sezione blog */}
+                                <h1 className="mt-16 text-[80px] xm:text-[35px] sm:text-[40px] xm:leading-[40px] sm:leading-[50px] text-white font-bold leading-[80px] tracking-tighter text-center">
+                                    {t("blogHeading")} {/* Titolo della sezione blog */}
                                 </h1>
+                            <p className="text-[28px] xm:text-[18px] sm:text-[20px] text-amara-gold font-medium leading-[36px] xm:leading-[24px] sm:leading-[28px] text-center">
+                                {t("blogSubtitle")}
+                            </p>
                             </div>
                         </div>
 

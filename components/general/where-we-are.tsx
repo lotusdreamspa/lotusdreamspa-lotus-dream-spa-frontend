@@ -1,8 +1,6 @@
-import { useTranslations } from "next-intl";
 import { Marquee } from "@/components";
 
 export default function WhereWeAre() {
-    const t = useTranslations("footerContent");
     return (
         <>
             <div

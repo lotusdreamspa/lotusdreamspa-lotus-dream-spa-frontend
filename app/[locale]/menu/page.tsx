@@ -9,7 +9,7 @@ import {
     Footer
 } from "@/components";
 
-import MenuFetcher from "@/components/menu-fetcher";
+import MenuFetcher from "@/components/fetchers/menu-fetcher"; // Import the MenuFetcher component
 
 
 export default function App() {

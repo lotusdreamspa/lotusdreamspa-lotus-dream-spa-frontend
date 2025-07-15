@@ -1,5 +1,3 @@
-import Image from "next/image";
-import { blackCircle } from "@/public";
 import { useTranslations } from "next-intl";
 import { TextHover, Marquee } from "@/components";
 import Link from "next/link";
@@ -9,7 +7,7 @@ export default function ContactUs() {
         <>
             <div
                 id="contact-us"
-                className="w-full h-screen flex flex-col items-center padding-x justify-between pt-5 mb-16">
+                className="mt-16 md:mt-0 w-full h-auto md:h-screen flex flex-col items-center padding-x pt-5 mb-16">
                 <Marquee
                     titile1="Get"
                     titile2="in touch"
@@ -28,13 +26,7 @@ export default function ContactUs() {
                     </div>
                     <div className="flex items-center justify-center">
                         <button className="group flex gap-2 items-center text-[17px] font-semibold capitalize text-[#260A2F] bg-secondary rounded-full leading-tight tracking-tight px-4 py-3">
-                            <Image
-                                src={blackCircle}
-                                alt="blackCircle"
-                                width={30}
-                                height={30}
-                                className="group-hover:rotate-[60deg] transition-all duration-300 ease-linear"
-                            />
+            
                             <Link href={t("contactUsLink")}>
                                 <TextHover
                                     titile1={t("contactUsBtn")}

@@ -2,10 +2,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { links } from "@/constants";
-import TextHover from "./text-hover";
 import { navVariants } from "@/motion";
 import { useRouter } from "next/navigation";
-import { blackCircle, logoSm } from "@/public";
 import { useState, useTransition } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { AnimatePresence, motion } from "framer-motion";
@@ -25,13 +23,13 @@ export default function Navbar() {
 	};
 
 	return (
-		<>
+	
 			<motion.nav
-				className="w-full py-3 padding-x fixed top-0 left-0 z-50 backdrop-blur-[5px] flex items-center justify-between"
+				className="w-screen py-3 padding-x fixed top-0 left-0 z-50 backdrop-blur-[5px] flex items-center justify-between"
 				initial="hidden"
-				whileInView="vissible"
+				whileInView="visible"
 				variants={navVariants}>
-				<div className="w-[50%]">
+				<div className="">
 					<Link href="/">
 						<Image
 							src="/logo-sm.png"
@@ -55,7 +53,7 @@ export default function Navbar() {
 							className="flex gap-2 items-center text-[17px] font-semibold capitalize text-[#260A2F] bg-secondary rounded-full leading-tight tracking-tight px-4 py-3 xm:py-2 sm:py-2 xm:px-4 sm:px-4 group"
 							onClick={() => setActive(!active)}>
 							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-								<path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+								<path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
 							</svg>
 						</button>
 						<motion.div
@@ -75,7 +73,7 @@ export default function Navbar() {
 										{links.map((link) => (
 											<Link
 												key={link.id}
-												href={`${link.href}`}
+												href={`/${currentLocale}${link.href}`}
 												className="text-[16px] font-semibold capitalize text-[#260A2F] bg-secondary leading-tight tracking-tight"
 												onClick={() => setActive(!active)}>
 												{t(link.title)}
@@ -88,6 +86,6 @@ export default function Navbar() {
 					</div>
 				</div>
 			</motion.nav>
-		</>
+		
 	);
 }

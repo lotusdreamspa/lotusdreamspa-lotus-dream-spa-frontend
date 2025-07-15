@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 
 
 export default function Footer() {
-	const t = useTranslations("footerContent");
 	return (
 		<>
 			<div

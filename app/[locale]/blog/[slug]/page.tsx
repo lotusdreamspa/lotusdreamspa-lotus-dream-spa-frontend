@@ -64,7 +64,7 @@ export async function generateMetadata({
     searchParams,
 }: {
     params: {
-        locale: string; slug: string 
+         slug: string 
 };
     searchParams: { documentId?: string };
 }): Promise<Metadata> {
@@ -102,7 +102,7 @@ export async function generateMetadata({
             // URL dell'immagine di Open Graph
             images: ogImageUrl ? [{ url: ogImageUrl }] : [],
             // URL canonico della pagina
-            url: `https://amara.pub/${params.locale}/blog/${slug}?documentId=${documentId}`, 
+            url: `https://amara.pub/en/blog/${slug}?documentId=${documentId}`, 
             // Assicurati di usare il tuo dominio reale
         },
         twitter: {

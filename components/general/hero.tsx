@@ -75,7 +75,7 @@ export default function Hero({ heroWord = "Amara" }: HeroProps) {
   };
 
   return (
-    <div className="flex flex-col justify-start w-full" ref={containerRef}>
+    <div className="flex flex-col justify-center md:justify-start w-full h-[100vh] md:h-auto" ref={containerRef}>
       <h1 className="text-[24px] xm:text-lg sm:text-lg text-[#9FE870] font-normal leading-tight tracking-tight mt-24 hidden md:block lg:block xl:block">
         {t("welcome-to-the-amara")}
       </h1>

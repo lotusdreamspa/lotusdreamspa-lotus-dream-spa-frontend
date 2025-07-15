@@ -40,7 +40,7 @@ export default function App() {
 			<AnimatePresence mode="wait">{isLoading && <Preload />}</AnimatePresence>
 			{!isLoading && (
 				<>
-					<div className="w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
+					<div className="w-full min-h-screen flex flex-col items-center justify-between md:justify-center padding-x gap-10">
 						<Navbar />
 						<Hero />
 						<VideoCta videoPath="./amara.mp4" translationNamespace="homepageVideoCtaContent" ctaParagraph="paragraph" lateralText="lateralText" ctaLinkLabel="linkLabel" ctaLinkHref="/contacts" />

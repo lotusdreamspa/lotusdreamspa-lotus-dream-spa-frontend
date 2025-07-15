@@ -1,6 +1,5 @@
 export { default as logo } from "./logo.svg";
 export { default as logoSm } from "./logo-sm.svg";
-export { default as blackCircle } from "./black-circle.svg";
 export { default as arrowDown } from "./arrowDown.svg";
 export { default as arrowLeft } from "./arrow-left.svg";
 export { default as arrowRight } from "./arrow-right.svg";

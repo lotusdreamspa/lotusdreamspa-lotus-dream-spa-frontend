@@ -82,7 +82,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
     const { slug } = params;
     const { locale } = params;
-    
+
     setRequestLocale(locale);
     // Recupera i dati dell'articolo per i metadata
     const article = await getArticleForMetadata(slug); // documentId è garantito da notFound() sotto
@@ -136,11 +136,12 @@ export async function generateMetadata({
 export default async function ArticleDetailPage({
     params
 }: {
-    params: { slug: string };
+    params: { slug: string, locale: string };
 }) {
     const { slug } = params;
-
-
+    const { locale } = params;
+    
+    setRequestLocale(locale);
 
     const articleRes: StrapiSingleResponse<StrapiArticleType[]> | null = await fetchStrapiData(
         `articles`, {

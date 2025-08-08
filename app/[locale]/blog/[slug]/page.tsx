@@ -2,6 +2,7 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { fetchStrapiData } from '@/lib/strapi';
+import { setRequestLocale } from 'next-intl/server';
 
 // Import all the provided types
 import {
@@ -32,9 +33,19 @@ export async function generateStaticParams() {
         return [];
     }
 
-    return articlesRes.data.map((article) => ({
-        slug: article.slug,
-    }));
+    // Le lingue che supporti
+
+    // Crea tutte le combinazioni possibili di lingua/slug
+
+    const locales = ['en', 'kh'];
+
+    // Il modo corretto di combinare i due array
+    return articlesRes.data.flatMap(article =>
+        locales.map(locale => ({
+            locale: locale,
+            slug: article.slug
+        }))
+    );
 }
 
 async function getArticleForMetadata(slug: string): Promise<StrapiArticleType | null> {
@@ -44,7 +55,7 @@ async function getArticleForMetadata(slug: string): Promise<StrapiArticleType | 
             filters: {
                 slug: { $eq: slug }
             },
-            populate: ['openGraphImage'], 
+            populate: ['openGraphImage'],
         },
         300
     );
@@ -65,11 +76,14 @@ export async function generateMetadata({
     params,
 }: {
     params: {
-         slug: string 
-};
+        slug: string,
+        locale: string
+    };
 }): Promise<Metadata> {
     const { slug } = params;
-   
+    const { locale } = params;
+    
+    setRequestLocale(locale);
     // Recupera i dati dell'articolo per i metadata
     const article = await getArticleForMetadata(slug); // documentId è garantito da notFound() sotto
 
@@ -102,7 +116,7 @@ export async function generateMetadata({
             // URL dell'immagine di Open Graph
             images: ogImageUrl ? [{ url: ogImageUrl }] : [],
             // URL canonico della pagina
-            url: `https://amara.pub/en/blog/${slug}`, 
+            url: `https://amara.pub/en/blog/${slug}`,
             // Assicurati di usare il tuo dominio reale
         },
         twitter: {
@@ -115,7 +129,7 @@ export async function generateMetadata({
             card: 'summary_large_image', // O 'summary' a seconda del layout desiderato
         },
         // Altri metadati che potresti voler includere
-      
+
     };
 }
 
@@ -128,9 +142,9 @@ export default async function ArticleDetailPage({
 
 
 
-const articleRes: StrapiSingleResponse<StrapiArticleType[]> | null = await fetchStrapiData(
-    `articles`, {
-              filters: {
+    const articleRes: StrapiSingleResponse<StrapiArticleType[]> | null = await fetchStrapiData(
+        `articles`, {
+        filters: {
             slug: {
                 $eq: slug
             }
@@ -147,22 +161,22 @@ const articleRes: StrapiSingleResponse<StrapiArticleType[]> | null = await fetch
             // Add other nested relations if you have more components with nested data
         ]
     }, 300);
-// The filter returns an array. If it's null or empty, the article is not found.
-if (!articleRes || !articleRes.data || articleRes.data.length === 0) {
-    notFound();
-}
+    // The filter returns an array. If it's null or empty, the article is not found.
+    if (!articleRes || !articleRes.data || articleRes.data.length === 0) {
+        notFound();
+    }
 
-// ✅ Correct: Select the FIRST element from the returned array
-const article: StrapiArticleType = articleRes.data[0];
+    // ✅ Correct: Select the FIRST element from the returned array
+    const article: StrapiArticleType = articleRes.data[0];
 
     const renderContentBlock = (block: ContentBlock) => {
         switch (block.__component) {
             case 'text-components.paragraph':
                 const paragraphBlock = block as ParagraphBlock;
-                       const processedText = paragraphBlock.text.replace(
-                /\*\*(.*?)\*\*/g, 
-                '<strong>$1</strong>'
-            );
+                const processedText = paragraphBlock.text.replace(
+                    /\*\*(.*?)\*\*/g,
+                    '<strong>$1</strong>'
+                );
                 return (
                     <div key={paragraphBlock.id} className={`my-6 text-[20px] xm:text-[16px] sm:text-[16px] text-[#260A2F] leading-normal tracking-tight ${paragraphBlock.cssClasses}`}>
                         <p dangerouslySetInnerHTML={{ __html: processedText }}></p>
@@ -339,8 +353,8 @@ const article: StrapiArticleType = articleRes.data[0];
                     ) : (
                         <div className="py-10 text-center text-[#0B3848] italic text-[20px]">
                             <p>No content blocks found for this article.</p>
-        
-                            <p>{JSON.stringify(article)}</p> 
+
+                            <p>{JSON.stringify(article)}</p>
                         </div>
                     )}
                 </div>

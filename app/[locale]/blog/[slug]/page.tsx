@@ -37,43 +37,43 @@ export async function generateStaticParams() {
     }));
 }
 
-async function getArticleForMetadata(slug: string, documentId: string): Promise<StrapiArticleType | null> {
-    if (!documentId) {
-        console.error(`Error: documentId is missing for metadata generation for slug: ${slug}`);
-        return null;
-    }
-
-    const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchStrapiData(
-        `articles/${documentId}`,
+async function getArticleForMetadata(slug: string): Promise<StrapiArticleType | null> {
+    const articleRes: StrapiSingleResponse<StrapiArticleType[]> | null = await fetchStrapiData(
+        'articles',
         {
-            populate: ['openGraphImage'], // Popola solo l'immagine per OpenGraph e gli altri campi SEO
-        }, 300
+            filters: {
+                slug: { $eq: slug }
+            },
+            populate: ['openGraphImage'], 
+        },
+        300
     );
 
-    if (!articleRes || !articleRes.data) {
-        console.error(`Article not found or API error for metadata for documentId: ${documentId}`);
+    // Check if the response or the data array is empty
+    if (!articleRes || !articleRes.data || articleRes.data.length === 0) {
+        console.log('Article not found for metadata with slug:', slug);
         return null;
     }
-    return articleRes.data;
+
+    // ✅ Correct: Return the FIRST element of the array
+    return articleRes.data[0];
 }
 
 
 // --- INIZIO: generateMetadata ---
 export async function generateMetadata({
     params,
-    searchParams,
 }: {
     params: {
          slug: string 
 };
-    searchParams: { documentId?: string };
 }): Promise<Metadata> {
     const { slug } = params;
-    const { documentId } = searchParams;
-
+   
     // Recupera i dati dell'articolo per i metadata
-    const article = await getArticleForMetadata(slug, documentId as string); // documentId è garantito da notFound() sotto
+    const article = await getArticleForMetadata(slug); // documentId è garantito da notFound() sotto
 
+    console.log(article)
     if (!article) {
         // Se l'articolo non viene trovato, puoi restituire metadata generici o NotFound
         return {
@@ -102,7 +102,7 @@ export async function generateMetadata({
             // URL dell'immagine di Open Graph
             images: ogImageUrl ? [{ url: ogImageUrl }] : [],
             // URL canonico della pagina
-            url: `https://amara.pub/en/blog/${slug}?documentId=${documentId}`, 
+            url: `https://amara.pub/en/blog/${slug}`, 
             // Assicurati di usare il tuo dominio reale
         },
         twitter: {
@@ -120,24 +120,21 @@ export async function generateMetadata({
 }
 
 export default async function ArticleDetailPage({
-    params,
-    searchParams,
+    params
 }: {
     params: { slug: string };
-    searchParams: { documentId?: string };
 }) {
     const { slug } = params;
-    const { documentId } = searchParams;
 
-    console.log(`Accessing /blog/${slug} with documentId: ${documentId}`);
 
-    if (!documentId) {
-        console.error(`Error: documentId is missing in searchParams for slug: ${slug}`);
-        notFound();
-    }
 
-const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchStrapiData(
-    `articles/${documentId}`, {
+const articleRes: StrapiSingleResponse<StrapiArticleType[]> | null = await fetchStrapiData(
+    `articles`, {
+              filters: {
+            slug: {
+                $eq: slug
+            }
+        },
         populate: [
             // Populate the main article image and openGraphImage directly
             'openGraphImage',
@@ -150,21 +147,25 @@ const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchSt
             // Add other nested relations if you have more components with nested data
         ]
     }, 300);
+// The filter returns an array. If it's null or empty, the article is not found.
+if (!articleRes || !articleRes.data || articleRes.data.length === 0) {
+    notFound();
+}
 
-    if (!articleRes || !articleRes.data) {
-        console.error(`Article not found or API error for documentId: ${documentId}`);
-        notFound();
-    }
-
-    const article: StrapiArticleType = articleRes.data;
+// ✅ Correct: Select the FIRST element from the returned array
+const article: StrapiArticleType = articleRes.data[0];
 
     const renderContentBlock = (block: ContentBlock) => {
         switch (block.__component) {
             case 'text-components.paragraph':
                 const paragraphBlock = block as ParagraphBlock;
+                       const processedText = paragraphBlock.text.replace(
+                /\*\*(.*?)\*\*/g, 
+                '<strong>$1</strong>'
+            );
                 return (
                     <div key={paragraphBlock.id} className={`my-6 text-[20px] xm:text-[16px] sm:text-[16px] text-[#260A2F] leading-normal tracking-tight ${paragraphBlock.cssClasses}`}>
-                        <p dangerouslySetInnerHTML={{ __html: paragraphBlock.text }}></p>
+                        <p dangerouslySetInnerHTML={{ __html: processedText }}></p>
                         {/* Note: If paragraph images are part of text, they usually go within the HTML.
                             If they are standalone images associated with a paragraph block, this rendering is fine.
                             Ensure `image` in `ParagraphBlock` is correctly typed as `ImageType | null`. */}
@@ -338,7 +339,8 @@ const articleRes: StrapiSingleResponse<StrapiArticleType> | null = await fetchSt
                     ) : (
                         <div className="py-10 text-center text-[#0B3848] italic text-[20px]">
                             <p>No content blocks found for this article.</p>
-                            {/* <p>{JSON.stringify(article)}</p> // Uncomment for debugging if needed */}
+        
+                            <p>{JSON.stringify(article)}</p> 
                         </div>
                     )}
                 </div>

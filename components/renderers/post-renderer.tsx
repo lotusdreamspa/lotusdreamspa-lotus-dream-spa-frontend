@@ -35,7 +35,7 @@ export default function PostRenderer({ blogPosts }: PostRendererProps) {
                                             role="img" // Indicate that this div serves as an image for accessibility
                                             aria-label={post.thumbnail?.alternativeText || post.seoTitle || "Article image"}
                                         >
-                                            <Link href={`/blog/${post.slug}?documentId=${post.documentId}`}
+                                            <Link href={`/blog/${post.slug}`}
                                                 className="cursor-pointer w-full h-full flex flex-col justify-between"
                                             >
                                                 <h4 className="text-[40px] xm:text-[27px] sm:text-[27px] leading-tight tracking-tight text-amara-gold font-bold bg-amara-dark-blue uppercase px-2 rounded-sm">

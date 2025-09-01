@@ -1,4 +1,3 @@
-export { default as logo } from "./logo.svg";
 export { default as logoSm } from "./logo-sm.svg";
 export { default as arrowDown } from "./arrowDown.svg";
 export { default as arrowLeft } from "./arrow-left.svg";

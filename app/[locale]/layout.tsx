@@ -22,6 +22,7 @@ export default async function RootLayout({
 				<NextIntlClientProvider messages={messages}>
 					{children}
 				</NextIntlClientProvider>
+				<script defer src="https://umami-production-0c7c.up.railway.app/script.js" data-website-id="fc959da3-b48c-48db-bb47-cbc16800271e"></script>
 			</body>
 		</html>
 	);

@@ -27,7 +27,7 @@ export const config = {
     // MA ESCLUDI i percorsi interni di Next.js e i tuoi asset statici.
     // Questi percorsi non prefissati (es. /about-us) verranno reindirizzati
     // al defaultLocale (es. /en/about-us).
-    '/((?!_next|api|favicon.ico|.+\\.(?:jpg|mp4|mov|png|svg|pdf|webp|gif|webm)).*)',
+  '/((?!_next|api|favicon.ico|.+\\.(?:jpg|jpeg|png|gif|webp|svg|mp4|mov|webm|pdf|woff|woff2|ttf|otf)).*)',
     // Ho aggiunto anche webp e gif/webm per le estensioni comuni.
   ],
 };

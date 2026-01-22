@@ -9,8 +9,9 @@ import { useTranslations } from "next-intl"; // Per le traduzioni
 // Ho commentato o rimosso quelli non presenti nel tuo snippet per chiarezza,
 // ma dovresti riaggiungerli se li usi nella pagina.
 import {
-    Navbar, // Se la Navbar è presente in questa pagina
-    Footer, // Se il Footer è presente in questa pagina
+    NavbarElement,
+    HeroElement, // Se la Navbar è presente in questa pagina
+    FooterElement, // Se il Footer è presente in questa pagina
     Preload, // Il tuo componente di pre-caricamento
     // Hero, NotJust, VideoCta, Journey, OurWay // Componenti non specifici per il blog/slider di post
 } from "@/components";
@@ -33,7 +34,7 @@ export default function BlogPage() {
 
     // Logica per Framer Motion (se applicabile agli elementi di questa pagina, non al contenuto di PostRenderer)
 
-   
+
 
     // Effetto per Lenis e il timer di pre-caricamento
     useEffect(() => {
@@ -74,29 +75,12 @@ export default function BlogPage() {
                     {/* Contenitore principale della pagina, che potrebbe avere animazioni o scroll specifici */}
                     <main ref={container}> {/* Aggiunto ref={container} se Framer Motion usa questo */}
                         {/* Se la Navbar è parte di questa pagina, la metti qui */}
-                        <div className="w-full min-h-20 flex flex-col items-center justify-center padding-x gap-10">
-                            <Navbar />
+                        <div className="bg-lotus-blue w-full min-h-20 flex flex-col items-center justify-center padding-x gap-10">
+                            <NavbarElement />
+                            <HeroElement title="Blog" hasSubtitle={false} />
+                            <BlogPostFetcher />
+                            <FooterElement />
                         </div>
-
-                        {/* Intestazione della sezione blog */}
-                        <div className="w-full flex justify-start items-center xm:pb-10 sm:pb-10">
-                            <div className="w-[72%] xm:w-full sm:w-full flex flex-col gap-4 mx-auto pb-8">
-                                <h1 className="mt-16 text-[80px] xm:text-[35px] sm:text-[40px] xm:leading-[40px] sm:leading-[50px] text-white font-bold leading-[80px] tracking-tighter text-center">
-                                    {t("blogHeading")} {/* Titolo della sezione blog */}
-                                </h1>
-                            <p className="text-[28px] xm:text-[18px] sm:text-[20px] text-amara-gold font-medium leading-[36px] xm:leading-[24px] sm:leading-[28px] text-center">
-                                {t("blogSubtitle")}
-                            </p>
-                            </div>
-                        </div>
-
-                        {/* Qui carichi il Server Component che fetcha i dati e renderizza lo Swiper dei post.
-                            Questo componente verrà eseguito sul server, popolando l'HTML iniziale
-                            anche se la pagina padre è un Client Component. */}
-                        <BlogPostFetcher />
-
-                        {/* Se il Footer è parte di questa pagina, lo metti qui */}
-                        <Footer />
                     </main>
                 </>
             )}

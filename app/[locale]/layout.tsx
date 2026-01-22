@@ -4,8 +4,8 @@ import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
 
 export const metadata: Metadata = {
-	title: "The Amara Bar and Restaurant | Best Plant based and vegetarian restaurant in Siem Reap",
-	description: "The Amara Bar and Restaurant is a vegan and vegetarian restaurant in Siem Reap, Cambodia. We offer a wide range of delicious and healthy dishes made from fresh, locally sourced ingredients",
+	title: "Lotus Dream SPA | Best olistic massage and SPA in Kandal Village, Siem Reap",
+	description: "Experience ultimate relaxation and rejuvenation at Lotus Dream SPA, the premier destination for holistic massage and spa treatments in Kandal Village, Siem Reap. Indulge in our luxurious services designed to soothe your body and mind.",
 };
 
 export default async function RootLayout({

@@ -6,27 +6,26 @@ body::-webkit-scrollbar {
 	width: 0%;
 }
 
+
+@font-face {
+	font-family: Agr;
+	src: url("/fonts/agraham/Agraham.otf") format("opentype"),
+		
+}
+
+@font-face {
+	font-family: Ret;
+	src: url("/fonts/retro-floral/retrof.otf") format("opentype"),
+		
+}
+
+
 body {
-	font-family: Bricolage;
-	background-color: #0B3848;
+	background-color: #355070;
 	overflow-x: hidden;
 }
 
-@font-face {
-	src: url("../font/Bricolage.woff2");
-	font-family: Bricolage;
 
-}
-
-@font-face {
-	font-family: Hff;
-	src: url("../font/hff-hunts-deco.otf") format("opentype"),
-		 url("../font/hff-hunts-deco.ttf") format("truetype");
-}
-
-.text-hff {
-	font-family: Hff;
-}
 
 @layer utilities {
 	.padding-x {

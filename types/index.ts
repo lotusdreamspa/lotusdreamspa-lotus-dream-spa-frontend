@@ -230,3 +230,35 @@ interface Product {
   ingredients: string;
   sku: string; // Custom field
 }
+
+// 1. Definizione per il componente all'interno della Dynamic Zone "package"
+export interface PackageComponent {
+  id: number;
+  __component?: string; // Utile se hai più componenti nella dynamic zone
+  minutes: number;
+  price: number;
+  discountedPrice: number | null; // O 'number | null' se il campo non è obbligatorio
+}
+
+// 2. Definizione per l'Enumeration "category"
+// Sostituisci le stringhe qui sotto con i valori reali che hai impostato in Strapi
+export type TreatmentCategory = 'Massage' | 'Bodycare and Beauty' | string;
+
+// 3. Interfaccia principale per il Content Type "Treatment"
+export interface Treatment {
+  id: number;
+  documentId: string; // Strapi v5 usa spesso documentId, altrimenti usa solo id
+  title: string;
+  description: string;
+  category: TreatmentCategory;
+  khTitle: string | null;
+  khDescription: string | null;
+  
+  // Le Dynamic Zones in Strapi sono sempre array
+  packages: PackageComponent[]; 
+
+  // Campi standard generati da Strapi
+  createdAt: string;
+  updatedAt: string;
+  publishedAt?: string; // Opzionale perché potrebbe essere una bozza
+}

@@ -1,24 +1,36 @@
-export const links = [
+export const leftLinks = [
 	{
 		id: 1,
-		title: "aboutUs",
+		title: "theSpa",
 		href: "/about-us",
 	},
 	{
 		id: 2,
-		title: "ourOffer",
-		href: "/menu",
+		title: "OurTreatments",
+		href: "/treatments",
 	},
 	{
 		id: 3,
+		title: "gallery",
+		href: "/gallery",
+	}
+];
+
+export const rightLinks = [
+	{
+		id: 4,
+		title: "testimonials",
+		href: "/testimonials",
+	},
+	{
+		id: 5,
 		title: "blog",
 		href: "/blog",
 	},
 	{
-		id: 4,
-		title: "findUs",
+		id: 6,
+		title: "contacts",
 		href: "/contacts",
 	}
 ];
-
 

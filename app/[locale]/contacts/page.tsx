@@ -3,10 +3,10 @@ import Lenis from "@studio-freight/lenis";
 import { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import {
-    Navbar,
-    Hero,
+    NavbarElement,
+    HeroElement,
     Preload,
-    Footer
+    FooterElement
 } from "@/components";
 import Link from "next/link";
 import { TextHover } from "@/components";
@@ -37,18 +37,18 @@ export default function App() {
             <AnimatePresence mode="wait">{isLoading && <Preload />}</AnimatePresence>
             {!isLoading && (
                 <>
-                    <div className="w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
-                        <Navbar />
-                        <Hero heroWord="Find   Us"/>
+                    <div className="bg-lotus-blue w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
+                        <NavbarElement />
+                        <HeroElement title="Contacts" translationScope="footerContent" subtitle="how-to-reach-us"/>
 
                     </div>
 
                     <div className="w-full flex flex-col items-center justify-center mb-16">
-                        <div className="w-full lg:w-1/2 xl:w-3/5 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+                        <div className="w-full lg:w-4/6 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
 
                             <iframe
                                 className="w-full"
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3881.909463185599!2d103.85339852479922!3d13.35590545633676!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x311017dcaa9040d9%3A0x4edae835d38d891c!2sThe%20Amara%20Bar%20and%20Restaurant!5e0!3m2!1sit!2skh!4v1748493131137!5m2!1sit!2skh"
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3881.8860290349226!2d103.85336747479921!3d13.357362206303943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31101764523865f3%3A0x44be57aa7e937a07!2sLotus%20Dream%20SPA!5e0!3m2!1sen!2skh!4v1767947565143!5m2!1sen!2skh"
                                 width="100%"
                                 height="450"
                                 loading="lazy"
@@ -65,7 +65,7 @@ export default function App() {
                             </div>
                         </div>
                     </div>
-                    <Footer />
+                    <FooterElement />
                 </>
             )}
         </>

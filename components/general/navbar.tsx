@@ -1,91 +1,140 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { links } from "@/constants";
-import { navVariants } from "@/motion";
+import { leftLinks, rightLinks } from "@/constants";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { AnimatePresence, motion } from "framer-motion";
 
 export default function Navbar() {
-	const t = useTranslations("navbarContent");
-	const [active, setActive] = useState(false);
-	const [isPending, startTransition] = useTransition();
-	const router = useRouter();
-	const currentLocale = useLocale();
+    const t = useTranslations("navbarContent");
+    
+    // STATI ESISTENTI
+    const [active, setActive] = useState(false);
+    const [isPending, startTransition] = useTransition();
+    const router = useRouter();
+    const currentLocale = useLocale();
 
-	const onSelectChange = () => {
-		const nextLocale = currentLocale === "en" ? "kh" : "en";
-		startTransition(() => {
-			router.replace(`/${nextLocale}`);
-		});
-	};
+    // NUOVI STATI PER LO SCROLL
+    const [isVisible, setIsVisible] = useState(true);
+    const lastScrollY = useRef(0); // Usiamo ref per non re-renderizzare ad ogni pixel
+    const SCROLL_THRESHOLD = 15; // La costante di soglia richiesta
 
-	return (
-	
-			<motion.nav
-				className="w-screen py-3 padding-x fixed top-0 left-0 z-50 backdrop-blur-[5px] flex items-center justify-between"
-				initial="hidden"
-				whileInView="visible"
-				variants={navVariants}>
-				<div className="">
-					<Link href="/">
-						<Image
-							src="/logo-sm.png"
-							alt="The Amara logo"
-							width={70}
-							height={70}
-							className="xm:w-[70px] sm:w-[70px]"
-						/>
-					</Link>
-				</div>
-				<div className="flex gap-x-4">
-					<button
-						className="text-[17px] font-semibold uppercase text-[#260A2F] bg-secondary rounded-full leading-tight tracking-tight px-6 py-3 xm:py-2 sm:py-2 xm:px-4 sm:px-4"
-						onClick={onSelectChange}
-						disabled={isPending}>
-						{currentLocale === "kh" ? "en" : "kh"}
-					</button>
+    // LOGICA SCROLL
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
 
-					<div className="relative">
-						<button
-							className="flex gap-2 items-center text-[17px] font-semibold capitalize text-[#260A2F] bg-secondary rounded-full leading-tight tracking-tight px-4 py-3 xm:py-2 sm:py-2 xm:px-4 sm:px-4 group"
-							onClick={() => setActive(!active)}>
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-								<path fillRule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-							</svg>
-						</button>
-						<motion.div
-							initial={{ scaleY: 0 }}
-							animate={active ? { scaleY: 1 } : { scaleY: 0 }}
-							transition={{
-								duration: 0.4,
-								ease: "easeInOut",
-							}}>
-							<AnimatePresence mode="wait">
-								{active && (
-									<motion.div
-										className="absolute flex flex-col gap-2 bg-secondary pl-5 pr-16 py-8 rounded-[20px] right-0 mt-8 w-max"
-										initial={{ opacity: 0 }}
-										animate={{ opacity: 1 }}
-										exit={{ opacity: 0 }}>
-										{links.map((link) => (
-											<Link
-												key={link.id}
-												href={`/${currentLocale}${link.href}`}
-												className="text-[16px] font-semibold capitalize text-[#260A2F] bg-secondary leading-tight tracking-tight"
-												onClick={() => setActive(!active)}>
-												{t(link.title)}
-											</Link>
-										))}
-									</motion.div>
-								)}
-							</AnimatePresence>
-						</motion.div>
-					</div>
-				</div>
-			</motion.nav>
-		
-	);
+            // Se siamo in cima alla pagina, mostra sempre la navbar
+            if (currentScrollY < 10) {
+                setIsVisible(true);
+                lastScrollY.current = currentScrollY;
+                return;
+            }
+
+            // Calcola la differenza di scroll
+            const diff = Math.abs(currentScrollY - lastScrollY.current);
+
+            // Se lo spostamento è inferiore alla soglia, ignora (evita jitter)
+            if (diff < SCROLL_THRESHOLD) {
+                return;
+            }
+
+            // Logica principale: Scendo -> Nascondo, Salgo -> Mostro
+            if (currentScrollY > lastScrollY.current) {
+                setIsVisible(false); // Scroll Down
+            } else {
+                setIsVisible(true); // Scroll Up
+            }
+
+            // Aggiorna l'ultima posizione nota
+            lastScrollY.current = currentScrollY;
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
+    const onSelectChange = () => {
+        const nextLocale = currentLocale === "en" ? "kh" : "en";
+        startTransition(() => {
+            router.replace(`/${nextLocale}`);
+        });
+    };
+
+    return (
+        <nav 
+            className={`w-screen py-4 fixed top-0 left-0 z-50 flex flex-col backdrop-blur-sm transition-transform duration-300 ease-in-out ${
+                isVisible ? "translate-y-0" : "-translate-y-full"
+            }`}
+        >
+
+            <div className="flex w-full px-4 items-center justify-between z-50">
+                <button
+                    className=""
+                    onClick={onSelectChange}
+                    disabled={isPending}>
+                    {currentLocale === "kh" ? (
+                        <Image
+                            src="/images/svg/en.svg"
+                            alt="Switch to English"
+                            width={32}
+                            height={32}
+                        />) : (
+                        <Image
+                            src="/images/svg/kh.svg"
+                            alt="Switch to Khmer"
+                            width={32}
+                            height={32}
+                        />)
+                    }
+                </button>
+
+
+                <Link href="bookings" className="h-full bg-transparent text-white border-2 border-white px-4 py-2 rounded-full capitalize hover:text-lotus-gold hover:border-lotus-gold transition-colors">
+                    {t("bookNow")}
+                </Link>
+
+
+            </div>
+            <div className="flex w-full items-end justify-between -mt-8 z-40">
+
+                <div className="flex w-full justify-between px-32 pb-8">
+                    {leftLinks.map((link) => (
+                        <Link
+                            key={link.id}
+                            href={`/${currentLocale}${link.href}`}
+                            className="text-2xl md:text-md xs:text-sm text-white font-ret uppercase hover:text-lotus-gold transition-colors"
+                            onClick={() => setActive(!active)}>
+                            {t(link.title)}
+                        </Link>
+                    ))}
+                </div>
+                <div className="">
+                    <Link href="/">
+                        <Image
+                            src="/lotus.png"
+                            alt="Lotus Dream SPA logo"
+                            width={400}
+                            height={400}
+                            className="xm:w-[70px] sm:w-[70px]"
+                        />
+                    </Link>
+                </div>
+                <div className="flex w-full justify-between px-32 pb-8">
+                    {rightLinks.map((link) => (
+                        <Link
+                            key={link.id}
+                            href={`/${currentLocale}${link.href}`}
+                            className="text-2xl md:text-md xs:text-sm text-white font-ret uppercase hover:text-lotus-gold transition-colors"
+                            onClick={() => setActive(!active)}>
+                            {t(link.title)}
+                        </Link>
+                    ))}
+                </div>
+
+            </div>
+        </nav>
+    );
 }

@@ -1,29 +1,81 @@
 {
   "navbarContent": {
-    "aboutUs": "What's Amara?",
-    "ourOffer": "Menu",
+    "theSpa": "The SPA",
+    "OurTreatments": "Treatments",
+    "gallery": "Gallery",
+    "testimonials": "Testimonials",
     "blog": "Blog",
-    "findUs": "Find Us"
+    "contacts": "Contacts",
+    "bookNow": "Book Now"
+  },
+  "HomepageCtaContent": {
+    "intro_title": "Welcome to The Lotus Dream",
+    "intro_desc": "A sanctuary of wellness and tranquility in the heart of Siem Reap.",
+    "intro_link": "Discover more about us",
+    "intro_lateral": "More...",
+    "treat_title": "We have many treatments for you",
+    "treat_desc": "Explore our diverse range of wellness treatments designed to rejuvenate your body and mind.",
+    "treat_link": "Choose now",
+    "treat_lateral": "More...",
+    "more_title": "Lotus dream is an experience",
+    "more_desc": "Come and immerse yourself in a holistic journey of relaxation and rejuvenation.",
+    "more_link": "Gallery, reviews and more",
+    "more_lateral": "More...",
+        "contacts_title": "And now reach us",
+    "contacts_desc": "We're in Kandal Village, one of the best locations in Siem Reap",
+    "contacts_link": "Find Us",
+    "contacts_lateral": "More..."
+
   },
   "heroContent": {
-    "welcome-to-the-amara": "The new Plant Based and Vegetarian Spot in Siem Reap"
+    "welcome-to-lotus-dream": "Best Olistic Massage SPA in Siem Reap"
   },
-  "homepageVideoCtaContent": {
-    "paragraph": "Redefining dining <br/> where healthy, ethical, and sustainable <br/> is the standard, not a luxury.",
-    "lateralText": "More...",
-    "linkLabel": "Let's cultivate Joy",
-    "linkHref": "/contacts"
+  "footerContent":{
+    "how-to-reach-us": "How to reach us"
   },
   "whatWeDoContent": {
     "paragraph": "At The Amara, we craft innovative plant-based and vegetarian dishes. Using fermentation and extraction, our chefs elevate local Khmer ingredients, offering healthy, ethical dining at fair prices."
   },
   "aboutUsContent": {
-    "paragraph": "Welcome to The Amara Bar and Restaurant, nestled in the evocative heart of Cambodia, where history deeply roots itself in the wild and captivating nature. We aim to offer you a truly unique culinary experience. We're committed to creating as much as possible with our own hands, presenting a cuisine that, starting from local ingredients—primarily sourced from traditional markets and small producers in the countryside around Siem Reap—reflects our identity, our meticulous research, and years of acquired expertise. From our artisanal kombucha to our homemade yogurt, and even more distinctive creations like our 100% mango vinegar or our plant-based milks (also available in high-protein versions), every detail is thoughtfully crafted to offer you authentic and innovative flavors."
+    "paragraph": "Founded by Rick from the UK and Navy from Cambodia, our spa blends international standards with warm local hospitality. We use organic, locally sourced ingredients wherever possible, and our team of therapists are fully trained, each with over 10 years of experience."
   },
-    "aboutUsSliderContent": {
+  "treatmentsContent": {
+    "find-the-perfect-escape": "Indulge in our diverse range of wellness treatments designed to rejuvenate your body and mind. From traditional massages to modern therapies, each treatment is crafted to provide a holistic experience that nurtures your well-being."
+  },
+  "aboutUsSliderContent": {
     "sliderHeading1": "Our Approach to Flavor",
     "sliderHeading2": "Crafting Authenticity Through Dedication",
     "sliderHeading3": "At The Amara Bar and Restaurant, our culinary philosophy extends beyond mere ingredients; it's a deep commitment to the art of creation. We believe the true essence of a dish lies in its journey from concept to plate, shaped by meticulous research, passion, and years of honed expertise. Every element, from our unique fermentations to our custom blends, is a testament to our dedication to innovation and genuine taste. This commitment forms the core of an experience that is uniquely Amara.",
+    "slide-1": {
+      "title": "Local Sourcing",
+      "heading": "Embracing Cambodia's Bounty",
+      "par": "Our ingredients are the heartbeat of Cambodia. We champion local markets and small farmers in Siem Reap, ensuring every dish brings you the freshest, most vibrant flavors straight from our land."
+    },
+    "slide-2": {
+      "title": "Artisanal Craft",
+      "heading": "Handcrafted Excellence",
+      "par": "Beyond cooking, we are creators. Our dedication to homemade quality shines in everything from our handcrafted kombucha to our bespoke plant-based milks, each made with precision and care."
+    },
+    "slide-3": {
+      "title": "Innovative Spirit",
+      "heading": "Pioneering New Tastes",
+      "par": "We honor tradition but dare to innovate. Explore unique culinary expressions like our pure mango vinegar or high-protein plant-based milks, pushing boundaries for adventurous palates."
+    },
+    "slide-4": {
+      "title": "Sustainability",
+      "heading": "Nurturing Our Planet",
+      "par": "Our commitment extends to the planet. By sourcing locally and minimizing waste, we strive to offer a dining experience that is as responsible as it is delicious, respecting Cambodia's natural bounty."
+    },
+    "slide-5": {
+      "title": "Mastery",
+      "heading": "Years of Dedication",
+      "par": "Every recipe reflects deep research and a genuine love for transforming natural elements into extraordinary dishes, guided by our honed expertise."
+    }
+  },
+    "tripAdvisorSliderContent": {
+    "sliderHeading1": "What they say about Us",
+    "sliderHeading2": "We Care About Your Experience",
+    "sliderHeading3": "Here some of the reviews from our beloved customers, we always strive to give the best experience possible to everyone who visit us. Your feedback is our motivation to keep improving and providing exceptional service. Thanks You all for the love and support.",
     "slide-1": {
       "title": "Local Sourcing",
       "heading": "Embracing Cambodia's Bounty",
@@ -107,9 +159,5 @@
     "contactUsSubtitle": "Here's our contacts and how to reach us, in Siem Reap",
     "contactUsBtn": "Find us",
     "contactUsLink": "en/contacts"
-  },
-  "blogContent": {
-    "blogHeading": "Our Blog",
-    "blogSubtitle": "Discover our latest news, recipes, and insights into the world of plant-based and vegetarian cuisine."
   }
 }

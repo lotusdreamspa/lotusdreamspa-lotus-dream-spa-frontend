@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import { Words } from "@/components";
+import { WordsElement } from "@/components";
 import { useTranslations } from "next-intl";
 import { useScroll, useTransform, motion, useSpring } from "framer-motion";
 import { AnimatedTextSectionProps } from "@/types";
@@ -30,7 +30,7 @@ export default function AnimatedTextSection({
       ref={container}
     >
       <div className={`${paragraphWidth || "w-[70%]"} h-full flex items-center justify-center sm:w-full xm:w-full md:w-full px-5 sm:pb-20 xm:pb-20`}>
-        <Words paragraph={t("paragraph")} className={textColor || "text-white"} /> {/* Use textColor prop, with a fallback */}
+        <WordsElement paragraph={t("paragraph")} className={textColor || "text-white"} /> {/* Use textColor prop, with a fallback */}
       </div>
       {svgPath && (
         <div className="w-full h-full absolute">

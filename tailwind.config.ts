@@ -11,15 +11,16 @@ const config: Config = {
       colors: {
         background: "#163300",
         secondary: "#FFC091",
-        "dark-subtle": "rgba(255, 255, 255, 0.5)",
-        "light-subtle": "rgba(39, 39, 39, 0.5)",
-        "highlight-dark": "#ffc220",
-        "highlight-light": "#ffc220",
-        "amara-gold": "#d8975d",
-        "amara-dark-blue": "#0B3848",
+        'lotus-blue': '#355070',
+        "lotus-dark-blue": "#1f3a5c",
+        'lotus-lavander': '#7552A0',
+        'lotus-bronze': '#eaac8b',
+        'lotus-rosewood': '#b56576',
+        "lotus-gold": "#d8975d",
       },
       fontFamily: {
-        hff: ["Hff", "sans-serif"],
+        agr: ["Agr", "serif"],
+        ret: ["Ret", "sans-serif"],
       }
     },
     screens: {

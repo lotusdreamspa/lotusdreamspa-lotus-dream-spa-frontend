@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { fetchStrapiData } from '@/lib/strapi';
 import { setRequestLocale } from 'next-intl/server';
 
+
+import Hero from '@/components/general/hero';
 // Import all the provided types
 import {
     Article as StrapiArticleType,
@@ -198,30 +200,9 @@ export default async function ArticleDetailPage({
             case 'image-components.hero':
                 const heroBlock = block as HeroBlock;
                 return (
-                    // HERO BLOCK within content blocks now uses a background image
-                    <div
-                        key={heroBlock.id}
-                        className={`relative my-8 h-80 sm:h-96 md:h-[500px] flex items-center justify-center text-center p-6 rounded-[20px] overflow-hidden ${heroBlock.cssClasses}`}
-                        style={{
-                            backgroundImage: heroBlock.bgImage && heroBlock.bgImage.url ? `url(${process.env.NEXT_PUBLIC_STRAPI_API_URL}${heroBlock.bgImage.url})` : 'none',
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                        }}
-                    >
 
-                        {/* Overlay for better text readability */}
-                        {heroBlock.bgImage && heroBlock.bgImage.url && (
-                            <div className="absolute inset-0 bg-black opacity-40 rounded-[20px]"></div>
-                        )}
-                        <div className="relative z-10 text-white"> {/* Text color set to white for readability on image */}
-                            <h2 className="text-[40px] xm:text-[27px] sm:text-[27px] font-bold leading-tight tracking-tight mb-2">
-                                {heroBlock.title}
-                            </h2>
-                            <p className="text-[20px] xm:text-[16px] sm:text-[16px] leading-normal tracking-tight">
-                                {heroBlock.caption}
-                            </p>
-                        </div>
-                    </div>
+                    // HERO BLOCK within content blocks now uses a background image
+                   <Hero title={heroBlock.title} bgImg={heroBlock.bgImage?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${heroBlock.bgImage.url}` : ''} subtitle={heroBlock.caption ?? null} />
                 );
             case 'text-components.quote':
                 const quoteBlock = block as QuoteBlock;
@@ -286,12 +267,12 @@ export default async function ArticleDetailPage({
     };
 
     return (
-        <div className="min-h-screen bg-amara-dark-blue text-[#FFD7EF] font-sans">
-            <header className="bg-amara-dark-blue shadow-sm py-6 border-b border-[#0B3848]">
-                <div className="max-w-4xl mx-auto flex justify-between items-center">
+        <div className="min-h-screen bg-lotus-blue text-white font-sans">
+            <header className="py-6 padding-x">
+                <div className="mx-auto flex justify-between items-center">
                     <a
                         href="/blog"
-                        className="inline-flex items-center text-[#9FE870] hover:text-white font-semibold transition-colors duration-200 ease-linear text-[20px]"
+                        className="inline-flex items-center text-white hover:text-lotus-gold font-semibold transition-colors duration-200 ease-linear text-[20px]"
                     >
                         &larr; Back to Blog List
                     </a>
@@ -328,25 +309,7 @@ export default async function ArticleDetailPage({
                 </div>
             )}
 
-            <main className="max-w-4xl mx-auto padding-x py-12 bg-[#FFD7EF] shadow-lg rounded-b-[30px] text-[#260A2F]">
-                {/* Article Header (inside main for consistency, but hero handled above) */}
-                {!article.thumbnail && ( // Only show if there's no main hero thumbnail, as the hero above covers this
-                    <>
-                        <h1 className="text-[80px] xm:text-[35px] sm:text-[40px] font-bold text-center mb-4 leading-[80px] xm:leading-[40px] sm:leading-[50px] tracking-tighter">
-                            {article.title}
-                        </h1>
-                        {article.subtitle && (
-                            <h2 className="text-[40px] xm:text-[27px] sm:text-[27px] text-[#0B3848] text-center mb-6 leading-tight tracking-tight">
-                                {article.subtitle}
-                            </h2>
-                        )}
-                        {article.description && (
-                            <p className="text-[23px] text-[#0B3848] text-center mb-10 max-w-2xl mx-auto leading-normal tracking-tight">
-                                {article.description}
-                            </p>
-                        )}
-                    </>
-                )}
+            <main className="mx-auto padding-x mb-16 bg-lotus-bronze shadow-lg  text-black">
 
                 <div className="article-content">
                     {article.contentBlocks && article.contentBlocks.length > 0 ? (

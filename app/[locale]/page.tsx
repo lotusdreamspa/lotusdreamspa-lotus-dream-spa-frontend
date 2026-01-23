@@ -77,23 +77,12 @@ export default function App() {
 
 	return (
 		<>
-			<AnimatePresence mode="wait">{isLoading && <Preload />}</AnimatePresence>
-			{!isLoading && (
-				<>
-					<NavbarElement />
-
-
-					<HeroElement bgImg="/images/home/hero/hero-sample.jpg" />
-					<div className="w-full min-h-screen flex flex-col items-center justify-between md:justify-center padding-x gap-10">
-
-						<ImageCtaListElement items={ctaData} />
-					</div>
-
-
-					<FooterElement />
-
-				</>
-			)}
+			<NavbarElement />
+			<HeroElement bgImg="/images/home/hero/hero-sample.jpg" />
+			<div className="w-full min-h-screen flex flex-col items-center justify-between md:justify-center padding-x gap-10">
+				<ImageCtaListElement items={ctaData} />
+			</div>
+			<FooterElement />
 		</>
 	);
 }

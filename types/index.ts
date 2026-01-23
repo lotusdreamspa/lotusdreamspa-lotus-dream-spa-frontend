@@ -172,6 +172,16 @@ export type ContentBlock =
   | CtaBlock
   | GalleryBlock;
 
+
+
+
+export interface StrapiResponse<T> {
+  data: T;
+  meta: {
+    pagination: Pagination;
+  };
+}
+
 export interface Article {
   id: number;
   documentId: string;

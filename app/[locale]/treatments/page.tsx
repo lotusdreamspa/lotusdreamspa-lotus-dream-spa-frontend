@@ -1,15 +1,22 @@
-import TreatmentsRenderer from "@/components/renderers/treatments-renderer"; // Importa il componente client appena creato
+// app/[locale]/menu/page.tsx (o treatments/page.tsx)
+
+import {
+  NavbarElement,
+  HeroElement,
+  FooterElement,
+} from "@/components";
+// Importiamo il componente client (che ora è "leggero")
+import TreatmentsRenderer from "@/components/renderers/treatments-renderer";
 import { Treatment } from "@/types";
 
-// Questa funzione gira sul server.
+// --- FETCHING DATI (Server Side) ---
 async function getTreatments() {
   try {
     const url = `${process.env.NEXT_PUBLIC_STRAPI_CLOUD_URL}/api/treatments?populate=packages`;
-    
-    // QUI STA IL TRUCCO DELLA CACHE:
-    // next: { revalidate: 3600 } significa "tieni in cache per 1 ora"
-    const res = await fetch(url, { 
-      next: { revalidate: 3600 } 
+
+    // Cache per 24 ore
+    const res = await fetch(url, {
+      next: { revalidate: 86400 }
     });
 
     if (!res.ok) {
@@ -19,7 +26,7 @@ async function getTreatments() {
     const json = await res.json();
     const treatments: Treatment[] = Array.isArray(json.data) ? json.data : [];
 
-    // Raggruppamento dati (fatto sul server ora, alleggerisce il client)
+    // Raggruppamento dati
     const grouped = treatments.reduce((acc, curr) => {
       const cat = curr.category || 'Other';
       if (!acc[cat]) acc[cat] = [];
@@ -34,22 +41,28 @@ async function getTreatments() {
   }
 }
 
-// Params viene passato automaticamente da Next.js nelle page server-side
-export default async function TreatmentsPage({ params }: { params: { lang: string, locale: string } }) {
-  // Fetch dei dati sul server
+// --- COMPONENTE DI PAGINA ---
+export default async function TreatmentsPage({
+  params: { locale }
+}: {
+  params: { locale: string }
+}) {
+  // 1. Fetch dei dati
   const treatmentsData = await getTreatments();
-  
-  // Gestione del locale
-  // Nota: nelle server page 'params' potrebbe dover essere atteso se usi le ultime versioni di Next, 
-  // ma di base qui prendiamo il valore diretto.
-  const rawLocale = params?.locale || params?.lang;
-  const locale = (Array.isArray(rawLocale) ? rawLocale[0] : rawLocale) || 'en';
 
-  // Passiamo i dati al componente client
+  // 2. Render della struttura
   return (
-    <TreatmentsRenderer 
-      treatmentsData={treatmentsData} 
-      locale={locale} 
-    />
+    <>
+      {/* Wrapper principale con lo stile di background condiviso */}
+      <div className="bg-lotus-blue w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
+        <NavbarElement />
+        <HeroElement title="Treatments" translationScope="treatmentsContent" subtitle="find-the-perfect-escape" />
+      </div>
+      <TreatmentsRenderer
+        treatmentsData={treatmentsData}
+        locale={locale}
+      />
+      <FooterElement />
+    </>
   );
 }

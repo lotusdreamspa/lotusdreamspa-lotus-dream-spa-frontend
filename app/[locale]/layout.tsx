@@ -2,6 +2,8 @@ import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { getMessages } from "next-intl/server";
 import { NextIntlClientProvider } from "next-intl";
+import ClientRenderer from "@/components/renderers/client-renderer";
+
 
 export const metadata: Metadata = {
 	title: "Lotus Dream SPA | Best olistic massage and SPA in Kandal Village, Siem Reap",
@@ -20,7 +22,9 @@ export default async function RootLayout({
 		<html lang={locale}>
 			<body>
 				<NextIntlClientProvider messages={messages}>
-					{children}
+					<ClientRenderer>
+						{children}
+					</ClientRenderer>
 				</NextIntlClientProvider>
 				<script defer src="https://umami-production-0c7c.up.railway.app/script.js" data-website-id="fc959da3-b48c-48db-bb47-cbc16800271e"></script>
 			</body>

@@ -1,13 +1,3 @@
-"use client";
-import Lenis from "@studio-freight/lenis";
-import { useEffect, useState } from "react";
-import { AnimatePresence } from "framer-motion";
-import {
-  NavbarElement,
-  HeroElement,
-  Preload,
-  FooterElement
-} from "@/components";
 import { Treatment } from "@/types";
 
 // --- HELPER: PRICE FORMATTER ---
@@ -62,22 +52,22 @@ const TreatmentCategorySection = ({ category, treatments, currentLocale }: { cat
                   );
                 })}
                 <div className="flex flex-wrap gap-3 mt-2 md:hidden lg:hidden xl:hidden 2xl:hidden">
-                  {item.packages?.filter(p => p.minutes >= 60).sort((a,b) => a.minutes - b.minutes).map((pkg) => (
-                      <div key={pkg.id} className="px-3 py-2 rounded border border-lotus-gold flex items-center gap-2">
-                        <span className="text-lotus-bronze font-semibold text-sm">{pkg.minutes} min</span> 
-                        {pkg.discountedPrice ? (
-                          <div className="flex items-baseline gap-2">
-                            <span className="text-white font-bold text-sm">{formatPrice(pkg.discountedPrice, currentLocale)}</span>
-                            <span className="text-gray-500 text-xs line-through">{formatPrice(pkg.price, currentLocale)}</span>
-                          </div>
-                        ) : (
-                           <span className="text-white font-bold text-sm">{formatPrice(pkg.price, currentLocale)}</span>
-                        )}
-                      </div>
+                  {item.packages?.filter(p => p.minutes >= 60).sort((a, b) => a.minutes - b.minutes).map((pkg) => (
+                    <div key={pkg.id} className="px-3 py-2 rounded border border-lotus-gold flex items-center gap-2">
+                      <span className="text-lotus-bronze font-semibold text-sm">{pkg.minutes} min</span>
+                      {pkg.discountedPrice ? (
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-white font-bold text-sm">{formatPrice(pkg.discountedPrice, currentLocale)}</span>
+                          <span className="text-gray-500 text-xs line-through">{formatPrice(pkg.price, currentLocale)}</span>
+                        </div>
+                      ) : (
+                        <span className="text-white font-bold text-sm">{formatPrice(pkg.price, currentLocale)}</span>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>
-             
+
             </div>
           );
         })}
@@ -93,33 +83,33 @@ const BodycareCategorySection = ({ category, treatments, currentLocale }: { cate
       <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-white my-10 md:my-16 pb-8 md:pb-16 capitalize font-agr">{category}</h2>
       <div className="flex flex-col gap-12">
         {treatments.map((item) => {
-           const displayTitle = (currentLocale === 'kh' && item.khTitle) ? item.khTitle : item.title;
-           const displayDescription = (currentLocale === 'kh' && item.khDescription) ? item.khDescription : item.description;
-           const pkg = item.packages && item.packages.length > 0 ? item.packages[0] : null;
-           return (
-             <div key={item.id} className="flex flex-col border-b border-white pb-8 last:border-none">
-                <div className="flex flex-col md:flex-row md:justify-between md:items-baseline mb-3 gap-2">
-                   <h3 className="text-2xl md:text-3xl font-semibold text-white">{displayTitle}</h3>
-                   {pkg && (
-                     <div className="flex items-baseline gap-3">
-                           {pkg && pkg.minutes > 0 && (
-                   <div className="self-start text-lotus-bronze/80 text-sm font-medium border border-lotus-gold/30 px-3 py-1 rounded">Duration: {pkg.minutes} min</div>
+          const displayTitle = (currentLocale === 'kh' && item.khTitle) ? item.khTitle : item.title;
+          const displayDescription = (currentLocale === 'kh' && item.khDescription) ? item.khDescription : item.description;
+          const pkg = item.packages && item.packages.length > 0 ? item.packages[0] : null;
+          return (
+            <div key={item.id} className="flex flex-col border-b border-white pb-8 last:border-none">
+              <div className="flex flex-col md:flex-row md:justify-between md:items-baseline mb-3 gap-2">
+                <h3 className="text-2xl md:text-3xl font-semibold text-white">{displayTitle}</h3>
+                {pkg && (
+                  <div className="flex items-baseline gap-3">
+                    {pkg && pkg.minutes > 0 && (
+                      <div className="self-start text-lotus-bronze/80 text-sm font-medium border border-lotus-gold/30 px-3 py-1 rounded">Duration: {pkg.minutes} min</div>
+                    )}
+                    {pkg.discountedPrice ? (
+                      <>
+                        <span className="text-gray-500 text-sm line-through">{formatPrice(pkg.price, currentLocale)}</span>
+                        <span className="text-lotus-bronze font-bold text-xl md:text-2xl">{formatPrice(pkg.discountedPrice, currentLocale)}</span>
+                      </>
+                    ) : (
+                      <span className="text-white font-bold text-xl md:text-2xl">{formatPrice(pkg.price, currentLocale)}</span>
+                    )}
+                  </div>
                 )}
-                        {pkg.discountedPrice ? (
-                           <>
-                              <span className="text-gray-500 text-sm line-through">{formatPrice(pkg.price, currentLocale)}</span>
-                              <span className="text-lotus-bronze font-bold text-xl md:text-2xl">{formatPrice(pkg.discountedPrice, currentLocale)}</span>
-                           </>
-                        ) : (
-                           <span className="text-white font-bold text-xl md:text-2xl">{formatPrice(pkg.price, currentLocale)}</span>
-                        )}
-                     </div>
-                   )}
-                </div>
-                <p className="text-white text-base md:text-lg leading-relaxed max-w-3xl mb-4">{displayDescription}</p>
-           
-             </div>
-           )
+              </div>
+              <p className="text-white text-base md:text-lg leading-relaxed max-w-3xl mb-4">{displayDescription}</p>
+
+            </div>
+          )
         })}
       </div>
     </div>
@@ -134,47 +124,20 @@ interface TreatmentsRendererProps {
 }
 
 export default function TreatmentsRenderer({ treatmentsData, locale }: TreatmentsRendererProps) {
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Lenis e Preload animation logic
-  useEffect(() => {
-    const lenis = new Lenis();
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
-      document.body.style.cursor = "default";
-    }, 2000); // Manteniamo l'animazione di 2 secondi
-    return () => clearTimeout(timeout);
-  }, []);
-
   return (
     <>
-      <AnimatePresence mode="wait">{isLoading && <Preload />}</AnimatePresence>
-      {!isLoading && (
-        <>
-          <div className="w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10 bg-lotus-blue">
-            <NavbarElement />
-            <HeroElement title="Treatments" translationScope="treatmentsContent" subtitle="find-the-perfect-escape" />
-          </div>
-          <div className="w-full flex flex-col items-center justify-center mb-16 pt-10 min-h-[50vh] bg-lotus-blue">
-            {Object.keys(treatmentsData).length > 0 ? (
-               Object.entries(treatmentsData).map(([category, items]) => {
-                 if (category === 'Bodycare and Beauty') {
-                    return <BodycareCategorySection key={category} category={category} treatments={items} currentLocale={locale} />;
-                 }
-                 return <TreatmentCategorySection key={category} category={category} treatments={items} currentLocale={locale} />;
-               })
-            ) : (
-              <p className="text-gray-400">No treatments found.</p>
-            )}
-          </div>
-          <FooterElement />
-        </>
-      )}
+      <div className="w-full flex flex-col items-center justify-center mb-16 pt-10 min-h-[50vh] bg-lotus-blue">
+        {Object.keys(treatmentsData).length > 0 ? (
+          Object.entries(treatmentsData).map(([category, items]) => {
+            if (category === 'Bodycare and Beauty') {
+              return <BodycareCategorySection key={category} category={category} treatments={items} currentLocale={locale} />;
+            }
+            return <TreatmentCategorySection key={category} category={category} treatments={items} currentLocale={locale} />;
+          })
+        ) : (
+          <p className="text-gray-400">No treatments found.</p>
+        )}
+      </div>
     </>
   );
 }

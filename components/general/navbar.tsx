@@ -92,7 +92,7 @@ export default function Navbar() {
                 </button>
 
 
-                <Link href="bookings" className="h-full bg-transparent text-white border-2 border-white px-4 py-2 rounded-full capitalize hover:text-lotus-gold hover:border-lotus-gold transition-colors">
+                <Link href="booking" className="h-full bg-transparent text-white border-2 border-white px-4 py-2 rounded-full capitalize hover:text-lotus-gold hover:border-lotus-gold transition-colors">
                     {t("bookNow")}
                 </Link>
 

@@ -1,42 +1,33 @@
-// app/[locale]/menu/page.tsx (o treatments/page.tsx)
-
 import {
   NavbarElement,
   HeroElement,
   FooterElement,
 } from "@/components";
-// Importiamo il componente client (che ora è "leggero")
 import TreatmentsRenderer from "@/components/renderers/treatments-renderer";
+// 1. Importa il Service
+import { fetchTreatmentsFromStrapi } from "@/services/treatments"; 
 import { Treatment } from "@/types";
 
-// --- FETCHING DATI (Server Side) ---
-async function getTreatments() {
+// --- LOGICA DI TRASFORMAZIONE (Data Transformation Layer) ---
+async function getGroupedTreatments() {
   try {
-    const url = `${process.env.NEXT_PUBLIC_STRAPI_CLOUD_URL}/api/treatments?populate=packages`;
+    // 2. Chiamata al Service condiviso (Gestisce Auth, URL e Cache)
+    const treatments = await fetchTreatmentsFromStrapi();
 
-    // Cache per 24 ore
-    const res = await fetch(url, {
-      next: { revalidate: 86400 }
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch data");
-    }
-
-    const json = await res.json();
-    const treatments: Treatment[] = Array.isArray(json.data) ? json.data : [];
-
-    // Raggruppamento dati
-    const grouped = treatments.reduce((acc, curr) => {
-      const cat = curr.category || 'Other';
+    // 3. Raggruppamento dati (Logica specifica per questa pagina)
+    const grouped = treatments.reduce((acc: { [x: string]: any[]; }, curr: { category: string; }) => {
+      const rawCat = curr.category || 'Other';
+      const cat = rawCat.trim(); 
+      
       if (!acc[cat]) acc[cat] = [];
       acc[cat].push(curr);
       return acc;
     }, {} as Record<string, Treatment[]>);
 
     return grouped;
+
   } catch (error) {
-    console.error("Error fetching treatments:", error);
+    console.error("Error organizing treatments data:", error);
     return {};
   }
 }
@@ -47,21 +38,26 @@ export default async function TreatmentsPage({
 }: {
   params: { locale: string }
 }) {
-  // 1. Fetch dei dati
-  const treatmentsData = await getTreatments();
+  // 4. Fetch + Trasformazione dei dati
+  const treatmentsData = await getGroupedTreatments();
 
-  // 2. Render della struttura
   return (
     <>
-      {/* Wrapper principale con lo stile di background condiviso */}
       <div className="bg-lotus-blue w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
         <NavbarElement />
-        <HeroElement title="Treatments" translationScope="treatmentsContent" subtitle="find-the-perfect-escape" />
+        <HeroElement 
+            title="Treatments" 
+            translationScope="treatmentsContent" 
+            subtitle="find-the-perfect-escape" 
+        />
       </div>
+      
+      {/* Passiamo i dati al componente client */}
       <TreatmentsRenderer
         treatmentsData={treatmentsData}
         locale={locale}
       />
+      
       <FooterElement />
     </>
   );

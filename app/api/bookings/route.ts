@@ -22,7 +22,8 @@ export async function POST(request: Request) {
     const { 
       name, 
       email, 
-      phone, 
+      phone,
+      isKhmer, 
       date, // Formato "YYYY-MM-DD"
       time, // Formato "HH:mm" (es. "14:00")
       treatment, // Oggetto intero del trattamento
@@ -35,7 +36,7 @@ export async function POST(request: Request) {
     }
 
     // 2. Trova o Crea il Cliente
-    const customer = await findOrCreateCustomer({ name, email, phone });
+    const customer = await findOrCreateCustomer({ name, email, phone, isKhmer });
 
     if (!customer || !customer.id) {
         throw new Error("Failed to resolve customer ID");

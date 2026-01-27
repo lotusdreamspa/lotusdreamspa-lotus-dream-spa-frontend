@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Words } from "@/components";
+import  Words from "@/components/general/words";
 import { useTranslations } from "next-intl";
 import { ParagraphProps } from "@/types";
 import { TextHover } from "@/components";

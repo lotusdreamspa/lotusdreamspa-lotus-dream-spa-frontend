@@ -10,6 +10,7 @@ interface CustomerData {
   name: string;
   email: string;
   phone: string;
+  isKhmer: boolean
 }
 
 // Helper per trovare un cliente per email

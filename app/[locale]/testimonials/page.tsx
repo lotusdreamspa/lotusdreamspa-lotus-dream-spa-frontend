@@ -2,7 +2,7 @@ import {
 	NavbarElement,
 	FooterElement,
 	HeroElement,
-	ReusableSlider,
+	ReusableSliderElement,
 } from "@/components";
 
 export default function Testimonialspage() {
@@ -14,7 +14,7 @@ export default function Testimonialspage() {
 			</div>
 			<div id="trip-advisor-slider">
 
-				<ReusableSlider
+				<ReusableSliderElement
 					translationKey="tripAdvisorSliderContent"		// Adjust the translation key as needed
 					numberOfSlides={5}
 					arrowButtonBgColor="#0B3848"

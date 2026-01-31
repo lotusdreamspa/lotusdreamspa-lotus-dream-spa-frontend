@@ -1,5 +1,5 @@
 import {
-	AnimatedTextSection,
+	AnimatedTextSectionElement,
 	NavbarElement,
 	FooterElement,
 	HeroElement,
@@ -52,7 +52,7 @@ export default function AboutUsPage() {
 				<NavbarElement />
 				<HeroElement title="About" hasSubtitle={false} />
 			</div>
-			<AnimatedTextSection
+			<AnimatedTextSectionElement
 				translationKey="aboutUsContent"
 				paragraphWidth="w-[90%]"
 				textColor="text-white"

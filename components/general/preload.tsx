@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import {LiquidEther} from "@/components" // Assicurati che il percorso sia corretto
+import {LiquidEtherElement} from "@/components" // Assicurati che il percorso sia corretto
 
 // Definizione dell'animazione: solo Opacity
 const opacityAnim = {
@@ -30,7 +30,7 @@ export default function PreLoad() {
             {dimension.width > 0 && (
                 <div className="w-full h-full relative">
                     {/* Componente LiquidEther a tutto schermo */}
-                    <LiquidEther
+                    <LiquidEtherElement
                         colors={['#5227FF', '#FF9FFC', '#B19EEF']} // I tuoi colori
                         mouseForce={20}
                         cursorSize={100}

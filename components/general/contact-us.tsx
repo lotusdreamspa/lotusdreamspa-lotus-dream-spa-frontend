@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { TextHover, Marquee } from "@/components";
+import { TextHoverElement, MarqueeElement } from "@/components";
 import Link from "next/link";
 export default function ContactUs() {
     const t = useTranslations("contactUsContent");
@@ -8,7 +8,7 @@ export default function ContactUs() {
             <div
                 id="contact-us"
                 className="mt-16 md:mt-0 w-full h-auto md:h-screen flex flex-col items-center padding-x pt-5 mb-16">
-                <Marquee
+                <MarqueeElement
                     titile1="Get"
                     titile2="in touch"
                     className="text-white"
@@ -28,7 +28,7 @@ export default function ContactUs() {
                         <button className="group flex gap-2 items-center text-[17px] font-semibold capitalize text-[#260A2F] bg-secondary rounded-full leading-tight tracking-tight px-4 py-3">
             
                             <Link href={t("contactUsLink")}>
-                                <TextHover
+                                <TextHoverElement
                                     titile1={t("contactUsBtn")}
                                     titile2={t("contactUsBtn")}
                                 />

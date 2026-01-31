@@ -10,6 +10,7 @@ export async function GET(request: Request) {
   if (!date) return NextResponse.json({ error: 'Date required' }, { status: 400 });
 
   const data = await fetchBookingsByDate(date);
+  console.log(data, 'dentro api')
   return NextResponse.json({ data });
 }
 

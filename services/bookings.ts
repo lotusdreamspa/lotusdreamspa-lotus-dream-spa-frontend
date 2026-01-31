@@ -14,7 +14,7 @@ export async function fetchBookingsByDate(date: string) {
   try {
     // 3. Chiamata Server-to-Server
     // Nota: 'no-store' è cruciale per i booking per evitare dati vecchi
-    const res = await fetch(`${STRAPI_URL}/api/bookings?filters[date][$eq]=${date}`, {
+    const res = await fetch(`${STRAPI_URL}/api/bookings?filters[date][$eq]=${date}&populate=masseuse`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

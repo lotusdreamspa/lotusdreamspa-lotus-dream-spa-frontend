@@ -22,7 +22,6 @@ const getLocalISOString = (dateInput: Date | string | null): string => {
 };
 
 export default function BookingForm({ initialTreatments }: BookingFormProps) {
-
     // --- STATE LEVEL ---
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,9 +31,6 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
     const [selections, setSelections] = useState<{ id: string; treatment: Treatment; pkg: PackageComponent }[]>([]);
     const [showSelectionModal, setShowSelectionModal] = useState(false);
     const [triggerGlow, setTriggerGlow] = useState(false);
-
-    // ... altri stati ...
-
 
     // NUOVO STATO: Mappa l'indice della selezione (0, 1, 2...) all'oggetto Massaggiatrice
     const [assignedMasseuses, setAssignedMasseuses] = useState<Record<number, any>>({});
@@ -66,6 +62,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
     const [currentMonth, setCurrentMonth] = useState(new Date());
     const [existingBookings, setExistingBookings] = useState<Booking[]>([]);
     const [loadingBookings, setLoadingBookings] = useState(false);
+    const [isConfirmed, setIsConfirmed] = useState(false)
 
     // Env vars
     const MIN_NOTICE_MINUTES = parseInt(process.env.NEXT_PUBLIC_BOOKING_NOTICE_MINUTES || '60', 10);
@@ -79,8 +76,23 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
         setFormData(prev => ({ ...prev, isKhmer: isKhmerURL }));
     }, [pathname]);
 
-
-    // --- HELPERS SELEZIONI ---
+        // --- SCROLL EFFECT ---
+    useEffect(() => {
+        const slowScrollToTop = (duration: number) => {
+            const startPosition = window.scrollY;
+            const startTime = performance.now();
+            function animation(currentTime: number) {
+                const timeElapsed = currentTime - startTime;
+                let progress = timeElapsed / duration;
+                if (progress > 1) progress = 1;
+                const ease = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
+                window.scrollTo(0, startPosition * (1 - ease));
+                if (timeElapsed < duration) requestAnimationFrame(animation);
+            }
+            requestAnimationFrame(animation);
+        };
+        if (step > 1) slowScrollToTop(1000);
+    }, [step]);
 
     const removeSelection = (indexToRemove: number) => {
         setTriggerGlow(true);
@@ -141,29 +153,15 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
         }
     }, [persons, selections]);
 
+
+    const formatPrice = (priceUsd: number) => {
+        if (formData.isKhmer) {
+            return `${(priceUsd * 4000).toLocaleString('en-US')} ៛`;
+        }
+        return `$ ${priceUsd}`;
+    };
+
     const currentTotal = selections.reduce((acc, curr) => acc + (curr.pkg.discountedPrice || curr.pkg.price), 0);
-
-
-    // --- SCROLL EFFECT ---
-    useEffect(() => {
-        const slowScrollToTop = (duration: number) => {
-            const startPosition = window.scrollY;
-            const startTime = performance.now();
-            function animation(currentTime: number) {
-                const timeElapsed = currentTime - startTime;
-                let progress = timeElapsed / duration;
-                if (progress > 1) progress = 1;
-                const ease = progress < 0.5 ? 2 * progress * progress : -1 + (4 - 2 * progress) * progress;
-                window.scrollTo(0, startPosition * (1 - ease));
-                if (timeElapsed < duration) requestAnimationFrame(animation);
-            }
-            requestAnimationFrame(animation);
-        };
-        if (step > 1) slowScrollToTop(1000);
-    }, [step]);
-
-
-
 
     // --- STEP 3: FETCH BOOKINGS (VERSIONE BLINDATA) ---
     useEffect(() => {
@@ -227,12 +225,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
     }, [step, formData.date]);
 
     // Helper Price
-    const formatPrice = (priceUsd: number) => {
-        if (formData.isKhmer) {
-            return `${(priceUsd * 4000).toLocaleString('en-US')} ៛`;
-        }
-        return `$ ${priceUsd}`;
-    };
+
 
     // --- STEP 4: AUTO-ASSIGN THERAPISTS ---
     useEffect(() => {
@@ -279,9 +272,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                             // Check DB Bookings
                             const isBusyInDB = todaysBookings.some((b: any) => {
                                 const bAttr = b.attributes || b;
-                                // Adatta in base a come Strapi restituisce la relazione (id o data.id)
-                                const bMasseuseId = bAttr.masseuse?.data?.id || bAttr.masseuse?.id;
-                                
+                                const bMasseuseId = bAttr?.masseuse?.id ;
                                 if (String(bMasseuseId) !== String(m.id)) return false;
 
                                 const bStart = toMin((bAttr.time || "").substring(0, 5));
@@ -301,7 +292,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                         if (available.length > 0) {
                             const randomIndex = Math.floor(Math.random() * available.length);
                             const chosenOne = available[randomIndex];
-                            
+
                             newAssignments[idx] = chosenOne;
                             currentlyAssignedIds.push(String(chosenOne.id));
                         }
@@ -719,129 +710,173 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
     // STEP 4: RECAP & SUBMIT
     // STEP 4: RECAP & SUBMIT
     // STEP 4: RECAP & SUBMIT
-    const renderStep4 = () => {
-        const grandTotal = selections.reduce((acc, item) => acc + (item.pkg.discountedPrice || item.pkg.price), 0);
+const renderStep4 = () => {
+    const grandTotal = selections.reduce((acc, item) => acc + (item.pkg.discountedPrice || item.pkg.price), 0);
 
+    // --- NUOVO LAYOUT DI CONFERMA (POST-BOOKING) ---
+    if (isConfirmed) {
         return (
-            <div className="animate-in fade-in slide-in-from-right-8 duration-500 w-full max-w-2xl bg-white/5 border border-lotus-gold/20 p-8 rounded-lg shadow-2xl backdrop-blur-sm">
-                <h2 className="text-3xl font-agr text-white mb-8 text-center">Confirm Reservation</h2>
+            <div className="animate-in fade-in zoom-in duration-500 w-full max-w-2xl bg-white/5 border border-lotus-gold/40 p-10 rounded-lg shadow-2xl backdrop-blur-md text-center">
+                <div className="flex justify-center mb-6">
+                    <div className="bg-lotus-gold rounded-full p-4 shadow-[0_0_30px_rgba(212,175,55,0.3)]">
+                        <Check size={48} className="text-lotus-blue" />
+                    </div>
+                </div>
+                
+                <h2 className="text-4xl font-agr text-white mb-4">Booking Confirmed!</h2>
+            
 
-                {/* ... (Sezioni Guest Details e Date & Time rimangono uguali) ... */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-white mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left bg-white/5 p-6 rounded-lg border border-white/10 mb-2 mt-16">
                     <div className="space-y-1">
-                        <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-2">Guest Details</p>
-                        <div className="text-xl font-medium flex items-center gap-2">
-                            {formData.name || 'Guest'}
-                            {persons > 1 && <span className="text-sm text-lotus-gold bg-lotus-gold/10 px-2 py-0.5 rounded-full border border-lotus-gold/20">Party of {persons}</span>}
-                        </div>
-                        <div className="text-gray-400 text-sm flex items-center gap-2"><Mail size={14} /> {formData.email}</div>
-                        <div className="text-gray-400 text-sm flex items-center gap-2"><Phone size={14} /> {formData.phone}</div>
-                        <div className="text-gray-400 text-sm flex items-center gap-2 mt-1"><Globe size={14} /> Language: {formData.isKhmer ? 'Khmer' : 'English'}</div>
+                        <p className="text-lotus-bronze text-[10px] uppercase font-bold tracking-[0.2em]">Reservation Details</p>
+                        <p className="text-white text-sm">Date: {formData.date?.toLocaleDateString()}</p>
+                        <p className="text-white text-sm">Time: {formData.time}</p>
+                        <p className="text-white text-sm">Guests: {persons}</p>
                     </div>
                     <div className="space-y-1">
-                        <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-2">Date & Time</p>
-                        <div className="flex items-center gap-2 text-lg font-medium"><CalendarIcon size={18} className="text-lotus-gold" /> {formData.date?.toLocaleDateString()}</div>
-                        <div className="flex items-center gap-2 text-2xl font-bold text-white"><Clock size={20} className="text-lotus-gold" /> {formData.time}</div>
+                        <p className="text-lotus-bronze text-[10px] uppercase font-bold tracking-[0.2em]">Notification</p>
+                        <p className="text-green-400 text-sm flex items-center gap-1 font-medium">
+                            <Mail size={14} /> Confirmation Email Sent
+                        </p>
+                        <p className="text-gray-400 text-[11px] leading-tight mt-1">Sent to: {formData.email}</p>
                     </div>
-
-                    <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
-                        <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-3">Selected Treatments ({selections.length})</p>
-
-                        {/* Indicatore di caricamento assegnazione */}
-                        {calculatingAssignment && <div className="text-xs text-lotus-gold animate-pulse mb-2">Assigning therapists...</div>}
-
-                        <div className="bg-white/5 rounded border border-white/10 divide-y divide-white/5">
-                            {selections.map((sel, idx) => {
-                                // Recuperiamo la massaggiatrice assegnata dallo stato
-                                const assigned = assignedMasseuses[idx];
-                                const masseuseName = assigned ? (assigned.attributes?.name || assigned.name) : null;
-
-                                return (
-                                    <div key={idx} className="p-4 flex justify-between items-center">
-                                        <div>
-                                            <div className="text-xs text-gray-500 uppercase font-bold mb-1">Guest {idx + 1}</div>
-                                            <div className="font-semibold text-lotus-gold">{sel.treatment.title}</div>
-                                            <div className="text-sm text-gray-400 flex items-center gap-1">
-                                                {sel.pkg.minutes} Minutes Session
-
-                                                {/* --- QUI MOSTRIAMO IL NOME --- */}
-                                                {masseuseName && (
-                                                    <>
-                                                        <span>with</span>
-                                                        <span className="text-white font-bold bg-white/10 px-1.5 rounded ml-1">{masseuseName}</span>
-                                                    </>
-                                                )}
-
-                                                {!masseuseName && !calculatingAssignment && <span className="text-gray-600 text-xs italic ml-2">(Any available)</span>}
-                                            </div>
-                                        </div>
-                                        <div className="text-xl text-white">{formatPrice(sel.pkg.discountedPrice || sel.pkg.price)}</div>
-                                    </div>
-                                );
-                            })}
-                            <div className="p-4 bg-lotus-gold/10 flex justify-between items-center">
-                                <div className="font-bold text-white uppercase tracking-wider">Total Amount</div>
-                                <div className="text-3xl text-lotus-gold">{formatPrice(grandTotal)}</div>
-                            </div>
-                        </div>
+                    <div className="md:col-span-2 mt-2">
+                        <p className="text-lotus-bronze text-[10px] uppercase font-bold tracking-[0.2em] mb-2">Treatments</p>
+                        <ul className="space-y-1">
+                            {selections.map((sel, i) => (
+                                <li key={i} className="text-xs text-gray-300 flex justify-between">
+                                    <span>• {sel.treatment.title} ({sel.pkg.minutes} min)</span>
+                                    {assignedMasseuses[i] && (
+                                        <span className="text-lotus-gold">with {assignedMasseuses[i].attributes?.name || assignedMasseuses[i].name}</span>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center pt-6 border-t border-white/10">
-                    <button onClick={prevStep} className="text-white hover:text-lotus-gold underline underline-offset-4 transition-colors">Modify Details</button>
-                    <button
-                        disabled={isSubmitting || calculatingAssignment} // Disabilita mentre calcola
-                        onClick={async () => {
-                            setIsSubmitting(true);
-                            try {
-                                const dateStr = getLocalISOString(formData.date);
+                <p className="text-gray-400 text-sm mb-8 px-4">
+                    Please arrive 10 minutes before your scheduled time. We look forward to seeing you.
+                </p>
 
-                                const bookingPromises = selections.map((sel, idx) => {
-                                    // Recuperiamo l'ID della massaggiatrice GIA' ASSEGNATA
-                                    // Non facciamo fetch qui, usiamo quello che l'utente vede a video!
-                                    const assignedId = assignedMasseuses[idx]?.documentId || null;
-
-                                    const payload = {
-                                        name: formData.name,
-                                        email: formData.email,
-                                        phone: formData.phone,
-                                        isKhmer: formData.isKhmer,
-                                        date: dateStr,
-                                        time: formData.time,
-                                        persons_count: persons,
-                                        treatment: sel.treatment,
-                                        selectedPackage: sel.pkg,
-                                        duration: sel.pkg.minutes,
-                                        price: sel.pkg.discountedPrice || sel.pkg.price,
-                                        masseuseDocId: assignedId // Passiamo l'ID salvato nello stato
-                                    };
-
-                                    console.log(payload)
-                                    
-                                    return fetch('/api/bookings', {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify(payload)
-                                    }).then(res => { if (!res.ok) throw new Error("A booking failed"); return res.json(); });
-                                });
-
-                                await Promise.all(bookingPromises);
-                                alert(`Success! ${persons} bookings confirmed.`);
-                            } catch (error) {
-                                console.error(error);
-                                alert("Something went wrong processing your bookings. Please contact us.");
-                            } finally {
-                                setIsSubmitting(false);
-                            }
-                        }}
-                        className={`bg-lotus-gold hover:bg-white text-lotus-blue font-bold py-3 px-12 rounded shadow-lg transform hover:scale-105 transition-all flex items-center gap-2 ${isSubmitting || calculatingAssignment ? 'opacity-70 cursor-wait' : ''}`}
-                    >
-                        {isSubmitting ? <>Processing...</> : <><Check size={20} /> Confirm Booking</>}
-                    </button>
-                </div>
+                <button 
+                    onClick={() => window.location.href = '/'} 
+                    className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold py-3 px-10 rounded transition-all flex items-center gap-2 mx-auto"
+                >
+                    Return to Home
+                </button>
             </div>
         );
-    };
+    }
+
+    // --- LAYOUT DI REVISIONE (IL TUO ORIGINALE) ---
+    return (
+        <div className="animate-in fade-in slide-in-from-right-8 duration-500 w-full max-w-2xl bg-white/5 border border-lotus-gold/20 p-8 rounded-lg shadow-2xl backdrop-blur-sm">
+            <h2 className="text-3xl font-agr text-white mb-8 text-center">Confirm Reservation</h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-white mb-8">
+                <div className="space-y-1">
+                    <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-2">Guest Details</p>
+                    <div className="text-xl font-medium flex items-center gap-2">
+                        {formData.name || 'Guest'}
+                        {persons > 1 && <span className="text-sm text-lotus-gold bg-lotus-gold/10 px-2 py-0.5 rounded-full border border-lotus-gold/20">Party of {persons}</span>}
+                    </div>
+                    <div className="text-gray-400 text-sm flex items-center gap-2"><Mail size={14} /> {formData.email}</div>
+                    <div className="text-gray-400 text-sm flex items-center gap-2"><Phone size={14} /> {formData.phone}</div>
+                    <div className="text-gray-400 text-sm flex items-center gap-2 mt-1"><Globe size={14} /> Language: {formData.isKhmer ? 'Khmer' : 'English'}</div>
+                </div>
+                <div className="space-y-1">
+                    <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-2">Date & Time</p>
+                    <div className="flex items-center gap-2 text-lg font-medium"><CalendarIcon size={18} className="text-lotus-gold" /> {formData.date?.toLocaleDateString()}</div>
+                    <div className="flex items-center gap-2 text-2xl font-bold text-white"><Clock size={20} className="text-lotus-gold" /> {formData.time}</div>
+                </div>
+
+                <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
+                    <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-3">Selected Treatments ({selections.length})</p>
+                    {calculatingAssignment && <div className="text-xs text-lotus-gold animate-pulse mb-2">Assigning therapists...</div>}
+
+                    <div className="bg-white/5 rounded border border-white/10 divide-y divide-white/5">
+                        {selections.map((sel, idx) => {
+                            const assigned = assignedMasseuses[idx];
+                            const masseuseName = assigned ? (assigned.attributes?.name || assigned.name) : null;
+
+                            return (
+                                <div key={idx} className="p-4 flex justify-between items-center">
+                                    <div>
+                                        <div className="text-xs text-gray-500 uppercase font-bold mb-1">Guest {idx + 1}</div>
+                                        <div className="font-semibold text-lotus-gold">{sel.treatment.title}</div>
+                                        <div className="text-sm text-gray-400 flex items-center gap-1">
+                                            {sel.pkg.minutes} Minutes Session
+                                            {masseuseName && (
+                                                <>
+                                                    <span>with</span>
+                                                    <span className="text-white font-bold bg-white/10 px-1.5 rounded ml-1">{masseuseName}</span>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="text-xl text-white">{formatPrice(sel.pkg.discountedPrice || sel.pkg.price)}</div>
+                                </div>
+                            );
+                        })}
+                        <div className="p-4 bg-lotus-gold/10 flex justify-between items-center">
+                            <div className="font-bold text-white uppercase tracking-wider">Total Amount</div>
+                            <div className="text-3xl text-lotus-gold">{formatPrice(grandTotal)}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex justify-between items-center pt-6 border-t border-white/10">
+                <button onClick={prevStep} className="text-white hover:text-lotus-gold underline underline-offset-4 transition-colors">Modify Details</button>
+                <button
+                    disabled={isSubmitting || calculatingAssignment}
+                    onClick={async () => {
+                        setIsSubmitting(true);
+                        try {
+                            const dateStr = getLocalISOString(formData.date);
+                            const bookingPromises = selections.map((sel, idx) => {
+                                const assignedId = assignedMasseuses[idx]?.documentId || null;
+                                const payload = {
+                                    name: formData.name,
+                                    email: formData.email,
+                                    phone: formData.phone,
+                                    isKhmer: formData.isKhmer,
+                                    date: dateStr,
+                                    time: formData.time,
+                                    persons_count: persons,
+                                    treatment: sel.treatment,
+                                    selectedPackage: sel.pkg,
+                                    duration: sel.pkg.minutes,
+                                    price: sel.pkg.discountedPrice || sel.pkg.price,
+                                    masseuseDocId: assignedId
+                                };
+
+                                return fetch('/api/bookings', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(payload)
+                                }).then(res => { if (!res.ok) throw new Error("A booking failed"); return res.json(); });
+                            });
+
+                            await Promise.all(bookingPromises);
+                            // Setta qui il tuo stato per mostrare il layout di conferma
+                            setIsConfirmed(true); 
+                        } catch (error) {
+                            console.error(error);
+                            alert("Something went wrong processing your bookings. Please contact us.");
+                        } finally {
+                            setIsSubmitting(false);
+                        }
+                    }}
+                    className={`bg-lotus-gold hover:bg-white text-lotus-blue font-bold py-3 px-12 rounded shadow-lg transform hover:scale-105 transition-all flex items-center gap-2 ${isSubmitting || calculatingAssignment ? 'opacity-70 cursor-wait' : ''}`}
+                >
+                    {isSubmitting ? <>Processing...</> : <><Check size={20} /> Confirm Booking</>}
+                </button>
+            </div>
+        </div>
+    );
+};
 
     return (
         <div className="w-full flex flex-col items-center">

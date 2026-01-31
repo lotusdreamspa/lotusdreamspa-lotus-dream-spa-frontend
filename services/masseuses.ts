@@ -10,7 +10,7 @@ export async function fetchAllMasseuses() {
     // 2. pagination[pageSize]=100 -> Prendiamo tutti (fino a 100)
     // 3. filters[isActive][$eq]=true -> Opzionale: se hai un campo 'isActive' su Strapi per nascondere chi non lavora più
     
-    const res = await fetch(`${STRAPI_URL}/api/masseusesnm`, {
+    const res = await fetch(`${STRAPI_URL}/api/masseuses`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -21,6 +21,8 @@ export async function fetchAllMasseuses() {
       // Se cambi staff su Strapi, ci vorrà max 1 ora per vederlo o devi rebuildare.
       
     });
+
+    console.log(res)
 
     if (!res.ok) {
       throw new Error(`Strapi error fetching masseuses: ${res.statusText}`);

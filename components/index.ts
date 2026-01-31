@@ -1,10 +1,10 @@
 export { default as NavbarElement } from "./general/navbar";
-export { default as FooterElement } from "./general/Footer";
+export { default as FooterElement } from "./general/footer";
 export { default as Preload } from "./general/preload";
 export { default as HeroElement } from "./general/hero";
-export {default as LiquidEther} from "./general/LiquidEther";
+export { default as LiquidEther } from "./general/liquidEther";
 export { default as NotJust } from "./general/not-just";
-export { default as ImageCtaListElement } from "./general/ImageCtaList";
+export { default as ImageCtaListElement } from "./general/imageCtaList";
 export { default as VideoCta } from "./general/videoCta";
 export { default as WhereWeAre } from "./general/where-we-are";
 export { default as Marquee } from "./general/marquee";

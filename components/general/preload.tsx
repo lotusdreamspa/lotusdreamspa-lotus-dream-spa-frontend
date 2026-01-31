@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import LiquidEther from "@/components//general/LiquidEther"; // Assicurati che il percorso sia corretto
+import LiquidEther from "@/components/general/liquidEther"; // Assicurati che il percorso sia corretto
 
 // Definizione dell'animazione: solo Opacity
 const opacityAnim = {

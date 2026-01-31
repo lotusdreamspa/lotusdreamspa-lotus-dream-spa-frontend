@@ -4,8 +4,6 @@ export { default as Preload } from "./general/preload";
 export { default as HeroElement } from "./general/hero";
 export {default as LiquidEther} from "./general/LiquidEther";
 export { default as NotJust } from "./general/not-just";
-export { default as OurWay } from "./general/our-way";
-export { default as OurWayCards } from "./general/our-way-cards";
 export { default as ImageCtaListElement } from "./general/ImageCtaList";
 export { default as VideoCta } from "./general/videoCta";
 export { default as WhereWeAre } from "./general/where-we-are";

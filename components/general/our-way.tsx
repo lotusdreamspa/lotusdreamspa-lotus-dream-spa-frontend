@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { Marquee, OurWayCards } from "@/components";
+import { Marquee } from "@/components";
 import { thanksFor } from "@/public";
 
 export default function OurWay() {

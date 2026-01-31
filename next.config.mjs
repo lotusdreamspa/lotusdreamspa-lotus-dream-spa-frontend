@@ -2,7 +2,9 @@
 
 import createNextIntlPlugin from "next-intl/plugin";
 
-const withNextIntl = createNextIntlPlugin();
+const withNextIntl = createNextIntlPlugin(
+  './i18n/request.ts' // <-- Se non hai 'src', togli 'src/' dal path
+);
 const nextConfig = {  images: {
     remotePatterns: [
       {

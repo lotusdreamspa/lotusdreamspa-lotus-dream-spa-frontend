@@ -1,29 +1,20 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Treatment, PackageComponent } from "@/types";
+import { Treatment, PackageComponent } from "@/types"; // Assicurati che i path siano corretti
 import { ChevronLeft, ChevronRight, Clock, Check, Calendar as CalendarIcon, User, Mail, Phone, Globe, Trash2, X } from "lucide-react";
 import { usePathname } from 'next/navigation';
-
-// --- TIPI ---
-interface Booking {
-    id: string;
-    date: string;
-    time: string;
-}
+import { Booking } from '@/types';
 
 interface BookingFormProps {
     initialTreatments: Record<string, Treatment[]>;
 }
 
 // --- HELPER CRUCIALE PER LE DATE (SOLUZIONE TIMEZONE) ---
-// Questa funzione garantisce che la data sia sempre YYYY-MM-DD locale
-// senza conversioni in UTC che causano il problema del "giorno prima".
 const getLocalISOString = (dateInput: Date | string | null): string => {
     if (!dateInput) return '';
     const d = new Date(dateInput);
-    if (isNaN(d.getTime())) return ''; // Gestione date non valide
-    
+    if (isNaN(d.getTime())) return '';
     const year = d.getFullYear();
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
@@ -37,28 +28,127 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [persons, setPersons] = useState(1);
 
+    // Gestione selezioni multiple
     const [selections, setSelections] = useState<{ id: string; treatment: Treatment; pkg: PackageComponent }[]>([]);
     const [showSelectionModal, setShowSelectionModal] = useState(false);
+    const [triggerGlow, setTriggerGlow] = useState(false);
 
-    // Helpers Selezioni
+    // ... altri stati ...
+
+
+    // NUOVO STATO: Mappa l'indice della selezione (0, 1, 2...) all'oggetto Massaggiatrice
+    const [assignedMasseuses, setAssignedMasseuses] = useState<Record<number, any>>({});
+    const [calculatingAssignment, setCalculatingAssignment] = useState(false);
+
+    // Categories
+    const categories = Object.keys(initialTreatments);
+    const [activeCat, setActiveCat] = useState(categories[0] || '');
+
+    // Form Data - [FIX] Aggiunto 'duration' nello stato iniziale
+    const [formData, setFormData] = useState({
+        isKhmer: false,
+        email: '',
+        phone: '',
+        name: '',
+
+        // Dati Selezione
+        treatment: null as Treatment | null, // Trattamento attualmente "aperto" nella UI
+
+        // [FIX CRUCIALE] La durata che guida il calendario.
+        // Viene aggiornata ogni volta che si aggiunge una selezione.
+        duration: 60,
+
+        date: null as Date | null,
+        time: ''
+    });
+
+    // Calendar & Bookings State
+    const [currentMonth, setCurrentMonth] = useState(new Date());
+    const [existingBookings, setExistingBookings] = useState<Booking[]>([]);
+    const [loadingBookings, setLoadingBookings] = useState(false);
+
+    // Env vars
+    const MIN_NOTICE_MINUTES = parseInt(process.env.NEXT_PUBLIC_BOOKING_NOTICE_MINUTES || '60', 10);
+    const MAX_CONTEMPORANY_TREATMENTS = parseInt(process.env.NEXT_PUBLIC_CONTEMPORANY_TREATMENTS || '4', 10);
+
+    // URL Logic
+    const pathname = usePathname();
+    useEffect(() => {
+        if (!pathname) return;
+        const isKhmerURL = pathname.startsWith('/kh');
+        setFormData(prev => ({ ...prev, isKhmer: isKhmerURL }));
+    }, [pathname]);
+
+
+    // --- HELPERS SELEZIONI ---
+
     const removeSelection = (indexToRemove: number) => {
-        setSelections(prev => prev.filter((_, i) => i !== indexToRemove));
+        setTriggerGlow(true);
+        setSelections(prev => {
+            const newSelections = prev.filter((_, i) => i !== indexToRemove);
+
+            // [FIX] Se rimuoviamo tutto, resettiamo la durata a 60
+            // Se rimane qualcosa, aggiorniamo la durata con quella del primo elemento rimasto
+            const nextDuration = newSelections.length > 0 ? newSelections[0].pkg.minutes : 60;
+            setFormData(f => ({ ...f, duration: nextDuration }));
+
+            return newSelections;
+        });
+        const timer = setTimeout(() => {
+            setTriggerGlow(false);
+        }, 500); // 0.5 secondi di durata
+
+        // Cleanup del timer se il componente viene smontato o l'effetto rieseguito rapidamente
+        return () => clearTimeout(timer);
     };
 
     const addSelection = (treatment: Treatment, pkg: PackageComponent) => {
+        setTriggerGlow(true);
         if (selections.length < persons) {
             setSelections(prev => [...prev, { id: `${Date.now()}`, treatment, pkg }]);
+
+            // [FIX CRUCIALE] Aggiorniamo IMMEDIATAMENTE la durata nel formData
+            // Usiamo la durata dell'ultimo pacchetto aggiunto (o la logica che preferisci, es. il massimo)
+            // Qui assumiamo che per gruppi si tenda a fare trattamenti di lunghezza simile o che l'ultimo comandi.
+            setFormData(prev => ({
+                ...prev,
+                duration: pkg.minutes
+            }));
         }
+        const timer = setTimeout(() => {
+            setTriggerGlow(false);
+        }, 500); // 0.5 secondi di durata
+
+        // Cleanup del timer se il componente viene smontato o l'effetto rieseguito rapidamente
+        return () => clearTimeout(timer);
     };
+
+    // --- AUTO-TRIM SELECTIONS ---
+    // Se l'utente riduce il numero di persone (es. da 4 a 2), 
+    // tagliamo automaticamente le selezioni in eccesso mantenendo le prime.
+    useEffect(() => {
+        if (selections.length > persons) {
+            // 1. Tagliamo l'array mantenendo solo i primi N elementi
+            const trimmedSelections = selections.slice(0, persons);
+            setSelections(trimmedSelections);
+
+            // 2. [IMPORTANTE] Sincronizziamo la durata
+            // Se dopo il taglio rimane qualcosa, usiamo la durata del primo pacchetto rimasto.
+            // Se non rimane nulla, resettiamo a 60.
+            const nextDuration = trimmedSelections.length > 0 ? trimmedSelections[0].pkg.minutes : 60;
+
+            setFormData(prev => ({ ...prev, duration: nextDuration }));
+        }
+    }, [persons, selections]);
 
     const currentTotal = selections.reduce((acc, curr) => acc + (curr.pkg.discountedPrice || curr.pkg.price), 0);
 
-    // --- CUSTOM SLOW SCROLL EFFECT ---
+
+    // --- SCROLL EFFECT ---
     useEffect(() => {
         const slowScrollToTop = (duration: number) => {
             const startPosition = window.scrollY;
             const startTime = performance.now();
-
             function animation(currentTime: number) {
                 const timeElapsed = currentTime - startTime;
                 let progress = timeElapsed / duration;
@@ -72,49 +162,17 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
         if (step > 1) slowScrollToTop(1000);
     }, [step]);
 
-    // Categories
-    const categories = Object.keys(initialTreatments);
-    const [activeCat, setActiveCat] = useState(categories[0] || '');
 
-    // Form Data
-    const [formData, setFormData] = useState({
-        isKhmer: false,
-        email: '',
-        phone: '',
-        name: '',
-        treatment: null as Treatment | null,
-        selectedPackage: null as PackageComponent | null,
-        date: null as Date | null,
-        time: ''
-    });
 
-    // Calendar & Bookings State
-    const [currentMonth, setCurrentMonth] = useState(new Date());
-    const [existingBookings, setExistingBookings] = useState<Booking[]>([]);
-    const [loadingBookings, setLoadingBookings] = useState(false);
-    
-    // Env vars con fallback
-    const MIN_NOTICE_MINUTES = parseInt(process.env.NEXT_PUBLIC_BOOKING_NOTICE_MINUTES || '60', 10);
-    const MAX_CONTEMPORANY_TREATMENTS = parseInt(process.env.NEXT_PUBLIC_CONTEMPORANY_TREATMENTS || '4', 10);
 
-    // URL Logic
-    const pathname = usePathname();
-    useEffect(() => {
-        if (!pathname) return;
-        const isKhmerURL = pathname.startsWith('/kh');
-        setFormData(prev => ({ ...prev, isKhmer: isKhmerURL }));
-    }, [pathname]);
-
-    // --- FETCH BOOKINGS (FIXED) ---
+    // --- STEP 3: FETCH BOOKINGS (VERSIONE BLINDATA) ---
     useEffect(() => {
         if (step === 3 && formData.date) {
             setLoadingBookings(true);
             setExistingBookings([]);
 
-            // [FIX 1] Usiamo l'helper per ottenere la stringa locale corretta (es. "2026-01-28")
             const dateStr = getLocalISOString(formData.date);
-
-            console.log(`Fetching bookings for: ${dateStr}`); // Debug Log
+            console.log(`Fetching bookings for: ${dateStr}`);
 
             fetch(`/api/bookings?date=${dateStr}`)
                 .then(res => {
@@ -123,11 +181,41 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                 })
                 .then((json) => {
                     const rawData = json.data || [];
-                    const mappedBookings: Booking[] = rawData.map((item: any) => ({
-                        id: item.id?.toString() || 'temp-id',
-                        date: item.attributes?.date || item.date,
-                        time: item.attributes?.time || item.time
-                    }));
+
+                    const mappedBookings: Booking[] = rawData.map((item: any) => {
+                        const attrs = item.attributes || item;
+
+                        // [FIX ROBUSTEZZA DATI]
+                        // Cerchiamo duration ovunque: item.duration, attrs.duration, etc.
+                        let rawDuration = attrs.duration ?? item.duration;
+
+                        // Conversione sicura in numero
+                        const cleanDuration = Number(rawDuration);
+
+                        // Fallback a 60 solo se il dato è mancante o 0
+                        const finalDuration = (cleanDuration > 0) ? cleanDuration : 60;
+
+                        return {
+                            id: item.id?.toString() || 'temp-id',
+                            documentId: item.documentId || item.id?.toString(),
+
+                            date: attrs.date,
+                            time: attrs.time,
+
+                            // Assegniamo la durata pulita
+                            duration: finalDuration,
+
+                            price: Number(attrs.price) || 0,
+                            bookingStatus: attrs.bookingStatus || 'confirmed',
+
+                            treatment: attrs.treatment,
+                            customer: attrs.customer,
+                            masseuse: attrs.masseuse
+                        };
+                    });
+
+                    // Debug: Controlla la console per vedere se le durate sono 120, 90, etc.
+                    // console.log("✅ Mapped Bookings (Snapshot):", JSON.parse(JSON.stringify(mappedBookings)));
                     setExistingBookings(mappedBookings);
                 })
                 .catch(err => {
@@ -146,9 +234,96 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
         return `$ ${priceUsd}`;
     };
 
+    // --- STEP 4: AUTO-ASSIGN THERAPISTS ---
+    useEffect(() => {
+        if (step === 4) {
+            const assignTherapists = async () => {
+                setCalculatingAssignment(true);
+                setAssignedMasseuses({}); // Reset pre-calcolo
+
+                try {
+                    const dateStr = getLocalISOString(formData.date);
+                    const myStartTime = formData.time;
+
+                    // 1. Fetch Parallelo: Massaggiatrici e Prenotazioni Esistenti
+                    const [masseuseRes, bookingsRes] = await Promise.all([
+                        fetch('/api/masseuses'),
+                        fetch(`/api/bookings?date=${dateStr}`)
+                    ]);
+
+                    if (!masseuseRes.ok || !bookingsRes.ok) throw new Error("Data fetch failed");
+
+                    const masseuseJson = await masseuseRes.json();
+                    const bookingsJson = await bookingsRes.json();
+
+                    const allMasseuses: any[] = masseuseJson.data || [];
+                    const todaysBookings: any[] = bookingsJson.data || [];
+
+                    // Helpers
+                    const toMin = (t: string) => {
+                        const [h, m] = t.split(':').map(Number);
+                        return h * 60 + m;
+                    };
+
+                    const newAssignments: Record<number, any> = {};
+                    const currentlyAssignedIds: string[] = []; // Per evitare doppi assegnamenti nello stesso batch
+
+                    // 2. Ciclo su ogni selezione dell'utente per trovare un terapista
+                    selections.forEach((sel, idx) => {
+                        const myStart = toMin(myStartTime);
+                        const myDuration = sel.pkg.minutes;
+                        const myEnd = myStart + myDuration;
+
+                        // Filtra chi è libero
+                        const available = allMasseuses.filter(m => {
+                            // Check DB Bookings
+                            const isBusyInDB = todaysBookings.some((b: any) => {
+                                const bAttr = b.attributes || b;
+                                // Adatta in base a come Strapi restituisce la relazione (id o data.id)
+                                const bMasseuseId = bAttr.masseuse?.data?.id || bAttr.masseuse?.id;
+                                
+                                if (String(bMasseuseId) !== String(m.id)) return false;
+
+                                const bStart = toMin((bAttr.time || "").substring(0, 5));
+                                const bDuration = Number(bAttr.duration || 60);
+                                const bEnd = bStart + bDuration;
+
+                                return Math.max(myStart, bStart) < Math.min(myEnd, bEnd); // Overlap Logic
+                            });
+
+                            // Check Current Batch (se ho 2 ospiti, non assegno la stessa persona)
+                            const isBusyInBatch = currentlyAssignedIds.includes(String(m.id));
+
+                            return !isBusyInDB && !isBusyInBatch;
+                        });
+
+                        // Assegna Random
+                        if (available.length > 0) {
+                            const randomIndex = Math.floor(Math.random() * available.length);
+                            const chosenOne = available[randomIndex];
+                            
+                            newAssignments[idx] = chosenOne;
+                            currentlyAssignedIds.push(String(chosenOne.id));
+                        }
+                    });
+
+                    setAssignedMasseuses(newAssignments);
+
+                } catch (error) {
+                    console.error("Error assigning therapists:", error);
+                } finally {
+                    setCalculatingAssignment(false);
+                }
+            };
+
+            assignTherapists();
+        }
+    }, [step, selections, formData.date, formData.time]); // Riesegue se cambiano date o selezioni
+
     // Navigation Handlers
     const nextStep = () => setStep((p) => p + 1);
     const prevStep = () => setStep((p) => p - 1);
+
 
     // --- RENDERERS ---
 
@@ -237,9 +412,9 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
             <div className="animate-in fade-in slide-in-from-right-8 duration-500 w-full max-w-5xl relative">
                 {showSelectionModal && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-                        <div className="bg-lotus-blue border border-lotus-gold p-6 rounded-xl w-full max-w-md shadow-2xl relative">
+                        <div className="bg-lotus-blue border border-lotus-gold px-6 py-4 rounded-xl w-full max-w-md shadow-2xl relative">
                             <button onClick={() => setShowSelectionModal(false)} className="absolute top-4 right-4 text-gray-400 hover:text-white"><X /></button>
-                            <h3 className="text-xl font-agr text-white mb-4">Your Selections</h3>
+                            <h3 className="text-xl font-agr text-white mb-4 mt-8">Your Selections</h3>
                             {selections.length === 0 ? (
                                 <p className="text-gray-400 text-center py-4">No treatments selected yet.</p>
                             ) : (
@@ -282,9 +457,22 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                     </div>
                     <button
                         onClick={() => setShowSelectionModal(true)}
-                        className={`group flex items-center gap-3 px-5 py-3 rounded-lg border transition-all ${isQuotaMet ? 'bg-lotus-gold border-lotus-gold text-lotus-blue shadow-[0_0_15px_rgba(251,191,36,0.3)]' : 'bg-white/5 border-white/20 text-white hover:border-lotus-gold/50'}`}
+                        // Aggiungiamo 'duration-500' per rendere fluido l'effetto pulse
+                        className={`group flex items-center gap-3 px-5 py-3 rounded-lg border transition-all duration-500 
+                        ${triggerGlow
+                                // STATO 1: GLOW PULSE (Priorità massima, dura 0.5s)
+                                // Ombra dorata forte, bordo dorato, leggero ingrandimento e sfondo dorato trasparente
+                                ? 'bg-lotus-gold/20 border-lotus-gold text-white shadow-[0_0_25px_rgba(251,191,36,0.8)] scale-105 z-10'
+                                : isQuotaMet
+                                    // STATO 2: QUOTA RAGGIUNTA (Stato fisso)
+                                    ? 'bg-lotus-gold border-lotus-gold text-lotus-blue shadow-[0_0_15px_rgba(251,191,36,0.3)]'
+                                    // STATO 3: DEFAULT (Stato normale)
+                                    : 'bg-white/5 border-white/20 text-white hover:border-lotus-gold/50'
+                            }
+                    `}
                     >
                         <div className="text-right">
+                            {/* ... contenuto del bottone ... */}
                             <div className="text-[10px] uppercase font-bold tracking-widest opacity-70">Selected</div>
                             <div className="text-xl font-bold leading-none">{selections.length} / {persons}</div>
                         </div>
@@ -362,6 +550,34 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
         const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
         const timeSlots = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"];
 
+        // Helper Time
+        const timeToMinutes = (str: string) => {
+            const [h, m] = str.split(':').map(Number);
+            return h * 60 + m;
+        };
+
+        // --- CHECK DISPONIBILITÀ (Backwards) ---
+        // Controlla se 'minutePoint' è occupato da un booking iniziato prima
+        const getActiveBookingsAt = (targetDateStr: string, minutePoint: number, debugMode = false) => {
+            return existingBookings.filter(b => {
+                const bDate = getLocalISOString(b.date);
+                if (bDate !== targetDateStr) return false;
+
+                const start = timeToMinutes((b.time || "").substring(0, 5));
+                // Qui ora siamo sicuri che duration sia un numero (grazie al mapping nel useEffect)
+                const duration = b.duration || 60;
+                const end = start + duration;
+
+                const isOverlapping = start <= minutePoint && minutePoint < end;
+
+                if (debugMode && isOverlapping) {
+                    // console.log(`   -> Conflitto con Booking ID: ${b.documentId} (Start: ${start}, End: ${end})`);
+                }
+
+                return isOverlapping;
+            }).length;
+        };
+
         return (
             <div className="animate-in fade-in slide-in-from-right-8 duration-500 w-full max-w-5xl flex flex-col md:flex-row gap-8">
                 {/* Calendar */}
@@ -380,7 +596,6 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                             {Array(firstDayIndex).fill(null).map((_, i) => <div key={`empty-${i}`} />)}
                             {days.map(d => {
                                 const dateObj = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), d);
-                                // Confronto sicuro tra stringhe locali
                                 const isSelected = getLocalISOString(formData.date) === getLocalISOString(dateObj);
                                 const isPast = dateObj < new Date(today.setHours(0, 0, 0, 0));
                                 return (
@@ -411,23 +626,36 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                     ) : (
                         <div className="grid grid-cols-3 gap-3">
                             {timeSlots.map(time => {
-                                // [FIX 2] Calcolo Disponibilità Robusto
                                 const selectedDateStr = getLocalISOString(formData.date);
-                                
-                                const bookingsAtThisTime = existingBookings.filter(b => {
-                                    const bookingDateStr = getLocalISOString(b.date);
-                                    const bookingTime = (b.time || "").substring(0, 5);
-                                    return bookingDateStr === selectedDateStr && bookingTime === time;
-                                }).length;
+                                const myStart = timeToMinutes(time);
 
-                                const slotsRemaining = MAX_CONTEMPORANY_TREATMENTS - bookingsAtThisTime;
-                                const isFull = slotsRemaining < persons;
+                                // [FIX] Usiamo la durata salvata in formData nello step precedente
+                                const treatmentDuration = formData.duration || 60;
+                                const myEnd = myStart + treatmentDuration;
 
+                                // --- LOGICA CORE DI DISPONIBILITÀ ---
+                                let isBlocked = false;
+
+                                // CHECK "IN AVANTI": Il mio trattamento sbatte contro qualcuno nel futuro?
+                                // Loop ogni 30 min da MyStart a MyEnd
+                                for (let checkTime = myStart; checkTime < myEnd; checkTime += 30) {
+                                    const activeCount = getActiveBookingsAt(selectedDateStr, checkTime);
+                                    const slotsRemaining = MAX_CONTEMPORANY_TREATMENTS - activeCount;
+
+                                    if (slotsRemaining < persons) {
+                                        isBlocked = true; // Trovato un muro
+                                        break;
+                                    }
+                                }
+
+                                // Calcoli per UI Labels (Left, Full) basati sull'orario di Start
+                                const startActiveCount = getActiveBookingsAt(selectedDateStr, myStart);
+                                const startSlotsRemaining = MAX_CONTEMPORANY_TREATMENTS - startActiveCount;
+
+                                // Logica Too Close
                                 let isTooClose = false;
                                 const cutoffTime = new Date(now.getTime() + MIN_NOTICE_MINUTES * 60000);
-                                // Controllo "Oggi" usando il nostro helper sicuro
                                 const isToday = getLocalISOString(formData.date) === getLocalISOString(today);
-
                                 if (isToday && formData.date) {
                                     const slotTime = new Date(formData.date);
                                     const [hours] = time.split(':').map(Number);
@@ -435,7 +663,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                                     if (slotTime < cutoffTime) isTooClose = true;
                                 }
 
-                                const isDisabled = isFull || isTooClose;
+                                const isDisabled = isBlocked || isTooClose;
                                 const isSelected = formData.time === time;
 
                                 return (
@@ -445,16 +673,30 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                                         onClick={() => setFormData({ ...formData, time })}
                                         className={`py-4 rounded border text-sm transition-all relative font-medium
                                             ${isSelected ? 'bg-lotus-gold border-lotus-gold text-lotus-blue shadow-md' : 'border-lotus-gold/30 text-white hover:border-lotus-gold hover:bg-white/5'}
-                                            ${isDisabled ? 'cursor-not-allowed bg-black/20 border-transparent' : ''}
+                                            ${isDisabled ? 'cursor-not-allowed bg-black/20 border-transparent opacity-50' : ''}
                                         `}
                                     >
                                         {time}
-                                        {slotsRemaining < 3 && (
-                                            <span className={`absolute translate-x-1/2 text-[10px] text-white px-1.5 rounded whitespace-nowrap ${slotsRemaining > 0 ? 'bg-amber-500/80' : 'bg-red-500/80'}`}>
-                                                {slotsRemaining <= 0 ? 'Full' : `${slotsRemaining} Left`}
+
+                                        {/* Caso: Libero all'inizio, ma non c'è abbastanza tempo (Overlap futuro) */}
+                                        {isDisabled && !isTooClose && startSlotsRemaining >= persons && (
+                                            <span className="absolute translate-x-1/2 text-[10px] bg-red-500/80 text-white px-1 rounded whitespace-nowrap">
+                                                No Time
                                             </span>
                                         )}
-                                        {isTooClose && !isFull && <span className="absolute translate-x-1/2 text-[10px] bg-gray-600 text-white px-1 rounded whitespace-nowrap">Too late</span>}
+
+                                        {/* Caso: Slot con posti limitati */}
+                                        {!isDisabled && startSlotsRemaining < 3 && (
+                                            <span className={`absolute translate-x-1/2 text-[10px] text-white px-1.5 rounded whitespace-nowrap ${startSlotsRemaining > 0 ? 'bg-amber-500/80' : 'bg-red-500/80'}`}>
+                                                {`${startSlotsRemaining} Left`}
+                                            </span>
+                                        )}
+
+                                        {isDisabled && startSlotsRemaining < persons && !isTooClose && (
+                                            <span className="absolute translate-x-1/2 text-[10px] bg-red-500/80 text-white px-1 rounded whitespace-nowrap">Full</span>
+                                        )}
+
+                                        {isTooClose && <span className="absolute translate-x-1/2 text-[10px] bg-gray-600 text-white px-1 rounded whitespace-nowrap">Too late</span>}
                                     </button>
                                 );
                             })}
@@ -475,12 +717,16 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
     };
 
     // STEP 4: RECAP & SUBMIT
+    // STEP 4: RECAP & SUBMIT
+    // STEP 4: RECAP & SUBMIT
     const renderStep4 = () => {
         const grandTotal = selections.reduce((acc, item) => acc + (item.pkg.discountedPrice || item.pkg.price), 0);
 
         return (
             <div className="animate-in fade-in slide-in-from-right-8 duration-500 w-full max-w-2xl bg-white/5 border border-lotus-gold/20 p-8 rounded-lg shadow-2xl backdrop-blur-sm">
                 <h2 className="text-3xl font-agr text-white mb-8 text-center">Confirm Reservation</h2>
+
+                {/* ... (Sezioni Guest Details e Date & Time rimangono uguali) ... */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-white mb-8">
                     <div className="space-y-1">
                         <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-2">Guest Details</p>
@@ -497,19 +743,42 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                         <div className="flex items-center gap-2 text-lg font-medium"><CalendarIcon size={18} className="text-lotus-gold" /> {formData.date?.toLocaleDateString()}</div>
                         <div className="flex items-center gap-2 text-2xl font-bold text-white"><Clock size={20} className="text-lotus-gold" /> {formData.time}</div>
                     </div>
+
                     <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
                         <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-3">Selected Treatments ({selections.length})</p>
+
+                        {/* Indicatore di caricamento assegnazione */}
+                        {calculatingAssignment && <div className="text-xs text-lotus-gold animate-pulse mb-2">Assigning therapists...</div>}
+
                         <div className="bg-white/5 rounded border border-white/10 divide-y divide-white/5">
-                            {selections.map((sel, idx) => (
-                                <div key={idx} className="p-4 flex justify-between items-center">
-                                    <div>
-                                        <div className="text-xs text-gray-500 uppercase font-bold mb-1">Guest {idx + 1}</div>
-                                        <div className="font-semibold text-lotus-gold">{sel.treatment.title}</div>
-                                        <div className="text-sm text-gray-400">{sel.pkg.minutes} Minutes Session</div>
+                            {selections.map((sel, idx) => {
+                                // Recuperiamo la massaggiatrice assegnata dallo stato
+                                const assigned = assignedMasseuses[idx];
+                                const masseuseName = assigned ? (assigned.attributes?.name || assigned.name) : null;
+
+                                return (
+                                    <div key={idx} className="p-4 flex justify-between items-center">
+                                        <div>
+                                            <div className="text-xs text-gray-500 uppercase font-bold mb-1">Guest {idx + 1}</div>
+                                            <div className="font-semibold text-lotus-gold">{sel.treatment.title}</div>
+                                            <div className="text-sm text-gray-400 flex items-center gap-1">
+                                                {sel.pkg.minutes} Minutes Session
+
+                                                {/* --- QUI MOSTRIAMO IL NOME --- */}
+                                                {masseuseName && (
+                                                    <>
+                                                        <span>with</span>
+                                                        <span className="text-white font-bold bg-white/10 px-1.5 rounded ml-1">{masseuseName}</span>
+                                                    </>
+                                                )}
+
+                                                {!masseuseName && !calculatingAssignment && <span className="text-gray-600 text-xs italic ml-2">(Any available)</span>}
+                                            </div>
+                                        </div>
+                                        <div className="text-xl text-white">{formatPrice(sel.pkg.discountedPrice || sel.pkg.price)}</div>
                                     </div>
-                                    <div className="text-xl  text-white">{formatPrice(sel.pkg.discountedPrice || sel.pkg.price)}</div>
-                                </div>
-                            ))}
+                                );
+                            })}
                             <div className="p-4 bg-lotus-gold/10 flex justify-between items-center">
                                 <div className="font-bold text-white uppercase tracking-wider">Total Amount</div>
                                 <div className="text-3xl text-lotus-gold">{formatPrice(grandTotal)}</div>
@@ -521,26 +790,34 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                 <div className="flex justify-between items-center pt-6 border-t border-white/10">
                     <button onClick={prevStep} className="text-white hover:text-lotus-gold underline underline-offset-4 transition-colors">Modify Details</button>
                     <button
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || calculatingAssignment} // Disabilita mentre calcola
                         onClick={async () => {
                             setIsSubmitting(true);
                             try {
-                                // [FIX 3] Anche qui usiamo l'helper per il salvataggio!
                                 const dateStr = getLocalISOString(formData.date);
 
-                                const bookingPromises = selections.map(sel => {
+                                const bookingPromises = selections.map((sel, idx) => {
+                                    // Recuperiamo l'ID della massaggiatrice GIA' ASSEGNATA
+                                    // Non facciamo fetch qui, usiamo quello che l'utente vede a video!
+                                    const assignedId = assignedMasseuses[idx]?.documentId || null;
+
                                     const payload = {
                                         name: formData.name,
                                         email: formData.email,
                                         phone: formData.phone,
                                         isKhmer: formData.isKhmer,
-                                        date: dateStr, // Inviamo YYYY-MM-DD
+                                        date: dateStr,
                                         time: formData.time,
                                         persons_count: persons,
                                         treatment: sel.treatment,
                                         selectedPackage: sel.pkg,
-                                        price: sel.pkg.discountedPrice || sel.pkg.price
+                                        duration: sel.pkg.minutes,
+                                        price: sel.pkg.discountedPrice || sel.pkg.price,
+                                        masseuseDocId: assignedId // Passiamo l'ID salvato nello stato
                                     };
+
+                                    console.log(payload)
+                                    
                                     return fetch('/api/bookings', {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },
@@ -549,8 +826,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                                 });
 
                                 await Promise.all(bookingPromises);
-                                alert(`Success! ${persons} bookings confirmed. We sent you an email.`);
-                                // Optional: window.location.reload(); 
+                                alert(`Success! ${persons} bookings confirmed.`);
                             } catch (error) {
                                 console.error(error);
                                 alert("Something went wrong processing your bookings. Please contact us.");
@@ -558,7 +834,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                                 setIsSubmitting(false);
                             }
                         }}
-                        className={`bg-lotus-gold hover:bg-white text-lotus-blue font-bold py-3 px-12 rounded shadow-lg transform hover:scale-105 transition-all flex items-center gap-2 ${isSubmitting ? 'opacity-70 cursor-wait' : ''}`}
+                        className={`bg-lotus-gold hover:bg-white text-lotus-blue font-bold py-3 px-12 rounded shadow-lg transform hover:scale-105 transition-all flex items-center gap-2 ${isSubmitting || calculatingAssignment ? 'opacity-70 cursor-wait' : ''}`}
                     >
                         {isSubmitting ? <>Processing...</> : <><Check size={20} /> Confirm Booking</>}
                     </button>

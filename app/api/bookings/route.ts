@@ -17,7 +17,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    
+   
     // Destrutturiamo i dati che arrivano dal frontend (BookingForm)
     const { 
       name, 
@@ -27,7 +27,8 @@ export async function POST(request: Request) {
       date, // Formato "YYYY-MM-DD"
       time, // Formato "HH:mm" (es. "14:00")
       treatment, // Oggetto intero del trattamento
-      selectedPackage // Oggetto del pacchetto selezionato (prezzo, minuti)
+      selectedPackage, // Oggetto del pacchetto selezionato (prezzo, minuti)
+      masseuseDocId 
     } = body;
 
     // 1. Validazione base
@@ -60,6 +61,7 @@ export async function POST(request: Request) {
       // Relazioni: Strapi v4/v5 vuole l'ID diretto per le relazioni oneWay/manyToOne
       treatment: treatment.documentId, 
       customer: customer.documentId,
+      masseuse: masseuseDocId,
       
       // Enum: Assicurati che 'pending' sia un valore valido nella tua lista Enumeration su Strapi.
       // Altrimenti metti 'confirmed' o quello che hai configurato.
@@ -69,7 +71,6 @@ export async function POST(request: Request) {
       notes: `Booked via Web from the customer.`
     };
 
-    console.log(bookingPayload)
     // 5. Crea la prenotazione
     const newBooking = await createBookingInStrapi(bookingPayload);
 

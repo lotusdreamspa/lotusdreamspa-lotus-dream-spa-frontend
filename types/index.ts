@@ -221,25 +221,15 @@ export interface ArticleData {
   meta: Meta;
 }
 
-export interface Category {
-  id: number;
-  documentId?: string;
-  name: string;
-  products?: Product[];
-  isFood?: boolean; // Indicates if the category is food-related
-  isAlcoholic?: boolean; // Indicates if the category is drink-related
+export interface Customer {
+  // Campi semplici
+  name?: string;
+  email: string;
+  phone: string;
+  isKhmer: boolean;
+  wantsNewsletter: boolean;
 }
 
-interface Product {
-  name: string;
-  price: number;
-  description: string;
-  vat: number;
-  image: Image; // Assuming 'Media' can be represented as a URL string
-  available: boolean;
-  ingredients: string;
-  sku: string; // Custom field
-}
 
 // 1. Definizione per il componente all'interno della Dynamic Zone "package"
 export interface PackageComponent {
@@ -271,4 +261,38 @@ export interface Treatment {
   createdAt: string;
   updatedAt: string;
   publishedAt?: string; // Opzionale perché potrebbe essere una bozza
+}
+
+export type BookingStatus = 'pending' | 'confirmed' | 'cancelled' | 'done' | string;
+
+export interface Booking {
+  id:string;
+  documentId: string;
+  // Campi semplici
+  date: string;         // Strapi restituisce le date come stringa 'YYYY-MM-DD'
+  time: string;         // Strapi restituisce il tempo come stringa 'HH:mm:ss.SSS'
+  duration: number;     // Number
+  price: number;        // Number
+  
+  // Enumeration
+  bookingStatus: BookingStatus;
+
+  // Campi di testo (Long Text o Text)
+  notes?: string;            // Opzionale (può essere null)
+  cancellationNotes?: string; // Opzionale
+
+  // Relazioni (in Strapi v4 arrivano dentro un oggetto { data: ... })
+  treatment?: Treatment ;
+  customer?:  Customer ;
+  masseuse?:  Masseuse ;
+
+  // Campi standard di Strapi
+  createdAt: string;
+  updatedAt: string;
+  publishedAt?: string;
+}
+
+export interface Masseuse {
+  name: string;
+  bookings: [];
 }

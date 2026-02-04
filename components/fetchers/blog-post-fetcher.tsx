@@ -4,11 +4,9 @@ import Paginator from "@/components/general/paginator";
 import { Article, StrapiResponse } from '@/types';
 
 export default async function BlogPostFetcher({ 
-    currentPage = 1 ,
-    key = 0
+    currentPage = 1 
 }: { 
-    currentPage?: number ,
-    key?: number
+    currentPage?: number 
 }) {
     let blogPosts: Article[] = [];
     let pagination = null;

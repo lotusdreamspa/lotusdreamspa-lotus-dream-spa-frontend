@@ -16,6 +16,7 @@ const config: Config = {
         'lotus-lavander': '#7552A0',
         'lotus-bronze': '#eaac8b',
         'lotus-rosewood': '#b56576',
+        'lotus-light-gold': '#FFC091',
         "lotus-gold": "#d8975d",
       },
       fontFamily: {

@@ -18,7 +18,7 @@ export default function Testimonialspage() {
 					translationKey="tripAdvisorSliderContent"		// Adjust the translation key as needed
 					numberOfSlides={5}
 					arrowButtonBgColor="#0B3848"
-					arrowButtonHoverColor="#C09C60"// Adjust the number of slides as needed	
+					arrowButtonHoverColor="#b56576"// Adjust the number of slides as needed	
 				/>
 			</div>
 			<FooterElement />

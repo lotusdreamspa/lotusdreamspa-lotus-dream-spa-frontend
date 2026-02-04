@@ -1,56 +1,35 @@
-// app/[locale]/blog/BlogPageContent.tsx
 "use client";
-
-import Lenis from "@studio-freight/lenis";
-import { useEffect, useState, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
+import PreLoad from "@/components/general/preload"; // il tuo componente Liquid
 import { AnimatePresence } from "framer-motion";
-import { PreloadElement } from "@/components"; 
 
-export default function BlogPageRenderer({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  // Stato per gestire il pre-caricamento
-  const [isLoading, setIsLoading] = useState(true);
-  const container = useRef(null);
+export default function ClientRenderer({ children }: { children: React.ReactNode }) {
+    const pathname = usePathname();
+    const [isLoading, setIsLoading] = useState(true);
+    const currentKey = Date.now().toString();
 
-  useEffect(() => {
-    // Inizializza Lenis per lo smooth scrolling
-    const lenis = new Lenis();
+    useEffect(() => {
+        // Ogni volta che il pathname cambia, mostriamo il loader
+        setIsLoading(true);
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
+        // Simuliamo un tempo di caricamento o attendiamo che i dati siano pronti
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1000); // Regola il tempo in base alla durata della tua transizione
 
-    requestAnimationFrame(raf);
+        return () => clearTimeout(timer);
+    }, [pathname]);
 
-    // Timeout per disabilitare il pre-caricamento
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
-      document.body.style.cursor = "default";
-    }, 2000);
-
-    return () => {
-      lenis.destroy();
-      clearTimeout(timeout);
-    };
-  }, []);
-
-  return (
-    <>
-      {/* Gestione Preloader */}
-      <AnimatePresence mode="wait">
-        {isLoading && <PreloadElement />}
-      </AnimatePresence>
-
-      {/* Renderizza i children (la pagina vera e propria) solo quando non carica */}
-      {!isLoading && (
-        <main ref={container}>
-          {children}
-        </main>
-      )}
-    </>
-  );
+        console.log('isLoading', isLoading)
+    return (
+        
+        <>
+    
+            <AnimatePresence mode="wait">
+                {isLoading && <PreLoad key={currentKey} />}
+            </AnimatePresence>
+            {children}
+        </>
+    );
 }

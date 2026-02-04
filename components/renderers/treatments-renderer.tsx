@@ -41,7 +41,7 @@ const TreatmentCategorySection = ({ category, treatments, currentLocale }: { cat
                           {pkg.discountedPrice ? (
                             <>
                               <span className="text-lotus-bronze font-bold whitespace-nowrap text-lg">{formatPrice(pkg.discountedPrice, currentLocale)}</span>
-                              <span className="text-xs text-gray-500 line-through whitespace-nowrap">{formatPrice(pkg.price, currentLocale)}</span>
+                              <span className="text-xs text-gray-300 line-through whitespace-nowrap">{formatPrice(pkg.price, currentLocale)}</span>
                             </>
                           ) : (
                             <span className="whitespace-nowrap font-medium text-white text-lg">{formatPrice(pkg.price, currentLocale)}</span>
@@ -58,7 +58,7 @@ const TreatmentCategorySection = ({ category, treatments, currentLocale }: { cat
                       {pkg.discountedPrice ? (
                         <div className="flex items-baseline gap-2">
                           <span className="text-white font-bold text-sm">{formatPrice(pkg.discountedPrice, currentLocale)}</span>
-                          <span className="text-gray-500 text-xs line-through">{formatPrice(pkg.price, currentLocale)}</span>
+                          <span className="text-gray-300 text-xs line-through">{formatPrice(pkg.price, currentLocale)}</span>
                         </div>
                       ) : (
                         <span className="text-white font-bold text-sm">{formatPrice(pkg.price, currentLocale)}</span>
@@ -97,7 +97,7 @@ const BodycareCategorySection = ({ category, treatments, currentLocale }: { cate
                     )}
                     {pkg.discountedPrice ? (
                       <>
-                        <span className="text-gray-500 text-sm line-through">{formatPrice(pkg.price, currentLocale)}</span>
+                        <span className="text-gray-300 text-sm line-through">{formatPrice(pkg.price, currentLocale)}</span>
                         <span className="text-lotus-bronze font-bold text-xl md:text-2xl">{formatPrice(pkg.discountedPrice, currentLocale)}</span>
                       </>
                     ) : (

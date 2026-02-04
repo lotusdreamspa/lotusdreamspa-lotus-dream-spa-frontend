@@ -8,9 +8,11 @@ const opacityAnim = {
     initial: { opacity: 1 },
     exit: { 
         opacity: 0, 
-        transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } 
+        transition: { duration: .8, ease: [0.76, 0, 0.24, 1] } 
     }
 };
+
+
 
 export default function PreLoad() {
     const [dimension, setDimension] = useState({ width: 0, height: 0 });
@@ -25,8 +27,10 @@ export default function PreLoad() {
             initial="initial"
             exit="exit"
             // z-50 per stare sopra tutto, fixed per bloccarlo, bg-black o il tuo colore di sfondo
-            className="fixed top-0 left-0 w-screen h-screen z-50 bg-black cursor-wait"
+            className="fixed top-0 bottom-0 left-0 w-screen h-screen z-50 bg-lotus-blue cursor-wait"
         >
+
+          
             {dimension.width > 0 && (
                 <div className="w-full h-full relative">
                     {/* Componente LiquidEther a tutto schermo */}
@@ -39,8 +43,8 @@ export default function PreLoad() {
                         resolution={0.5}
                         // Attiviamo l'autoDemo per avere movimento senza che l'utente debba muovere il mouse
                         autoDemo={true} 
-                        autoSpeed={0.5}
-                        autoIntensity={2.2}
+                        autoSpeed={2}
+                        autoIntensity={5}
                         // Stile per forzare il riempimento
                         style={{ width: '100%', height: '100%' }}
                     />

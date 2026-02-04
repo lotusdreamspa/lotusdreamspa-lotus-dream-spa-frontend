@@ -34,13 +34,15 @@ async function getGroupedTreatments() {
 
 // --- COMPONENTE DI PAGINA ---
 export default async function TreatmentsPage({
-  params: { locale }
+  params
 }: {
-  params: { locale: string }
+ params: Promise<{ locale: string }>;
 }) {
   // 4. Fetch + Trasformazione dei dati
   const treatmentsData = await getGroupedTreatments();
+  const { locale } = await params;
 
+  
   return (
     <>
       <div className="bg-lotus-blue w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">

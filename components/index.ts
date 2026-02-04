@@ -3,6 +3,8 @@ export { default as FooterElement } from "./general/footer";
 export { default as PreloadElement } from "./general/preload";
 export { default as HeroElement } from "./general/hero";
 export { default as LiquidEtherElement } from "./general/liquid-ether";
+export { default as MasonryLayoutElement } from "./general/masonry-layout";
+export { default as CarouselElement } from "./general/carousel";
 export { default as ImageCtaListElement } from "./general/image-cta-list";
 export { default as MarqueeElement } from "./general/marquee";
 export { default as ReusableSliderElement } from "./general/reusable-slider";

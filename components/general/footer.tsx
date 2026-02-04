@@ -18,7 +18,7 @@ export default function Footer() {
 									Phone
 								</p>
 								<Link
-									className="text-[30px] font-semibold text-lotus-gold leading-tight tracking-tight"
+									className="text-[30px] font-semibold text-lotus-light-gold hover:text-lotus-rosewood transition-colors duration-500 leading-tight tracking-tight"
 									href={`tel:${process.env.NEXT_PUBLIC_STORE_PHONE_NUMBER}`}>
 									{process.env.NEXT_PUBLIC_STORE_PHONE_NUMBER}
 								</Link>
@@ -28,7 +28,7 @@ export default function Footer() {
 									Facebook
 								</p>
 								<Link
-									className="text-[30px] font-semibold text-lotus-gold leading-tight tracking-tight"
+									className="text-[30px] font-semibold text-lotus-light-gold hover:text-lotus-rosewood transition-colors duration-500 leading-tight tracking-tight"
 									href={process.env.NEXT_PUBLIC_STORE_FACEBOOK ?? "/"}>
 									Our Facebook Page
 								</Link>
@@ -40,7 +40,7 @@ export default function Footer() {
 									E-mail
 								</p>
 								<Link
-									className="text-[30px] font-semibold text-lotus-gold leading-tight tracking-tight"
+									className="text-[30px] font-semibold text-lotus-light-gold hover:text-lotus-rosewood transition-colors duration-500 leading-tight tracking-tight"
 									href={`mailto:${process.env.NEXT_PUBLIC_STORE_EMAIL}`}>
 									{process.env.NEXT_PUBLIC_STORE_EMAIL}
 								</Link>
@@ -50,7 +50,7 @@ export default function Footer() {
 									Instagram
 								</p>
 								<Link
-									className="text-[30px] font-semibold text-lotus-gold leading-tight tracking-tight"
+									className="text-[30px] font-semibold text-lotus-light-gold hover:text-lotus-rosewood transition-colors duration-500 leading-tight tracking-tight"
 									href={process.env.NEXT_PUBLIC_STORE_INSTAGRAM ?? "/"}>
 									Our Instagtram Profile
 								</Link>
@@ -64,7 +64,7 @@ export default function Footer() {
 									Address
 								</p>
 								<p
-									className="text-[30px] font-semibold text-lotus-gold leading-tight tracking-tight"
+									className="text-[30px] font-semibold text-lotus-light-gold leading-tight tracking-tight"
 									>
 									{process.env.NEXT_PUBLIC_STORE_ADDRESS}
 								</p>

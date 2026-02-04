@@ -30,7 +30,7 @@ export default async function BookingPage() {
                 <NavbarElement />
             </div>
 
-            <div className="flex-grow flex flex-col items-center justify-start px-4 pb-20 mt-64">
+            <div className="flex-grow flex flex-col items-center justify-start px-4 pb-20 mt-48">
                 {/* Passiamo i dati al Client Component */}
                 <BookingForm initialTreatments={groupedTreatments} />
             </div>

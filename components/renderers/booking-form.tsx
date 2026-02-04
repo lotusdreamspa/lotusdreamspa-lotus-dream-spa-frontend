@@ -389,7 +389,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                     <button
                         disabled={!formData.email || !formData.phone}
                         onClick={nextStep}
-                        className="w-full mt-6 bg-lotus-gold text-lotus-blue font-bold py-3 rounded hover:bg-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                        className="w-full mt-6 bg-lotus-gold text-lotus-blue font-bold py-3 rounded hover:bg-lotus-light-gold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg duration-300"
                     >Continue</button>
                 </div>
             </div>
@@ -524,7 +524,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                         <button
                             disabled={!isQuotaMet}
                             onClick={nextStep}
-                            className="bg-lotus-gold text-lotus-blue font-bold py-3 px-8 rounded hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:scale-105"
+                            className="bg-lotus-gold text-lotus-blue font-bold py-3 px-8 rounded hover:bg-lotus-light-gold disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:scale-105"
                         >Confirm Selections ({selections.length})</button>
                     </div>
                 </div>
@@ -700,7 +700,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                     <button
                         disabled={!formData.date || !formData.time}
                         onClick={nextStep}
-                        className="bg-lotus-gold text-lotus-blue font-bold py-3 px-10 rounded hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:scale-105"
+                        className="bg-lotus-gold text-lotus-blue font-bold py-3 px-10 rounded hover:bg-lotus-light-gold disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:scale-105"
                     >Review Booking</button>
                 </div>
             </div>
@@ -869,7 +869,7 @@ const renderStep4 = () => {
                             setIsSubmitting(false);
                         }
                     }}
-                    className={`bg-lotus-gold hover:bg-white text-lotus-blue font-bold py-3 px-12 rounded shadow-lg transform hover:scale-105 transition-all flex items-center gap-2 ${isSubmitting || calculatingAssignment ? 'opacity-70 cursor-wait' : ''}`}
+                    className={`bg-lotus-gold hover:bg-lotus-light-gold text-lotus-blue font-bold py-3 px-12 rounded shadow-lg transform hover:scale-105 transition-all flex items-center gap-2 ${isSubmitting || calculatingAssignment ? 'opacity-70 cursor-wait' : ''}`}
                 >
                     {isSubmitting ? <>Processing...</> : <><Check size={20} /> Confirm Booking</>}
                 </button>
@@ -879,12 +879,21 @@ const renderStep4 = () => {
 };
 
     return (
-        <div className="w-full flex flex-col items-center">
-            <div className="flex gap-2 mb-12 w-full max-w-xs justify-center">
-                {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className={`h-1.5 rounded-full transition-all duration-500 ${step >= i ? 'w-full bg-lotus-gold' : 'w-full bg-white/20'}`} />
-                ))}
-            </div>
+  <div className="w-full flex flex-col items-center">
+    {/* Aggiunto overflow-visible e un leggero padding verticale (py-4) */}
+    <div className="flex gap-2 mb-16 py-4 w-full max-w-xs justify-center overflow-visible">
+        {[1, 2, 3, 4].map((i) => (
+            <div 
+                key={i} 
+                className={`h-1.5 rounded-full transition-all duration-500 relative
+                    ${step >= i 
+                        ? 'w-full bg-lotus-light-gold shadow-[0_0_15px_rgba(216,180,254,1)]' // Shadow personalizzata più intensa
+                        : 'w-full bg-white/20'
+                    }`} 
+            />
+        ))}
+    </div>
+
             {step === 1 && renderStep1()}
             {step === 2 && renderStep2()}
             {step === 3 && renderStep3()}

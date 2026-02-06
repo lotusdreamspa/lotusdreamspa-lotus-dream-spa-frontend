@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import {
 	NavbarElement,
 	FooterElement,
 	HeroElement,
 	ReusableSliderElement,
 } from "@/components";
+
+
+export const metadata: Metadata = {
+    title: "Testimonials & Reviews | Lotus Dream SPA | Best olistic spa in Siem Reap",
+    description: "Read what our guests say about their experience. Discover why travelers and locals consider Lotus Dream SPA in Kandal Village the best olistic spa in Siem Reap.",
+};
 
 export default function Testimonialspage() {
 	return (

@@ -1,10 +1,17 @@
 import { useTranslations } from "next-intl";
+import type { Metadata } from "next";
 import {
     NavbarElement,
     HeroElement,
     FooterElement,
 } from "@/components";
 import BlogPostFetcher from "@/components/fetchers/blog-post-fetcher";
+
+
+export const metadata: Metadata = {
+    title: "Blog & Wellness Tips | Lotus Dream SPA | Best olistic spa in Siem Reap",
+    description: "Explore our blog for holistic wellness tips, the benefits of traditional massage, and news from Lotus Dream SPA, the best olistic spa in Siem Reap.",
+};
 
 // Definiamo i props che Next.js passa alle pagine
 interface PageProps {

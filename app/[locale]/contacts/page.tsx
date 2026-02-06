@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
     NavbarElement,
     HeroElement,
@@ -5,6 +6,11 @@ import {
 } from "@/components";
 import Link from "next/link";
 import { TextHoverElement } from "@/components";
+
+export const metadata: Metadata = {
+    title: "Contact Us | Lotus Dream SPA | Best olistic spa in Siem Reap",
+    description: "Find us in the heart of Kandal Village. Contact Lotus Dream SPA for inquiries, directions, and the ultimate wellness experience at the best olistic spa in Siem Reap.",
+};
 
 export default function ContactsPage() {
 

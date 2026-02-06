@@ -1,11 +1,16 @@
+import type { Metadata } from "next";
 import {
     NavbarElement,
     CarouselElement,
     MasonryLayoutElement,
     FooterElement
 } from "@/components";
-import Link from "next/link";
-import { TextHoverElement } from "@/components";
+
+export const metadata: Metadata = {
+    title: "Gallery | Lotus Dream SPA | Best olistic spa in Siem Reap",
+    description: "Take a virtual tour of our tranquil sanctuary in Kandal Village. View photos of our treatment rooms and peaceful atmosphere at the best olistic spa in Siem Reap.",
+};
+
 
 const masonryImages = [{ id: 1, src: "/images/masonry/img-1.jpg", title: "Urban Art" },
 { id: 2, src: "/images/masonry/img-2.jpg", title: "Lotus Concept" },

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   NavbarElement,
   HeroElement,
@@ -7,6 +8,11 @@ import TreatmentsRenderer from "@/components/renderers/treatments-renderer";
 // 1. Importa il Service
 import { fetchTreatmentsFromStrapi } from "@/services/treatments"; 
 import { Treatment } from "@/types";
+
+export const metadata: Metadata = {
+    title: "Our Treatments | Lotus Dream SPA | Best olistic spa in Siem Reap",
+    description: "Discover our range of holistic massages and spa treatments. From traditional techniques to modern relaxation, experience the best olistic spa in Siem Reap.",
+};
 
 // --- LOGICA DI TRASFORMAZIONE (Data Transformation Layer) ---
 async function getGroupedTreatments() {

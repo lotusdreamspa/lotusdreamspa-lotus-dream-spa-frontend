@@ -1,8 +1,14 @@
 // app/booking/page.tsx (o dove si trova il tuo file)
+import type { Metadata } from "next";
 import { NavbarElement, HeroElement, FooterElement } from "@/components";
 import BookingForm from "@/components/renderers/booking-form";
 import { Treatment } from "@/types";
 import { fetchTreatmentsFromStrapi } from "@/services/treatments"; // <--- Importa la funzione
+
+export const metadata: Metadata = {
+    title: "Book an Appointment | Lotus Dream SPA | Best olistic spa in Siem Reap",
+    description: "Schedule your path to relaxation. Use our online booking system to secure your session at Lotus Dream SPA, the best olistic spa in Siem Reap.",
+};
 
 // Funzione per raggruppare i dati (Business Logic)
 async function getGroupedTreatments() {

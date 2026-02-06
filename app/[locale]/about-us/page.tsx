@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
 	AnimatedTextSectionElement,
 	NavbarElement,
@@ -5,6 +6,11 @@ import {
 	HeroElement,
 	ImageCtaListElement,
 } from "@/components";
+
+export const metadata: Metadata = {
+    title: "About Us | Lotus Dream SPA | Best olistic spa in Siem Reap",
+    description: "Discover the philosophy of Lotus Dream SPA. We are the premier destination for holistic care in Kandal Village, dedicated to being the best olistic spa in Siem Reap through authentic wellness traditions.",
+};
 
 const ctaData = [
 	{

@@ -26,10 +26,10 @@ export default function MasonryLayout({ images, children }: MasonryLayoutProps) 
   // Pattern di classi per il masonry desktop
   const getGridClass = (index: number) => {
     const patterns = [
-      "col-span-1 row-span-1", // Indice 0
+      "col-span-2 row-span-1 lg:col-span-1", // Indice 0
       "col-span-1 row-span-3", // Indice 2 (dopo il carousel)
-      "col-span-1 row-span-2", // Indice 3
-      "col-span-2 row-span-2", // Indice 4
+      "row-span-3 col-span-1 lg:row-span-2", // Indice 3
+      "row-span-4 col-span-2 lg:row-span-2", // Indice 4
       "col-span-1 row-span-1", // Indice 5
       "col-span-1 row-span-1", // Indice 6
     ];

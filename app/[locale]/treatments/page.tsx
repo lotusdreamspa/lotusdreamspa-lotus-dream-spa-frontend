@@ -51,6 +51,7 @@ export default async function TreatmentsPage({
             title="Treatments" 
             translationScope="treatmentsContent" 
             subtitle="find-the-perfect-escape" 
+            subtitleClass="text-lotus-bronze lg:text-white"
         />
       </div>
       

@@ -9,7 +9,7 @@ export default function Footer() {
 		<>
 			<div
 				id="footer"
-				className="w-full  flex flex-col items-center padding-x justify-end pt-5">
+				className="w-full  flex flex-col items-center padding-x justify-end pt-5 bg-lotus-dark-blue lg:bg-lotus-blue">
 				<div className="w-full flex justify-between gap-5 py-10 xm:flex-col sm:flex-col">
 					<div className="w-1/2 xm:w-full sm:w-full flex gap-5 justify-between xm:flex-col sm:flex-col">
 						<div className="flex flex-col gap-5">

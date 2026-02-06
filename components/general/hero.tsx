@@ -58,7 +58,7 @@ export default function Hero({
       {/* TITLE */}
       <h1
         // MODIFICA QUI: Aggiunto 'relative z-10' per assicurarsi che stia SOPRA immagine e overlay
-        className="relative z-10 flex text-white mx-auto whitespace-wrap text-center font-agr mt-64 sm:mt-0 text-2xl md:text-4xl lg:text-6xl xl:text-8xl leading-inherit"
+        className="relative z-10 flex text-white mx-auto whitespace-wrap text-center font-agr mt-64 sm:mt-0 text-4xl lg:text-6xl xl:text-8xl leading-inherit"
       >
         {title}
       </h1>
@@ -67,7 +67,7 @@ export default function Hero({
       {hasSubtitle && translatedSubtitle && (
         <h2
           // MODIFICA QUI: Aggiunto 'relative z-10' anche qui
-          className={`relative z-10 text-lg md:text-xl lg:text-2xl xl:text-4xl mx-auto text-center w-3/4 font-normal leading-tight tracking-tight mt-24 ${subtitleClass}`}
+          className={`relative z-10 text-2xl xl:text-4xl mx-auto text-center w-full lg:w-3/4 font-normal lg:leading-tight lg:tracking-tight mt-24 ${subtitleClass}`}
         >
           {translatedSubtitle}
         </h2>

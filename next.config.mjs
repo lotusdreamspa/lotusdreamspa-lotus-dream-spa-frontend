@@ -15,6 +15,10 @@ const nextConfig = {  images: {
         protocol: 'https',
         hostname: 'strapi-production-cfe0.up.railway.app',
       },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
     ],
   }};
 

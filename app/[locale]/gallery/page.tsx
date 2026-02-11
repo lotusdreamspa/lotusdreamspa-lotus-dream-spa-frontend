@@ -33,7 +33,7 @@ export default function GalleryPage() {
                 <NavbarElement />
 
             </div>
-            <div className="w-full flex flex-col items-center justify-center mb-16 mt-48">
+            <div className="w-full flex flex-col items-center justify-center mb-16 mt-24 lg:mt-64">
 
 
                 <MasonryLayoutElement images={masonryImages}>

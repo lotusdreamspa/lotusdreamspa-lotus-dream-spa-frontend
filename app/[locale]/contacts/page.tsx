@@ -18,7 +18,7 @@ export default function ContactsPage() {
         <>
             <div className="bg-lotus-blue w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
                 <NavbarElement />
-                <HeroElement title="About" hasSubtitle={false} />
+                <HeroElement title="Contacts" hasSubtitle={false} />
             </div>
             <div className="w-full flex flex-col items-center justify-center mb-16">
                 <div className="w-full lg:w-4/6 hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">

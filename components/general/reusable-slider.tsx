@@ -17,6 +17,7 @@ export default function ReusableSlider({
 	sliderCardTextColor = "#FFC091",
 	arrowButtonBgColor = "#9fe870",
 	arrowButtonHoverColor = "#FFEB69",
+	reviews,
 }: ReusableSliderProps) {
 	const t = useTranslations(translationKey);
 	const swiperRef = useRef<any | null>(null);
@@ -31,6 +32,57 @@ export default function ReusableSlider({
 	// Funzione per renderizzare le slide dinamicamente
 	const renderSlides = () => {
 		const slides = [];
+		if (reviews && reviews.length > 0) {
+			// Render Reviews
+			return reviews.map((review, i) => (
+				<SwiperSlide key={`review-${i}`}>
+					<div
+						className="p-7 rounded-[30px] swiper-slide h-[450px] xm:min-h-[500px] sm:min-h-[500px] cursor-grab flex flex-col justify-between"
+						style={{ backgroundColor: sliderCardBgColor }}>
+						<div className="flex flex-col gap-3">
+							{/* Stars */}
+							<div className="flex gap-1">
+								{Array.from({ length: 5 }).map((_, index) => (
+									<span key={index} className={`text-2xl ${index < review.rating ? 'text-yellow-400' : 'text-gray-400'}`}>
+										★
+									</span>
+								))}
+							</div>
+
+							{/* Snippet / Text */}
+							<p
+								className="text-[20px] xm:text-[16px] sm:text-[16px] font-normal leading-normal tracking-tight line-clamp-6"
+								style={{ color: sliderCardTextColor }}>
+								"{review.snippet}"
+							</p>
+						</div>
+
+						{/* User Info */}
+						<div className="flex items-center gap-4 mt-4">
+							{review.user?.thumbnail && (
+								<Image
+									src={review.user.thumbnail}
+									alt={review.user.name}
+									width={50}
+									height={50}
+									className="rounded-full"
+								/>
+							)}
+							<div className="flex flex-col">
+								<h2
+									className="text-[20px] font-bold leading-tight"
+									style={{ color: sliderCardTextColor }}>
+									{review.user?.name || "Google User"}
+								</h2>
+								<span className="text-sm opacity-70" style={{ color: sliderCardTextColor }}>{review.date}</span>
+							</div>
+						</div>
+					</div>
+				</SwiperSlide>
+			));
+		}
+
+		// Fallback to Translations
 		for (let i = 1; i <= numberOfSlides; i++) {
 			slides.push(
 				<SwiperSlide key={`slide-${i}`}>
@@ -123,12 +175,12 @@ export default function ReusableSlider({
 							className="transition-all duration-200 ease-linear cursor-pointer px-3 py-2 rounded-[30px]"
 							style={{ backgroundColor: arrowButtonBgColor }}
 							onMouseEnter={(e) =>
-								((e.currentTarget as HTMLElement).style.backgroundColor =
-									arrowButtonHoverColor)
+							((e.currentTarget as HTMLElement).style.backgroundColor =
+								arrowButtonHoverColor)
 							}
 							onMouseLeave={(e) =>
-								((e.currentTarget as HTMLElement).style.backgroundColor =
-									arrowButtonBgColor)
+							((e.currentTarget as HTMLElement).style.backgroundColor =
+								arrowButtonBgColor)
 							}>
 							<Image
 								src={arrowLeft}
@@ -143,12 +195,12 @@ export default function ReusableSlider({
 							className="transition-all duration-200 ease-linear cursor-pointer px-3 py-2 rounded-[30px]"
 							style={{ backgroundColor: arrowButtonBgColor }}
 							onMouseEnter={(e) =>
-								((e.currentTarget as HTMLElement).style.backgroundColor =
-									arrowButtonHoverColor)
+							((e.currentTarget as HTMLElement).style.backgroundColor =
+								arrowButtonHoverColor)
 							}
 							onMouseLeave={(e) =>
-								((e.currentTarget as HTMLElement).style.backgroundColor =
-									arrowButtonBgColor)
+							((e.currentTarget as HTMLElement).style.backgroundColor =
+								arrowButtonBgColor)
 							}>
 							<Image
 								src={arrowRight}

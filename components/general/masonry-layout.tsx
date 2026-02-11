@@ -88,12 +88,12 @@ export default function MasonryLayout({ images, children }: MasonryLayoutProps) 
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedImg(null)}
-              className="absolute inset-0 bg-lotus-lavander/40 backdrop-blur-2xl"
+              className="absolute inset-0 bg-lotus-rosewood/40 backdrop-blur-2xl"
             />
 
             <motion.div
               layoutId={`img-${selectedImg.id}`}
-              className="relative w-full max-w-6xl h-[70vh] md:h-[85vh] z-10 overflow-hidden rounded-xl shadow-2xl"
+              className="relative w-full bg-lotus-lavander/20 max-w-6xl h-[70vh] md:h-[85vh] z-10 overflow-hidden rounded-xl shadow-2xl"
             >
               <Image
                 src={selectedImg.src}

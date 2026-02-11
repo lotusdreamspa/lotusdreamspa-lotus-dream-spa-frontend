@@ -91,7 +91,7 @@ export default function Navbar() {
 
                 {/* CONTAINER DESKTOP (Nascosto su mobile) */}
                 <div className="hidden lg:flex w-full items-end justify-between -mt-8 z-40">
-                    <div className="flex w-full justify-between ps-16 pe-8 pb-8">
+                    <div className="flex w-full justify-between ps-16 pe-24 pb-8">
                         {leftLinks.map((link) => (
                             <Link
                                 key={link.id}
@@ -113,7 +113,7 @@ export default function Navbar() {
                             />
                         </Link>
                     </div>
-                    <div className="flex w-full justify-between pe-16 ps-8 pb-8">
+                    <div className="flex w-full justify-between ps-24 pe-16 pb-8">
                         {rightLinks.map((link) => (
                             <Link
                                 key={link.id}

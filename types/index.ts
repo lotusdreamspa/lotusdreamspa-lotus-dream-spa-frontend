@@ -71,7 +71,21 @@ export interface ReusableSliderProps {
 	sliderCardTextColor?: string; // Colore del testo all'interno delle slide (es. "#FFD7EF")
 	arrowButtonBgColor?: string; // Colore di sfondo dei bottoni freccia (es. "#9fe870")
 	arrowButtonHoverColor?: string; // Colore di hover dei bottoni freccia (es. "#FFEB69")
+    reviews?: GoogleReview[];
 }
+
+export interface GoogleReview {
+    rating: number;
+    date: string;
+    source: string;
+    snippet: string;
+    link: string;
+    user?: {
+      name: string;
+      thumbnail: string;
+      link: string;
+    }
+  }
 
 export interface ImageFormat {
   ext: string;

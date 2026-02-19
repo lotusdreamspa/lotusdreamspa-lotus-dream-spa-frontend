@@ -49,6 +49,7 @@ export async function createBookingInStrapi(bookingData: any) {
   const STRAPI_WRITE_TOKEN = process.env.NEXT_PUBLIC_STRAPI_CLOUD_WRITE_TOKEN; // Usa token con permessi CREATE
 
   try {
+    console.log("createBookingInStrapi - Payload:", JSON.stringify({ data: bookingData }, null, 2));
     const res = await fetch(`${STRAPI_URL}/api/bookings`, {
       method: 'POST',
       headers: {

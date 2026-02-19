@@ -308,5 +308,8 @@ export interface Booking {
 
 export interface Masseuse {
   name: string;
+  description: string;
+  khDescription: string;
+  img: Image;
   bookings: [];
 }

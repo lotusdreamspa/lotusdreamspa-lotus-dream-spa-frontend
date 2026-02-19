@@ -71,6 +71,9 @@ export async function POST(request: Request) {
       // Note opzionali: possiamo salvare qui i dettagli testuali se servono
       notes: `Booked via Web from the customer.`
     };
+    
+    console.log("API Route - Customer:", JSON.stringify(customer, null, 2));
+    console.log("API Route - Booking Payload:", JSON.stringify(bookingPayload, null, 2));
 
     // 5. Crea la prenotazione
     const newBooking = await createBookingInStrapi(bookingPayload);

@@ -6,38 +6,50 @@ import {
 	HeroElement,
 	ImageCtaListElement,
 } from "@/components";
+import { fetchAllMasseuses } from "@/services/masseuses";
 
 export const metadata: Metadata = {
-    title: "About Us | Lotus Dream SPA | Best olistic spa in Siem Reap",
-    description: "Discover the philosophy of Lotus Dream SPA. We are the premier destination for holistic care in Kandal Village, dedicated to being the best olistic spa in Siem Reap through authentic wellness traditions.",
+	title: "About Us | Lotus Dream SPA | Best olistic spa in Siem Reap",
+	description: "Discover the philosophy of Lotus Dream SPA. We are the premier destination for holistic care in Kandal Village, dedicated to being the best olistic spa in Siem Reap through authentic wellness traditions.",
 };
 
-const ctaData = [
-	{
-		imgPath: "/images/home/img-1.webp",         // Percorso nella cartella public
-		translationNamespace: "HomepageCtaContent",
-		ctaTitle: "intro_title",              // La chiave del titolo nel JSON
-		ctaParagraph: "intro_desc",      // La chiave del testo nel JSON
-		lateralText: "intro_lateral",           // La chiave del testo laterale
-		ctaLinkLabel: "intro_link",        // La chiave dell'etichetta del link
-		ctaLinkHref: "/about",                // Dove porta il link
-	}
-];
+interface AboutUsPageProps {
+	params: Promise<{
+		locale: string;
+	}>;
+}
 
-export default function AboutUsPage() {
+export default async function AboutUsPage(props: AboutUsPageProps) {
+	const params = await props.params;
+	const { locale } = params;
+	const masseuses = await fetchAllMasseuses();
+
+	const masseuseItems = masseuses.map((masseuse: any) => ({
+		imgPath: masseuse.img?.url || "/images/placeholder.jpg",
+		translationNamespace: "common",
+		ctaTitle: masseuse.name,
+		ctaParagraph: locale === "kh" ? (masseuse.khDescription || masseuse.description) : masseuse.description,
+		lateralText: "Staff",
+		skipTranslation: true,
+		// No ctaLinkHref, so button will be hidden
+	}));
+
 	return (
 		<>
-			<div className="bg-lotus-blue w-full min-h-screen flex flex-col items-center justify-center padding-x gap-10">
+			<div className="bg-lotus-blue w-full min-h-screen flex flex-col items-center justify-center
+			 gap-10">
 				<NavbarElement />
-				<HeroElement title="About" hasSubtitle={false} />
+				<HeroElement title="About" hasSubtitle={false} bgImg="/images/about/hero.jpg" />
 			</div>
-			<AnimatedTextSectionElement
+					<AnimatedTextSectionElement
 				translationKey="aboutUsContent"
 				paragraphWidth="w-[90%]"
 				textColor="text-white"
 			/>
+			<div className="px-16">
+				<ImageCtaListElement items={masseuseItems} />
+			</div>
 
-			<ImageCtaListElement items={ctaData} />
 			<FooterElement />
 
 		</>

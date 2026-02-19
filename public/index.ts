@@ -1,10 +1,3 @@
-export { default as logoSm } from "./logo-sm.svg";
 export { default as arrowDown } from "./arrowDown.svg";
 export { default as arrowLeft } from "./arrow-left.svg";
 export { default as arrowRight } from "./arrow-right.svg";
-export { default as kindFood } from "./kind-food.png";
-export { default as porridge } from "./porridge.png";
-export { default as kombucha } from "./kombucha.png";
-export { default as pig } from "./pig.png";
-export { default as romduol } from "./romduol.png";
-export { default as thanksFor } from "./thanks.png";

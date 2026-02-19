@@ -19,6 +19,10 @@ const nextConfig = {  images: {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'pub-004ec797aa4742aab6b3c705799bba0c.r2.dev',
+      },
     ],
   }};
 

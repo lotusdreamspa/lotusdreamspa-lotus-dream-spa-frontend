@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Treatment, PackageComponent } from "@/types"; // Assicurati che i path siano corretti
-import { ChevronLeft, ChevronRight, Clock, Check, Calendar as CalendarIcon, User, Mail, Phone, Globe, Trash2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, Clock, Check, Calendar as CalendarIcon, User, Mail, Phone, Globe, Trash2, X } from "lucide-react";
 import { usePathname } from 'next/navigation';
 import { Booking } from '@/types';
 
@@ -63,6 +63,12 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
     const [existingBookings, setExistingBookings] = useState<Booking[]>([]);
     const [loadingBookings, setLoadingBookings] = useState(false);
     const [isConfirmed, setIsConfirmed] = useState(false)
+    const [isContactMode, setIsContactMode] = useState(false);
+    const [contactPreference, setContactPreference] = useState<'email' | 'phone' | null>(null);
+
+    // Validation State
+    const [touched, setTouched] = useState<{ email?: boolean; phone?: boolean }>({});
+    const [errors, setErrors] = useState<{ email?: string; phone?: string }>({});
 
     // Env vars
     const MIN_NOTICE_MINUTES = parseInt(process.env.NEXT_PUBLIC_BOOKING_NOTICE_MINUTES || '60', 10);
@@ -76,7 +82,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
         setFormData(prev => ({ ...prev, isKhmer: isKhmerURL }));
     }, [pathname]);
 
-        // --- SCROLL EFFECT ---
+    // --- SCROLL EFFECT ---
     useEffect(() => {
         const slowScrollToTop = (duration: number) => {
             const startPosition = window.scrollY;
@@ -272,7 +278,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                             // Check DB Bookings
                             const isBusyInDB = todaysBookings.some((b: any) => {
                                 const bAttr = b.attributes || b;
-                                const bMasseuseId = bAttr?.masseuse?.id ;
+                                const bMasseuseId = bAttr?.masseuse?.id;
                                 if (String(bMasseuseId) !== String(m.id)) return false;
 
                                 const bStart = toMin((bAttr.time || "").substring(0, 5));
@@ -312,7 +318,38 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
     }, [step, selections, formData.date, formData.time]); // Riesegue se cambiano date o selezioni
 
     // Navigation Handlers
-    const nextStep = () => setStep((p) => p + 1);
+    // Validation Handlers
+    const validateEmail = (email: string) => {
+        if (!email) return "Email is required";
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!re.test(email)) return "Invalid email format";
+        return "";
+    };
+
+    const validatePhone = (phone: string) => {
+        if (!phone) return "Phone number is required";
+        // Basic phone regex: allows +, digits, spaces, dashes
+        const re = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
+        if (!re.test(phone)) return "Invalid phone number";
+        return "";
+    };
+
+    const handleBlur = (field: 'email' | 'phone') => {
+        setTouched(prev => ({ ...prev, [field]: true }));
+        const error = field === 'email' ? validateEmail(formData.email) : validatePhone(formData.phone);
+        setErrors(prev => ({ ...prev, [field]: error }));
+    };
+
+    const nextStep = () => {
+        const eError = validateEmail(formData.email);
+        const pError = validatePhone(formData.phone);
+        if (eError || pError) {
+            setErrors({ email: eError, phone: pError });
+            setTouched({ email: true, phone: true });
+            return;
+        }
+        setStep((p) => p + 1);
+    };
     const prevStep = () => setStep((p) => p - 1);
 
 
@@ -325,20 +362,32 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                 <h2 className="text-3xl font-agr text-white mb-6 text-center">Contact Details</h2>
                 <div className="space-y-4">
                     <div className="relative">
-                        <Mail className="absolute left-3 top-3 text-lotus-bronze" size={18} />
+                        <Mail className={`absolute left-3 top-3 ${touched.email && errors.email ? 'text-red-400' : 'text-lotus-bronze'}`} size={18} />
                         <input
                             type="email" required placeholder="Email Address *"
-                            className="w-full bg-lotus-blue/50 border border-lotus-gold/30 rounded pl-10 p-3 text-white focus:border-lotus-gold outline-none placeholder:text-gray-500"
-                            value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            className={`w-full bg-lotus-blue/50 border rounded pl-10 p-3 text-white outline-none placeholder:text-gray-500 transition-all ${touched.email && errors.email ? 'border-red-500/50 focus:border-red-500' : 'border-lotus-gold/30 focus:border-lotus-gold'}`}
+                            value={formData.email}
+                            onChange={(e) => {
+                                setFormData({ ...formData, email: e.target.value });
+                                if (touched.email) setErrors(prev => ({ ...prev, email: validateEmail(e.target.value) }));
+                            }}
+                            onBlur={() => handleBlur('email')}
                         />
+                        {touched.email && errors.email && <p className="text-red-400 text-[10px] mt-1 ml-1 font-bold uppercase tracking-wider">{errors.email}</p>}
                     </div>
                     <div className="relative">
-                        <Phone className="absolute left-3 top-3 text-lotus-bronze" size={18} />
+                        <Phone className={`absolute left-3 top-3 ${touched.phone && errors.phone ? 'text-red-400' : 'text-lotus-bronze'}`} size={18} />
                         <input
                             type="tel" required placeholder="Phone Number *"
-                            className="w-full bg-lotus-blue/50 border border-lotus-gold/30 rounded pl-10 p-3 text-white focus:border-lotus-gold outline-none placeholder:text-gray-500"
-                            value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            className={`w-full bg-lotus-blue/50 border rounded pl-10 p-3 text-white outline-none placeholder:text-gray-500 transition-all ${touched.phone && errors.phone ? 'border-red-500/50 focus:border-red-500' : 'border-lotus-gold/30 focus:border-lotus-gold'}`}
+                            value={formData.phone}
+                            onChange={(e) => {
+                                setFormData({ ...formData, phone: e.target.value });
+                                if (touched.phone) setErrors(prev => ({ ...prev, phone: validatePhone(e.target.value) }));
+                            }}
+                            onBlur={() => handleBlur('phone')}
                         />
+                        {touched.phone && errors.phone && <p className="text-red-400 text-[10px] mt-1 ml-1 font-bold uppercase tracking-wider">{errors.phone}</p>}
                     </div>
                     <div className="relative">
                         <User className="absolute left-3 top-3 text-lotus-bronze" size={18} />
@@ -387,7 +436,7 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                     </div>
 
                     <button
-                        disabled={!formData.email || !formData.phone}
+                        disabled={!formData.email || !formData.phone || !!errors.email || !!errors.phone}
                         onClick={nextStep}
                         className="w-full mt-6 bg-lotus-gold text-lotus-blue font-bold py-3 rounded hover:bg-lotus-light-gold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg duration-300"
                     >Continue</button>
@@ -433,99 +482,145 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
                     </div>
                 )}
 
-                <div className="mb-6 flex justify-between items-end gap-4 border-b border-white/10 pb-6">
-                    <div>
-                        <h2 className="text-3xl font-agr text-white mb-2">Select Treatments</h2>
-                        <div className="flex flex-wrap gap-2">
-                            {categories.map(cat => (
+                <div className="mb-6 flex flex-col gap-6 border-b border-white/10 pb-6">
+                    <div className="flex justify-between items-end gap-4">
+                        <div>
+                            <h2 className="text-3xl font-agr text-white mb-2">Select Treatments</h2>
+                            <div className="flex flex-wrap gap-2">
+                                {categories.map(cat => (
+                                    <button
+                                        key={cat}
+                                        onClick={() => {
+                                            setActiveCat(cat);
+                                            setIsContactMode(false);
+                                        }}
+                                        className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all uppercase tracking-wider ${activeCat === cat && !isContactMode ? 'bg-lotus-gold text-lotus-blue shadow-lg' : 'border border-lotus-gold/30 text-lotus-bronze hover:border-lotus-gold hover:text-white'}`}
+                                    >{cat}</button>
+                                ))}
                                 <button
-                                    key={cat}
-                                    onClick={() => setActiveCat(cat)}
-                                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all uppercase tracking-wider ${activeCat === cat ? 'bg-lotus-gold text-lotus-blue shadow-lg' : 'border border-lotus-gold/30 text-lotus-bronze hover:border-lotus-gold hover:text-white'}`}
-                                >{cat}</button>
-                            ))}
+                                    onClick={() => setIsContactMode(true)}
+                                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all uppercase tracking-wider ${isContactMode ? 'bg-lotus-gold text-lotus-blue shadow-lg' : 'border border-lotus-gold/30 text-lotus-bronze hover:border-lotus-gold hover:text-white'}`}
+                                >Contact Me</button>
+                            </div>
                         </div>
+                        {!isContactMode && (
+                            <button
+                                onClick={() => setShowSelectionModal(true)}
+                                className={`group flex items-center gap-3 px-5 py-3 rounded-lg border transition-all duration-500 
+                                ${triggerGlow
+                                        // STATO 1: GLOW PULSE (Priorità massima, dura 0.5s)
+                                        // Ombra dorata forte, bordo dorato, leggero ingrandimento e sfondo dorato trasparente
+                                        ? 'bg-lotus-gold/20 border-lotus-gold text-white shadow-[0_0_25px_rgba(251,191,36,0.8)] scale-105 z-10'
+                                        : isQuotaMet
+                                            // STATO 2: QUOTA RAGGIUNTA (Stato fisso)
+                                            ? 'bg-lotus-gold border-lotus-gold text-lotus-blue shadow-[0_0_15px_rgba(251,191,36,0.3)]'
+                                            // STATO 3: DEFAULT (Stato normale)
+                                            : 'bg-white/5 border-white/20 text-white hover:border-lotus-gold/50'
+                                    }
+                            `}
+                            >
+                                <div className="text-right">
+                                    {/* ... contenuto del bottone ... */}
+                                    <div className="text-[10px] uppercase font-bold tracking-widest opacity-70">Selected</div>
+                                    <div className="text-xl font-bold leading-none">{selections.length} / {persons}</div>
+                                </div>
+                                <div className="h-8 w-px bg-current opacity-20"></div>
+                                <User size={20} />
+                            </button>
+                        )}
                     </div>
-                    <button
-                        onClick={() => setShowSelectionModal(true)}
-                        // Aggiungiamo 'duration-500' per rendere fluido l'effetto pulse
-                        className={`group flex items-center gap-3 px-5 py-3 rounded-lg border transition-all duration-500 
-                        ${triggerGlow
-                                // STATO 1: GLOW PULSE (Priorità massima, dura 0.5s)
-                                // Ombra dorata forte, bordo dorato, leggero ingrandimento e sfondo dorato trasparente
-                                ? 'bg-lotus-gold/20 border-lotus-gold text-white shadow-[0_0_25px_rgba(251,191,36,0.8)] scale-105 z-10'
-                                : isQuotaMet
-                                    // STATO 2: QUOTA RAGGIUNTA (Stato fisso)
-                                    ? 'bg-lotus-gold border-lotus-gold text-lotus-blue shadow-[0_0_15px_rgba(251,191,36,0.3)]'
-                                    // STATO 3: DEFAULT (Stato normale)
-                                    : 'bg-white/5 border-white/20 text-white hover:border-lotus-gold/50'
-                            }
-                    `}
-                    >
-                        <div className="text-right">
-                            {/* ... contenuto del bottone ... */}
-                            <div className="text-[10px] uppercase font-bold tracking-widest opacity-70">Selected</div>
-                            <div className="text-xl font-bold leading-none">{selections.length} / {persons}</div>
+
+                    {isContactMode && (
+                        <div className="animate-in fade-in slide-in-from-top-4 duration-500 bg-white/5 border border-lotus-gold/20 p-6 rounded-xl">
+                            <p className="text-white mb-4 font-medium">How would you like to be contacted?</p>
+                            <div className="flex gap-4">
+                                <button
+                                    onClick={() => setContactPreference('email')}
+                                    className={`flex-1 flex items-center justify-center gap-2 p-4 rounded-lg border transition-all ${contactPreference === 'email' ? 'bg-lotus-gold border-lotus-gold text-lotus-blue font-bold' : 'border-white/10 text-white hover:bg-white/5'}`}
+                                >
+                                    <Mail size={18} /> Email
+                                </button>
+                                <button
+                                    onClick={() => setContactPreference('phone')}
+                                    className={`flex-1 flex items-center justify-center gap-2 p-4 rounded-lg border transition-all ${contactPreference === 'phone' ? 'bg-lotus-gold border-lotus-gold text-lotus-blue font-bold' : 'border-white/10 text-white hover:bg-white/5'}`}
+                                >
+                                    <Phone size={18} /> Phone
+                                </button>
+                            </div>
                         </div>
-                        <div className="h-8 w-px bg-current opacity-20"></div>
-                        <User size={20} />
-                    </button>
+                    )}
                 </div>
 
                 <div className="pr-2 pb-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {initialTreatments[activeCat]?.map((t) => {
-                            const isExpanded = formData.treatment?.id === t.id;
-                            return (
-                                <div key={t.id} className={`rounded-lg border transition-all relative overflow-hidden ${isExpanded ? 'border-lotus-gold bg-white/5' : 'border-white/10 hover:border-white/30 bg-white/5'}`}>
-                                    <div onClick={() => setFormData(prev => ({ ...prev, treatment: isExpanded ? null : t }))} className="p-6 cursor-pointer">
-                                        <div className="flex justify-between items-start mb-2">
-                                            <h3 className="text-xl font-semibold text-white">{t.title}</h3>
-                                            <ChevronRight className={`text-lotus-gold transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`} />
-                                        </div>
-                                        <p className="text-sm text-gray-300 line-clamp-2">{t.description}</p>
-                                    </div>
-                                    {isExpanded && (
-                                        <div className="px-6 pb-6 pt-0 animate-in slide-in-from-top-2 duration-300">
-                                            <div className="h-px w-full bg-white/10 mb-4"></div>
-                                            <p className="text-xs text-lotus-bronze uppercase font-bold tracking-widest mb-3">Available Packages</p>
-                                            <div className="space-y-3">
-                                                {t.packages?.sort((a, b) => a.minutes - b.minutes).map(pkg => (
-                                                    <div key={pkg.id} className="flex items-center justify-between p-3 rounded bg-black/20 hover:bg-black/40 border border-transparent hover:border-white/10 transition-all">
-                                                        <div className="flex items-center gap-3 text-white">
-                                                            <Clock size={16} className="text-lotus-gold" />
-                                                            <span className="font-medium text-sm">{pkg.minutes} Min</span>
-                                                        </div>
-                                                        <div className="flex items-center gap-4">
-                                                            <span className="font-bold text-lotus-gold">{formatPrice(pkg.discountedPrice || pkg.price)}</span>
-                                                            <button
-                                                                disabled={isQuotaMet}
-                                                                onClick={(e) => { e.stopPropagation(); addSelection(t, pkg); }}
-                                                                className={`px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-all ${isQuotaMet ? 'bg-gray-600 text-gray-400 cursor-not-allowed opacity-50' : 'bg-lotus-gold text-lotus-blue hover:bg-white hover:scale-105 shadow-lg'}`}
-                                                            >
-                                                                {isQuotaMet ? 'Full' : 'Add +'}
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                ))}
+                    {!isContactMode ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {initialTreatments[activeCat]?.map((t) => {
+                                const isExpanded = formData.treatment?.id === t.id;
+                                return (
+                                    <div key={t.id} className={`rounded-lg border transition-all relative overflow-hidden ${isExpanded ? 'border-lotus-gold bg-white/5' : 'border-white/10 hover:border-white/30 bg-white/5'}`}>
+                                        <div onClick={() => setFormData(prev => ({ ...prev, treatment: isExpanded ? null : t }))} className="p-6 cursor-pointer">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <h3 className="text-xl font-semibold text-white">{t.title}</h3>
+                                                <ChevronRight className={`text-lotus-gold transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`} />
                                             </div>
+                                            <p className="text-sm text-gray-300 line-clamp-2">{t.description}</p>
                                         </div>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </div>
+                                        {isExpanded && (
+                                            <div className="px-6 pb-6 pt-0 animate-in slide-in-from-top-2 duration-300">
+                                                <div className="h-px w-full bg-white/10 mb-4"></div>
+                                                <p className="text-xs text-lotus-bronze uppercase font-bold tracking-widest mb-3">Available Packages</p>
+                                                <div className="space-y-3">
+                                                    {t.packages?.sort((a, b) => a.minutes - b.minutes).map(pkg => (
+                                                        <div key={pkg.id} className="flex items-center justify-between p-3 rounded bg-black/20 hover:bg-black/40 border border-transparent hover:border-white/10 transition-all">
+                                                            <div className="flex items-center gap-3 text-white">
+                                                                <Clock size={16} className="text-lotus-gold" />
+                                                                <span className="font-medium text-sm">{pkg.minutes} Min</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-4">
+                                                                <span className="font-bold text-lotus-gold">{formatPrice(pkg.discountedPrice || pkg.price)}</span>
+                                                                <button
+                                                                    disabled={isQuotaMet}
+                                                                    onClick={(e) => { e.stopPropagation(); addSelection(t, pkg); }}
+                                                                    className={`px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-all ${isQuotaMet ? 'bg-gray-600 text-gray-400 cursor-not-allowed opacity-50' : 'bg-lotus-gold text-lotus-blue hover:bg-white hover:scale-105 shadow-lg'}`}
+                                                                >
+                                                                    {isQuotaMet ? 'Full' : 'Add +'}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center py-12 text-center bg-white/5 rounded-2xl border border-dashed border-white/10">
+                            <div className="bg-lotus-gold/10 p-4 rounded-full mb-4">
+                                <User size={40} className="text-lotus-gold" />
+                            </div>
+                            <h3 className="text-2xl font-agr text-white mb-2">Request Callback</h3>
+                            <p className="text-gray-400 max-w-sm">Skip treatment selection and scheduling. We'll contact you to discuss your needs and find the best time for your visit.</p>
+                        </div>
+                    )}
                 </div>
 
                 <div className="w-full pt-6 mt-4 border-t border-white/10 flex justify-between items-center py-4">
                     <button onClick={prevStep} className="text-white hover:text-lotus-gold underline underline-offset-4 transition-colors">Back</button>
                     <div className="flex items-center gap-4">
-                        {!isQuotaMet && selections.length > 0 && <span className="text-sm text-lotus-gold animate-pulse">Select {persons - selections.length} more...</span>}
+                        {!isContactMode && !isQuotaMet && selections.length > 0 && <span className="text-sm text-lotus-gold animate-pulse">Select {persons - selections.length} more...</span>}
                         <button
-                            disabled={!isQuotaMet}
-                            onClick={nextStep}
+                            disabled={isContactMode ? !contactPreference : !isQuotaMet}
+                            onClick={() => {
+                                if (isContactMode) {
+                                    setStep(4);
+                                } else {
+                                    nextStep();
+                                }
+                            }}
                             className="bg-lotus-gold text-lotus-blue font-bold py-3 px-8 rounded hover:bg-lotus-light-gold disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg hover:scale-105"
-                        >Confirm Selections ({selections.length})</button>
+                        >{isContactMode ? 'Confirm Contact Method' : `Confirm Selections (${selections.length})`}</button>
                     </div>
                 </div>
             </div>
@@ -710,189 +805,229 @@ export default function BookingForm({ initialTreatments }: BookingFormProps) {
     // STEP 4: RECAP & SUBMIT
     // STEP 4: RECAP & SUBMIT
     // STEP 4: RECAP & SUBMIT
-const renderStep4 = () => {
-    const grandTotal = selections.reduce((acc, item) => acc + (item.pkg.discountedPrice || item.pkg.price), 0);
+    const renderStep4 = () => {
+        const grandTotal = selections.reduce((acc, item) => acc + (item.pkg.discountedPrice || item.pkg.price), 0);
 
-    // --- NUOVO LAYOUT DI CONFERMA (POST-BOOKING) ---
-    if (isConfirmed) {
-        return (
-            <div className="animate-in fade-in zoom-in duration-500 w-full max-w-2xl bg-white/5 border border-lotus-gold/40 p-10 rounded-lg shadow-2xl backdrop-blur-md text-center">
-                <div className="flex justify-center mb-6">
-                    <div className="bg-lotus-gold rounded-full p-4 shadow-[0_0_30px_rgba(212,175,55,0.3)]">
-                        <Check size={48} className="text-lotus-blue" />
-                    </div>
-                </div>
-                
-                <h2 className="text-4xl font-agr text-white mb-4">Booking Confirmed!</h2>
-            
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left bg-white/5 p-6 rounded-lg border border-white/10 mb-2 mt-16">
-                    <div className="space-y-1">
-                        <p className="text-lotus-bronze text-[10px] uppercase font-bold tracking-[0.2em]">Reservation Details</p>
-                        <p className="text-white text-sm">Date: {formData.date?.toLocaleDateString()}</p>
-                        <p className="text-white text-sm">Time: {formData.time}</p>
-                        <p className="text-white text-sm">Guests: {persons}</p>
-                    </div>
-                    <div className="space-y-1">
-                        <p className="text-lotus-bronze text-[10px] uppercase font-bold tracking-[0.2em]">Notification</p>
-                        <p className="text-green-400 text-sm flex items-center gap-1 font-medium">
-                            <Mail size={14} /> Confirmation Email Sent
-                        </p>
-                        <p className="text-gray-400 text-[11px] leading-tight mt-1">Sent to: {formData.email}</p>
-                    </div>
-                    <div className="md:col-span-2 mt-2">
-                        <p className="text-lotus-bronze text-[10px] uppercase font-bold tracking-[0.2em] mb-2">Treatments</p>
-                        <ul className="space-y-1">
-                            {selections.map((sel, i) => (
-                                <li key={i} className="text-xs text-gray-300 flex justify-between">
-                                    <span>• {sel.treatment.title} ({sel.pkg.minutes} min)</span>
-                                    {assignedMasseuses[i] && (
-                                        <span className="text-lotus-gold">with {assignedMasseuses[i].attributes?.name || assignedMasseuses[i].name}</span>
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-
-                <p className="text-gray-400 text-sm mb-8 px-4">
-                    Please arrive 10 minutes before your scheduled time. We look forward to seeing you.
-                </p>
-
-                <button 
-                    onClick={() => window.location.href = '/'} 
-                    className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold py-3 px-10 rounded transition-all flex items-center gap-2 mx-auto"
-                >
-                    Return to Home
-                </button>
-            </div>
-        );
-    }
-
-    // --- LAYOUT DI REVISIONE (IL TUO ORIGINALE) ---
-    return (
-        <div className="animate-in fade-in slide-in-from-right-8 duration-500 w-full max-w-2xl bg-white/5 border border-lotus-gold/20 p-8 rounded-lg shadow-2xl backdrop-blur-sm">
-            <h2 className="text-3xl font-agr text-white mb-8 text-center">Confirm Reservation</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-white mb-8">
-                <div className="space-y-1">
-                    <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-2">Guest Details</p>
-                    <div className="text-xl font-medium flex items-center gap-2">
-                        {formData.name || 'Guest'}
-                        {persons > 1 && <span className="text-sm text-lotus-gold bg-lotus-gold/10 px-2 py-0.5 rounded-full border border-lotus-gold/20">Party of {persons}</span>}
-                    </div>
-                    <div className="text-gray-400 text-sm flex items-center gap-2"><Mail size={14} /> {formData.email}</div>
-                    <div className="text-gray-400 text-sm flex items-center gap-2"><Phone size={14} /> {formData.phone}</div>
-                    <div className="text-gray-400 text-sm flex items-center gap-2 mt-1"><Globe size={14} /> Language: {formData.isKhmer ? 'Khmer' : 'English'}</div>
-                </div>
-                <div className="space-y-1">
-                    <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-2">Date & Time</p>
-                    <div className="flex items-center gap-2 text-lg font-medium"><CalendarIcon size={18} className="text-lotus-gold" /> {formData.date?.toLocaleDateString()}</div>
-                    <div className="flex items-center gap-2 text-2xl font-bold text-white"><Clock size={20} className="text-lotus-gold" /> {formData.time}</div>
-                </div>
-
-                <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
-                    <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-3">Selected Treatments ({selections.length})</p>
-                    {calculatingAssignment && <div className="text-xs text-lotus-gold animate-pulse mb-2">Assigning therapists...</div>}
-
-                    <div className="bg-white/5 rounded border border-white/10 divide-y divide-white/5">
-                        {selections.map((sel, idx) => {
-                            const assigned = assignedMasseuses[idx];
-                            const masseuseName = assigned ? (assigned.attributes?.name || assigned.name) : null;
-
-                            return (
-                                <div key={idx} className="p-4 flex justify-between items-center">
-                                    <div>
-                                        <div className="text-xs text-gray-500 uppercase font-bold mb-1">Guest {idx + 1}</div>
-                                        <div className="font-semibold text-lotus-gold">{sel.treatment.title}</div>
-                                        <div className="text-sm text-gray-400 flex items-center gap-1">
-                                            {sel.pkg.minutes} Minutes Session
-                                            {masseuseName && (
-                                                <>
-                                                    <span>with</span>
-                                                    <span className="text-white font-bold bg-white/10 px-1.5 rounded ml-1">{masseuseName}</span>
-                                                </>
-                                            )}
-                                        </div>
-                                    </div>
-                                    <div className="text-xl text-white">{formatPrice(sel.pkg.discountedPrice || sel.pkg.price)}</div>
-                                </div>
-                            );
-                        })}
-                        <div className="p-4 bg-lotus-gold/10 flex justify-between items-center">
-                            <div className="font-bold text-white uppercase tracking-wider">Total Amount</div>
-                            <div className="text-3xl text-lotus-gold">{formatPrice(grandTotal)}</div>
+        // --- NUOVO LAYOUT DI CONFERMA (POST-BOOKING) ---
+        if (isConfirmed) {
+            return (
+                <div className="animate-in fade-in zoom-in duration-500 w-full max-w-2xl bg-white/5 border border-lotus-gold/40 p-10 rounded-lg shadow-2xl backdrop-blur-md text-center">
+                    <div className="flex justify-center mb-6">
+                        <div className="bg-lotus-gold rounded-full p-4 shadow-[0_0_30px_rgba(212,175,55,0.3)]">
+                            <Check size={48} className="text-lotus-blue" />
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div className="flex justify-between items-center pt-6 border-t border-white/10">
-                <button onClick={prevStep} className="text-white hover:text-lotus-gold underline underline-offset-4 transition-colors">Modify Details</button>
-                <button
-                    disabled={isSubmitting || calculatingAssignment}
-                    onClick={async () => {
-                        setIsSubmitting(true);
-                        try {
-                            const dateStr = getLocalISOString(formData.date);
-                            const bookingPromises = selections.map((sel, idx) => {
-                                const assignedId = assignedMasseuses[idx]?.documentId || null;
-                                const payload = {
+                    <h2 className="text-4xl font-agr text-white mb-4">Booking Confirmed!</h2>
+
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left bg-white/5 p-6 rounded-lg border border-white/10 mb-2 mt-16">
+                        <div className="space-y-1">
+                            <p className="text-lotus-bronze text-[10px] uppercase font-bold tracking-[0.2em]">Reservation Details</p>
+                            {isContactMode ? (
+                                <p className="text-white text-sm">Type: Request Callback</p>
+                            ) : (
+                                <>
+                                    <p className="text-white text-sm">Date: {formData.date?.toLocaleDateString()}</p>
+                                    <p className="text-white text-sm">Time: {formData.time}</p>
+                                </>
+                            )}
+                            <p className="text-white text-sm">Guests: {persons}</p>
+                        </div>
+                        <div className="space-y-1">
+                            <p className="text-lotus-bronze text-[10px] uppercase font-bold tracking-[0.2em]">Notification</p>
+                            <p className="text-green-400 text-sm flex items-center gap-1 font-medium">
+                                <Mail size={14} /> {isContactMode ? 'Callback Requested' : 'Confirmation Email Sent'}
+                            </p>
+                            <p className="text-gray-400 text-[11px] leading-tight mt-1">{isContactMode ? `Preference: ${contactPreference}` : `Sent to: ${formData.email}`}</p>
+                        </div>
+                        <div className="md:col-span-2 mt-2">
+                            <p className="text-lotus-bronze text-[10px] uppercase font-bold tracking-[0.2em]">{isContactMode ? 'Note' : 'Treatments'}</p>
+                            {isContactMode ? (
+                                <p className="text-xs text-gray-300">User requested to be contacted via {contactPreference}. Our team will reach out shortly.</p>
+                            ) : (
+                                <ul className="space-y-1">
+                                    {selections.map((sel, i) => (
+                                        <li key={i} className="text-xs text-gray-300 flex justify-between">
+                                            <span>• {sel.treatment.title} ({sel.pkg.minutes} min)</span>
+                                            {assignedMasseuses[i] && (
+                                                <span className="text-lotus-gold">with {assignedMasseuses[i].attributes?.name || assignedMasseuses[i].name}</span>
+                                            )}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    </div>
+
+                    <p className="text-gray-400 text-sm mb-8 px-4">
+                        Please arrive 10 minutes before your scheduled time. We look forward to seeing you.
+                    </p>
+
+                    <button
+                        onClick={() => window.location.href = '/'}
+                        className="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold py-3 px-10 rounded transition-all flex items-center gap-2 mx-auto"
+                    >
+                        Return to Home
+                    </button>
+                </div>
+            );
+        }
+
+        // --- LAYOUT DI REVISIONE (IL TUO ORIGINALE) ---
+        return (
+            <div className="animate-in fade-in slide-in-from-right-8 duration-500 w-full max-w-2xl bg-white/5 border border-lotus-gold/20 p-8 rounded-lg shadow-2xl backdrop-blur-sm">
+                <h2 className="text-3xl font-agr text-white mb-8 text-center">Confirm Reservation</h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-white mb-8">
+                    <div className="space-y-1">
+                        <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-2">Guest Details</p>
+                        <div className="text-xl font-medium flex items-center gap-2">
+                            {formData.name || 'Guest'}
+                            {persons > 1 && <span className="text-sm text-lotus-gold bg-lotus-gold/10 px-2 py-0.5 rounded-full border border-lotus-gold/20">Party of {persons}</span>}
+                        </div>
+                        <div className="text-gray-400 text-sm flex items-center gap-2"><Mail size={14} /> {formData.email}</div>
+                        <div className="text-gray-400 text-sm flex items-center gap-2"><Phone size={14} /> {formData.phone}</div>
+                        <div className="text-gray-400 text-sm flex items-center gap-2 mt-1"><Globe size={14} /> Language: {formData.isKhmer ? 'Khmer' : 'English'}</div>
+                    </div>
+                    <div className="space-y-1">
+                        <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-2">Date & Time</p>
+                        {isContactMode ? (
+                            <div className="flex items-center gap-2 text-lg font-medium text-lotus-gold italic">Contact Requested</div>
+                        ) : (
+                            <>
+                                <div className="flex items-center gap-2 text-lg font-medium"><CalendarIcon size={18} className="text-lotus-gold" /> {formData.date?.toLocaleDateString()}</div>
+                                <div className="flex items-center gap-2 text-2xl font-bold text-white"><Clock size={20} className="text-lotus-gold" /> {formData.time}</div>
+                            </>
+                        )}
+                    </div>
+
+                    <div className="md:col-span-2 border-t border-white/10 pt-6 mt-2">
+                        <p className="text-lotus-bronze text-xs uppercase font-bold tracking-widest mb-3">{isContactMode ? 'Preference' : `Selected Treatments (${selections.length})`}</p>
+                        {isContactMode ? (
+                            <div className="bg-white/5 p-4 rounded border border-white/10 text-white flex items-center gap-3">
+                                {contactPreference === 'email' ? <Mail className="text-lotus-gold" /> : <Phone className="text-lotus-gold" />}
+                                <div>
+                                    <div className="font-bold">Contact via {contactPreference}</div>
+                                    <div className="text-xs text-gray-400">Our team will contact you at {contactPreference === 'email' ? formData.email : formData.phone}</div>
+                                </div>
+                            </div>
+                        ) : (
+                            <>
+                                {calculatingAssignment && <div className="text-xs text-lotus-gold animate-pulse mb-2">Assigning therapists...</div>}
+                                <div className="bg-white/5 rounded border border-white/10 divide-y divide-white/5">
+                                    {selections.map((sel, idx) => {
+                                        const assigned = assignedMasseuses[idx];
+                                        const masseuseName = assigned ? (assigned.attributes?.name || assigned.name) : null;
+
+                                        return (
+                                            <div key={idx} className="p-4 flex justify-between items-center">
+                                                <div>
+                                                    <div className="text-xs text-gray-500 uppercase font-bold mb-1">Guest {idx + 1}</div>
+                                                    <div className="font-semibold text-lotus-gold">{sel.treatment.title}</div>
+                                                    <div className="text-sm text-gray-400 flex items-center gap-1">
+                                                        {sel.pkg.minutes} Minutes Session
+                                                        {masseuseName && (
+                                                            <>
+                                                                <span>with</span>
+                                                                <span className="text-white font-bold bg-white/10 px-1.5 rounded ml-1">{masseuseName}</span>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="text-xl text-white">{formatPrice(sel.pkg.discountedPrice || sel.pkg.price)}</div>
+                                            </div>
+                                        );
+                                    })}
+                                    <div className="p-4 bg-lotus-gold/10 flex justify-between items-center">
+                                        <div className="font-bold text-white uppercase tracking-wider">Total Amount</div>
+                                        <div className="text-3xl text-lotus-gold">{formatPrice(grandTotal)}</div>
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </div>
+                </div>
+
+                <div className="flex justify-between items-center pt-6 border-t border-white/10">
+                    <button onClick={prevStep} className="text-white hover:text-lotus-gold underline underline-offset-4 transition-colors">Modify Details</button>
+                    <button
+                        disabled={isSubmitting || calculatingAssignment}
+                        onClick={async () => {
+                            setIsSubmitting(true);
+                            try {
+                                const dateStr = isContactMode ? getLocalISOString(new Date()) : getLocalISOString(formData.date);
+
+                                const commonPayload = {
                                     name: formData.name,
                                     email: formData.email,
                                     phone: formData.phone,
                                     isKhmer: formData.isKhmer,
                                     date: dateStr,
-                                    time: formData.time,
+                                    time: isContactMode ? '00:00' : formData.time,
                                     persons_count: persons,
-                                    treatment: sel.treatment,
-                                    selectedPackage: sel.pkg,
-                                    duration: sel.pkg.minutes,
-                                    price: sel.pkg.discountedPrice || sel.pkg.price,
-                                    masseuseDocId: assignedId
+                                    bookingStatus: isContactMode ? 'created' : 'confirmed',
+                                    notes: isContactMode ? `Client requested to be contacted via ${contactPreference}.` : ''
                                 };
 
-                                return fetch('/api/bookings', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify(payload)
-                                }).then(res => { if (!res.ok) throw new Error("A booking failed"); return res.json(); });
-                            });
+                                const bookingPromises = isContactMode
+                                    ? [fetch('/api/bookings', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify(commonPayload)
+                                    }).then(res => { if (!res.ok) throw new Error("A booking failed"); return res.json(); })]
+                                    : selections.map((sel, idx) => {
+                                        const assignedId = assignedMasseuses[idx]?.documentId || null;
+                                        const payload = {
+                                            ...commonPayload,
+                                            treatment: sel.treatment,
+                                            selectedPackage: sel.pkg,
+                                            duration: sel.pkg.minutes,
+                                            price: sel.pkg.discountedPrice || sel.pkg.price,
+                                            masseuseDocId: assignedId
+                                        };
 
-                            await Promise.all(bookingPromises);
-                            // Setta qui il tuo stato per mostrare il layout di conferma
-                            setIsConfirmed(true); 
-                        } catch (error) {
-                            console.error(error);
-                            alert("Something went wrong processing your bookings. Please contact us.");
-                        } finally {
-                            setIsSubmitting(false);
-                        }
-                    }}
-                    className={`bg-lotus-gold hover:bg-lotus-light-gold text-lotus-blue font-bold py-3 px-12 rounded shadow-lg transform hover:scale-105 transition-all flex items-center gap-2 ${isSubmitting || calculatingAssignment ? 'opacity-70 cursor-wait' : ''}`}
-                >
-                    {isSubmitting ? <>Processing...</> : <><Check size={20} /> Confirm Booking</>}
-                </button>
+                                        return fetch('/api/bookings', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(payload)
+                                        }).then(res => { if (!res.ok) throw new Error("A booking failed"); return res.json(); });
+                                    });
+
+                                await Promise.all(bookingPromises);
+                                // Setta qui il tuo stato per mostrare il layout di conferma
+                                setIsConfirmed(true);
+                            } catch (error) {
+                                console.error(error);
+                                alert("Something went wrong processing your bookings. Please contact us.");
+                            } finally {
+                                setIsSubmitting(false);
+                            }
+                        }}
+                        className={`bg-lotus-gold hover:bg-lotus-light-gold text-lotus-blue font-bold py-3 px-12 rounded shadow-lg transform hover:scale-105 transition-all flex items-center gap-2 ${isSubmitting || calculatingAssignment ? 'opacity-70 cursor-wait' : ''}`}
+                    >
+                        {isSubmitting ? <>Processing...</> : <><Check size={20} /> Confirm Booking</>}
+                    </button>
+                </div>
             </div>
-        </div>
-    );
-};
+        );
+    };
 
     return (
-  <div className="w-full flex flex-col items-center">
-    {/* Aggiunto overflow-visible e un leggero padding verticale (py-4) */}
-    <div className="flex gap-2 mb-16 py-4 w-full max-w-xs justify-center overflow-visible">
-        {[1, 2, 3, 4].map((i) => (
-            <div 
-                key={i} 
-                className={`h-1.5 rounded-full transition-all duration-500 relative
-                    ${step >= i 
-                        ? 'w-full bg-lotus-light-gold shadow-[0_0_15px_rgba(216,180,254,1)]' // Shadow personalizzata più intensa
-                        : 'w-full bg-white/20'
-                    }`} 
-            />
-        ))}
-    </div>
+        <div className="w-full flex flex-col items-center">
+            {/* Aggiunto overflow-visible e un leggero padding verticale (py-4) */}
+            <div className="flex gap-2 mb-16 py-4 w-full max-w-xs justify-center overflow-visible">
+                {[1, 2, 3, 4].map((i) => (
+                    <div
+                        key={i}
+                        className={`h-1.5 rounded-full transition-all duration-500 relative
+                    ${step >= i
+                                ? 'w-full bg-lotus-light-gold shadow-[0_0_15px_rgba(216,180,254,1)]' // Shadow personalizzata più intensa
+                                : 'w-full bg-white/20'
+                            }`}
+                    />
+                ))}
+            </div>
 
             {step === 1 && renderStep1()}
             {step === 2 && renderStep2()}

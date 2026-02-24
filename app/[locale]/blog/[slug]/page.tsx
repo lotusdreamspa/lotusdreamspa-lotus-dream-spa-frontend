@@ -100,7 +100,7 @@ export async function generateMetadata({
 
     // Costruisci l'URL completo dell'immagine per Open Graph
     const ogImageUrl = article.openGraphImage && article.openGraphImage.url
-        ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${article.openGraphImage.formats.small.url}`
+        ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${article.openGraphImage.formats.small.url}`
         : null;
 
     return {
@@ -142,7 +142,7 @@ export default async function ArticleDetailPage({
 }) {
     const { slug } = params;
     const { locale } = params;
-    
+
     setRequestLocale(locale);
 
     const articleRes: StrapiSingleResponse<StrapiArticleType[]> | null = await fetchStrapiData(
@@ -202,7 +202,7 @@ export default async function ArticleDetailPage({
                 return (
 
                     // HERO BLOCK within content blocks now uses a background image
-                   <Hero title={heroBlock.title} bgImg={heroBlock.bgImage?.url ? `${process.env.NEXT_PUBLIC_STRAPI_API_URL}${heroBlock.bgImage.url}` : ''} subtitle={heroBlock.caption ?? null} />
+                    <Hero title={heroBlock.title} bgImg={heroBlock.bgImage?.url ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${heroBlock.bgImage.url}` : ''} subtitle={heroBlock.caption ?? null} />
                 );
             case 'text-components.quote':
                 const quoteBlock = block as QuoteBlock;

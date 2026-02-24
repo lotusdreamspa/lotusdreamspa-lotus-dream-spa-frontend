@@ -8,8 +8,8 @@ export async function fetchBookingsByDate(date: string) {
   }
 
   // 2. Configurazione Strapi
-  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_CLOUD_URL || 'http://127.0.0.1:1337';
-  const STRAPI_WRITE_TOKEN = process.env.NEXT_PUBLIC_STRAPI_CLOUD_TOKEN;
+  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337';
+  const STRAPI_WRITE_TOKEN = process.env.NEXT_PUBLIC_STRAPI_TOKEN;
 
   try {
     // 3. Chiamata Server-to-Server
@@ -45,8 +45,8 @@ export async function fetchBookingsByDate(date: string) {
 
 // Aggiungi questa funzione:
 export async function createBookingInStrapi(bookingData: any) {
-  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_CLOUD_URL || 'http://127.0.0.1:1337';
-  const STRAPI_WRITE_TOKEN = process.env.NEXT_PUBLIC_STRAPI_CLOUD_WRITE_TOKEN; // Usa token con permessi CREATE
+  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://127.0.0.1:1337';
+  const STRAPI_WRITE_TOKEN = process.env.NEXT_PUBLIC_STRAPI_TOKEN; // Usa token con permessi CREATE
 
   try {
     console.log("createBookingInStrapi - Payload:", JSON.stringify({ data: bookingData }, null, 2));

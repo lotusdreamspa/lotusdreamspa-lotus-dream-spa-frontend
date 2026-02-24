@@ -3,7 +3,7 @@ import 'server-only'; // Opzionale: assicura che questo codice giri solo sul ser
 
 export async function fetchTreatmentsFromStrapi() {
   const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_CLOUD_URL || 'http://127.0.0.1:1337';
-  const STRAPI_TOKEN = process.env.NEXT_PUBLIC_STRAPI_CLOUD_READ_ONLY_TOKEN;
+  const STRAPI_TOKEN = process.env.NEXT_PUBLIC_STRAPI_CLOUD_TOKEN;
 
   try {
     const res = await fetch(`${STRAPI_URL}/api/treatments?populate=packages`, {

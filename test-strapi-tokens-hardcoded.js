@@ -41,8 +41,8 @@ async function main() {
     console.log("API URL:", apiUrl);
     
     await testToken("NEXT_PUBLIC_STRAPI_API_TOKEN", token1, apiUrl);
-    await testToken("NEXT_PUBLIC_STRAPI_CLOUD_READ_ONLY_TOKEN", token2, apiUrl);
-    await testToken("NEXT_PUBLIC_STRAPI_CLOUD_WRITE_TOKEN", token3, apiUrl);
+    await testToken("NEXT_PUBLIC_STRAPI_CLOUD_TOKEN", token2, apiUrl);
+    await testToken("NEXT_PUBLIC_STRAPI_CLOUD_TOKEN", token3, apiUrl);
 }
 
 main();

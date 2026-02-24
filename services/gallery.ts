@@ -77,7 +77,7 @@ interface StrapiResponse {
 
 export async function fetchGalleryImages(): Promise<GalleryData> {
   const apiUrl = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-  const apiToken = process.env.NEXT_PUBLIC_STRAPI_CLOUD_READ_ONLY_TOKEN;
+  const apiToken = process.env.NEXT_PUBLIC_STRAPI_CLOUD_TOKEN;
 
   if (!apiUrl || !apiToken) {
     console.error("Strapi API URL or Token not found");

@@ -35,8 +35,8 @@ async function main() {
     console.log("API URL:", process.env.NEXT_PUBLIC_STRAPI_API_URL);
     
     await testToken("NEXT_PUBLIC_STRAPI_API_TOKEN", process.env.NEXT_PUBLIC_STRAPI_API_TOKEN);
-    await testToken("NEXT_PUBLIC_STRAPI_CLOUD_READ_ONLY_TOKEN", process.env.NEXT_PUBLIC_STRAPI_CLOUD_READ_ONLY_TOKEN);
-    await testToken("NEXT_PUBLIC_STRAPI_CLOUD_WRITE_TOKEN", process.env.NEXT_PUBLIC_STRAPI_CLOUD_WRITE_TOKEN);
+    await testToken("NEXT_PUBLIC_STRAPI_CLOUD_TOKEN", process.env.NEXT_PUBLIC_STRAPI_CLOUD_TOKEN);
+    await testToken("NEXT_PUBLIC_STRAPI_CLOUD_TOKEN", process.env.NEXT_PUBLIC_STRAPI_CLOUD_TOKEN);
 }
 
 main();
